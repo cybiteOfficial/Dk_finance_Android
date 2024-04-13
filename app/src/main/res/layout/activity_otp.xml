@@ -52,10 +52,11 @@
                 android:id="@+id/resend_otp_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Resend OTP"
-                android:background="@android:color/transparent"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:text="Resend OTP"
+                android:textColor="#000000" />
 
         </LinearLayout>
 

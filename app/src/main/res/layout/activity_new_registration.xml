@@ -33,10 +33,30 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:id="@+id/name_edit_text"
+                android:layout_marginTop="20dp"
+                android:padding="8dp"
+                android:hint="Name"
+                android:drawablePadding="8dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:id="@+id/aadhaar_number_edit_text"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:hint="Aadhaar Number"
+                android:drawablePadding="8dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/pan_edit_text"
+                android:layout_marginTop="20dp"
+                android:padding="8dp"
+                android:hint="PAN"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
@@ -46,7 +66,7 @@
                 android:id="@+id/phone_number_edit_text"
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
-                android:hint="Phone Number"
+                android:hint="Mobile No."
                 android:inputType="phone"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
