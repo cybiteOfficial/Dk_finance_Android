@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Start the main activity after the splash screen duration
-                Intent mainIntent = new Intent(SplashActivity.this, DashboardActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, LoanFormActivity.class);
                 startActivity(mainIntent);
                 finish();
             }

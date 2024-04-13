@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- Loan Form Heading -->
+    <TextView
+        android:id="@+id/loan_form_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loan Form"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Loan Amount -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/loan_amount_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loan_form_heading"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
+        app:hintEnabled="true"
+        android:hint="Loan Amount">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loan_amount_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Loan Term -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/loan_term_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loan_amount_layout"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="true"
+        android:hint="Loan Term (Months)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loan_term_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Interest Rate -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/interest_rate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loan_term_layout"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="true"
+        android:hint="Interest Rate (%)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/interest_rate_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Gender Text -->
+    <TextView
+        android:id="@+id/gender_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:textSize="18sp"
+        android:layout_below="@id/interest_rate_layout"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        />
+
+    <!-- Gender Dropdown -->
+    <Spinner
+        android:id="@+id/gender_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gender_text"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/gender_options"/>
+
+    <!-- Religion Text -->
+    <TextView
+        android:id="@+id/religion_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Religion"
+        android:textSize="18sp"
+        android:layout_below="@id/gender_spinner"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Religion Dropdown -->
+    <Spinner
+        android:id="@+id/religion_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/religion_text"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/religion_options"/>
+
+    <!-- Email -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/religion_spinner"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="true"
+        android:hint="Email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Father's Name -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fathers_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email_layout"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="true"
+        android:hint="Father's Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fathers_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Mother's Name -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/mothers_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fathers_name_layout"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="true"
+        android:hint="Mother's Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/mothers_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Marital Status Text -->
+    <TextView
+        android:id="@+id/marital_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Marital Status"
+        android:textSize="18sp"
+        android:layout_below="@id/mothers_name_layout"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Marital Status Dropdown -->
+    <Spinner
+        android:id="@+id/marital_status_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marital_status_text"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/marital_status_options"/>
+
+    <!-- Residential Status Text -->
+    <TextView
+        android:id="@+id/residential_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Residential Status"
+        android:textSize="18sp"
+        android:layout_below="@id/marital_status_spinner"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Residential Status Dropdown -->
+    <Spinner
+        android:id="@+id/residential_status_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/residential_status_text"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:entries="@array/residential_status_options"/>
+
+    <!-- Other form fields (add here) -->
+
+</RelativeLayout>

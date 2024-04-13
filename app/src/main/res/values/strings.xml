@@ -1,4 +1,43 @@
+
 <resources>
+    <!-- Other strings -->
     <string name="app_name">bankApp</string>
     <string name="verification_successful">Verification Successful</string>
+    <string name="loan_status">Loan Status</string>
+    <string name="accepted_loans">Accepted Loans</string>
+    <string name="rejected_loans">Rejected Loans</string>
+    <string name="new_registration">New Registration</string>
+    <string name="stats_and_graph">Stats and Graph</string>
+
+    <!-- Gender Options -->
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- Religion Options -->
+    <string-array name="religion_options">
+        <item>Hinduism</item>
+        <item>Islam</item>
+        <item>Christianity</item>
+        <!-- Add more religion options as needed -->
+    </string-array>
+
+    <!-- Marital Status Options -->
+    <string-array name="marital_status_options">
+        <item>Single</item>
+        <item>Married</item>
+        <item>Divorced</item>
+        <item>Widowed</item>
+        <!-- Add more marital status options as needed -->
+    </string-array>
+
+    <!-- Residential Status Options -->
+    <string-array name="residential_status_options">
+        <item>Owned</item>
+        <item>Rented</item>
+        <item>Living with Parents</item>
+        <!-- Add more residential status options as needed -->
+    </string-array>
 </resources>
