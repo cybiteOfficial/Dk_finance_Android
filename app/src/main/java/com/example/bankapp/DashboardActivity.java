@@ -29,7 +29,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Set OnClickListener for the user profile ImageView
+        // Set OnClickListener for the user profile ImageView.
         userProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
