@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/username"
+        android:title="Username"/>
+    <item
+        android:id="@+id/employee_id"
+        android:title="Employee ID"/>
+    <item
+        android:id="@+id/support"
+        android:title="Support"/>
+</menu>

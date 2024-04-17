@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <!-- Top section with two circles -->
     <RelativeLayout
         android:id="@+id/top_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@android:color/white"
         android:padding="16dp">
 
@@ -30,8 +29,7 @@
                 android:src="@drawable/user"
                 android:background="@drawable/circle_background"
                 android:padding="10dp"
-                android:contentDescription="User Profile"/>
-
+                android:contentDescription="User Profile" />
 
         </LinearLayout>
     </RelativeLayout>
@@ -43,8 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top_section"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="8dp">
 
@@ -56,60 +54,59 @@
             android:padding="16dp"
             android:alignmentMode="alignMargins"
             android:columnOrderPreserved="false"
-            android:rowOrderPreserved="false">
+            android:rowOrderPreserved="false"
+            android:background="@android:color/white">
 
-            <!-- Button 1 -->
             <Button
                 android:id="@+id/new_reg_btn"
                 android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_margin="8dp"
                 android:text="@string/new_registration"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/squarish_button_background"
                 app:cornerRadius="12dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"/>
+                android:layout_gravity="fill"
+                android:layout_column="0"
+                android:layout_row="0" />
 
-            <!-- Button 2 -->
             <Button
                 android:id="@+id/loan_status_btn"
                 android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_margin="8dp"
                 android:text="@string/loan_status"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/squarish_button_background"
                 app:cornerRadius="12dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:layout_marginTop="18dp"/>
+                android:layout_gravity="fill"
+                android:layout_column="1"
+                android:layout_row="0" />
 
-            <!-- Button 3 -->
             <Button
                 android:id="@+id/accepted_loans_btn"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_margin="8dp"
                 android:text="@string/accepted_loans"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/squarish_button_background"
                 app:cornerRadius="12dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"/>
+                android:layout_gravity="fill"
+                android:layout_column="0"
+                android:layout_row="1" />
 
-            <!-- Button 4 -->
             <Button
                 android:id="@+id/rejected_loans_btn"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_margin="8dp"
                 android:text="@string/rejected_loans"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/squarish_button_background"
                 app:cornerRadius="12dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"/>
+                android:layout_gravity="fill"
+                android:layout_column="1"
+                android:layout_row="1" />
+
         </GridLayout>
     </androidx.cardview.widget.CardView>
 
@@ -121,5 +118,6 @@
         android:layout_below="@id/center_section"
         android:src="@drawable/stats_and_graph"
         android:padding="15dp"
-        android:contentDescription="@string/stats_and_graph"/>
+        android:contentDescription="@string/stats_and_graph" />
+
 </RelativeLayout>
