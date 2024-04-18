@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:fitsSystemWindows="true"> <!-- Add fitsSystemWindows attribute -->
+    android:fitsSystemWindows="true">
 
     <!-- Top Section -->
     <RelativeLayout
@@ -16,13 +16,12 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- User Profile ImageView -->
         <ImageView
-            android:id="@+id/user_profile"
+            android:id="@+id/back_btn"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:padding="10dp"
-            android:src="@drawable/icon_menu"/>
+            android:src="@drawable/icon_back" />
 
         <!-- Dashboard TextView -->
         <TextView
@@ -33,7 +32,47 @@
             android:textSize="18sp"
             android:textColor="#703273"
             android:gravity="center"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/approved_loans_section"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_section"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/lead_background">
+
+        <!-- Icon -->
+        <ImageView
+            android:id="@+id/icon_approved_loans"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_rejected_loans"
+            android:layout_gravity="center_vertical" />
+
+        <!-- Text -->
+        <TextView
+            android:id="@+id/text_approved_loans"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rejected_loans"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp" />
+
+        <!-- Arrow Icon -->
+        <ImageView
+            android:id="@+id/icon_arrow_down"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_arrow_down"
+            android:layout_gravity="center_vertical|end" />
+    </LinearLayout>
+
 </RelativeLayout>

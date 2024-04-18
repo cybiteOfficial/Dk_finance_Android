@@ -63,6 +63,7 @@
         android:layout_below="@id/services_title"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:padding="8dp"
         android:columnCount="2"
         android:rowCount="2"
         android:alignmentMode="alignMargins"
@@ -77,28 +78,29 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:orientation="vertical"
-            android:padding="8dp"
+            android:padding="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:clickable="true"
-            android:background="@drawable/squarish_button_background">
+            android:background="@drawable/squarish_button_background"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/icon_open_account"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginStart="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Open Account"
+                android:text="@string/open_account"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -110,8 +112,10 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:orientation="vertical"
-            android:padding="8dp"
+            android:padding="10dp"
             android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:background="@drawable/squarish_button_background">
 
             <ImageView
@@ -119,7 +123,7 @@
                 android:layout_height="48dp"
                 android:src="@drawable/icon_approved_loans"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginStart="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,7 +133,7 @@
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -143,7 +147,9 @@
             android:orientation="vertical"
             android:padding="8dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:background="@drawable/squarish_button_background">
 
             <ImageView
@@ -161,7 +167,7 @@
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -175,6 +181,8 @@
             android:orientation="vertical"
             android:padding="8dp"
             android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:background="@drawable/squarish_button_background">
 
             <ImageView
@@ -210,5 +218,24 @@
         android:textStyle="bold"
         android:layout_marginTop="36dp"/>
 
+    <!-- ScrollView for leads -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/leads_heading"
+        android:layout_marginTop="20dp">
 
+        <!-- Vertical LinearLayout to hold leads -->
+        <LinearLayout
+            android:id="@+id/leads_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Lead Item -->
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
