@@ -1,123 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Top section with two circles -->
-    <RelativeLayout
+    <!-- Top Section -->
+    <LinearLayout
         android:id="@+id/top_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <!-- Circle for user profile and dropdown -->
-        <LinearLayout
-            android:id="@+id/user_profile_layout"
-            android:layout_width="wrap_content"
+        <!-- User Profile ImageView -->
+        <ImageView
+            android:id="@+id/user_profile"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_menu" />
+
+        <!-- Dashboard TextView -->
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:text="Dashboard"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#703273"
+            android:textAlignment="center"/>
 
-            <ImageView
-                android:id="@+id/user_profile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/user"
-                android:background="@drawable/circle_background"
-                android:padding="10dp"
-                android:contentDescription="User Profile" />
+        <!-- Support ImageView -->
+        <ImageView
+            android:id="@+id/support"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon_support"
+            android:padding="10dp"/>
+    </LinearLayout>
 
-        </LinearLayout>
-    </RelativeLayout>
+    <!-- Services Title -->
+    <TextView
+        android:id="@+id/services_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_section"
+        android:layout_marginStart="26dp"
+        android:text="Services"
+        android:textSize="18sp"
+        android:textColor="#703273"
+        android:textStyle="bold"/>
 
-    <!-- Center section with squarish buttons -->
-    <androidx.cardview.widget.CardView
+    <!-- Center Section -->
+    <GridLayout
         android:id="@+id/center_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/top_section"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/services_title"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp">
+        android:columnCount="2"
+        android:rowCount="2"
+        android:alignmentMode="alignMargins"
+        android:columnOrderPreserved="false"
+        android:rowOrderPreserved="false">
 
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="2"
-            android:padding="16dp"
-            android:alignmentMode="alignMargins"
-            android:columnOrderPreserved="false"
-            android:rowOrderPreserved="false"
-            android:background="@android:color/white">
+        <!-- Button 1: Open Account -->
+        <LinearLayout
+            android:id="@+id/open_account_btn"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:background="@drawable/squarish_button_background">
 
-            <Button
-                android:id="@+id/new_reg_btn"
-                android:layout_width="0dp"
-                android:layout_margin="8dp"
-                android:text="@string/new_registration"
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_open_account"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Account"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/squarish_button_background"
-                app:cornerRadius="12dp"
-                android:layout_gravity="fill"
-                android:layout_column="0"
-                android:layout_row="0" />
+                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:textAlignment="center"/>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/loan_status_btn"
-                android:layout_width="0dp"
-                android:layout_margin="8dp"
-                android:text="@string/loan_status"
+        <!-- Button 2: Approved Loans -->
+        <LinearLayout
+            android:id="@+id/approved_loans_btn"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/squarish_button_background">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_approved_loans"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Approved Loans"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/squarish_button_background"
-                app:cornerRadius="12dp"
-                android:layout_gravity="fill"
-                android:layout_column="1"
-                android:layout_row="0" />
+                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:textAlignment="center"/>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/accepted_loans_btn"
-                android:layout_margin="8dp"
-                android:text="@string/accepted_loans"
+        <!-- Button 3: Rejected Loans -->
+        <LinearLayout
+            android:id="@+id/rejected_loans_btn"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/squarish_button_background">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_rejected_loans"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rejected Loans"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/squarish_button_background"
-                app:cornerRadius="12dp"
-                android:layout_gravity="fill"
-                android:layout_column="0"
-                android:layout_row="1" />
+                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:textAlignment="center"/>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/rejected_loans_btn"
-                android:layout_margin="8dp"
-                android:text="@string/rejected_loans"
+        <!-- Button 4: Failed Payments -->
+        <LinearLayout
+            android:id="@+id/failed_payments_btn"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/squarish_button_background">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_failed_payments"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Failed Payments"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/squarish_button_background"
-                app:cornerRadius="12dp"
-                android:layout_gravity="fill"
-                android:layout_column="1"
-                android:layout_row="1" />
+                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </GridLayout>
 
-        </GridLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Bottom section with stats and graph -->
-    <ImageView
-        android:id="@+id/stats_and_graph"
-        android:layout_width="match_parent"
+    <!-- Leads Title -->
+    <TextView
+        android:id="@+id/leads_heading"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/center_section"
-        android:src="@drawable/stats_and_graph"
-        android:padding="15dp"
-        android:contentDescription="@string/stats_and_graph" />
+        android:layout_marginStart="26dp"
+        android:text="Leads"
+        android:textSize="18sp"
+        android:textColor="#703273"
+        android:textStyle="bold"
+        android:layout_marginTop="36dp"/>
+
 
 </RelativeLayout>

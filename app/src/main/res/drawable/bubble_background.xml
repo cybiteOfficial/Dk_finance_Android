@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#703273"/> <!-- Background color of the bubble -->
+    <corners android:radius="20dp"/> <!-- Adjust the radius to control the roundness -->
+</shape>
