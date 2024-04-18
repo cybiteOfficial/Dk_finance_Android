@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Box at the top of the screen -->
+
+    <LinearLayout
+        android:id="@+id/topBox"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="#1A7A306c"
+        android:orientation="horizontal"
+        android:padding="10dp"
+
+        >
+
+        <!-- Home button on the left -->
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+
+            android:background="@drawable/baseline_add_home_24" />
+
+        <!-- Text in the center -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:text="New Application"
+            android:layout_marginLeft="90dp"  />
+    </LinearLayout>
+
+    <!-- Content area inside CardView -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:cardElevation="0dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/primary"
+            android:text="Application Id : 345789"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|bottom"
+        android:padding="10dp"
+        android:layout_marginBottom="5dp">
+
+        <!-- Exit button -->
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Exit"
+            android:textSize="20sp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/primary"
+            android:layout_gravity="start" />
+
+        <!-- Continue button -->
+        <Button
+            android:id="@+id/continue_payment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Continue"
+            android:textSize="20sp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            android:layout_gravity="end" />
+    </LinearLayout>
+</LinearLayout>

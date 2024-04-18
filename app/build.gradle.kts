@@ -39,4 +39,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.2")
+
+    implementation("phonepe.intentsdk.android.release:IntentSDK:2.4.3")
 }

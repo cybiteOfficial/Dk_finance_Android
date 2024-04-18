@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,16 +28,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loginUsername = findViewById(R.id.login_username);
+        loginUsername = findViewById(R.id.login_userID);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
         TextView forgotPasswordText = findViewById(R.id.forgot_password_text); // Initialize the forgot password button
+        SpannableString content = new SpannableString("Forgot Password?");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-
-        if (isLoggedIn()) {
-            startDashboardActivity();
-        }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,8 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // For now, let's just start the DashboardActivity
                 startDashboardActivity();
-                // Mark user as logged in
-                setLoggedIn(true);
+
             }
         });
 
@@ -61,15 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isLoggedIn() {
-        // Retrieve the login status from SharedPreferences
-        return sharedPreferences.getBoolean("isLoggedIn", false);
-    }
-
-    private void setLoggedIn(boolean loggedIn) {
-        // Save the login status to SharedPreferences
-        sharedPreferences.edit().putBoolean("isLoggedIn", loggedIn).apply();
-    }
 
     private void startDashboardActivity() {
         // Start the DashboardActivity
@@ -100,4 +90,3 @@ public class LoginActivity extends AppCompatActivity {
 //            return true;
 //        }
 //    }
-

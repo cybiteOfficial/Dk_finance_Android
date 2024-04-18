@@ -45,4 +45,29 @@
     <string name="open_account">Open Account</string>
     <string name="lead_number">lead number</string>
     <string name="status">status</string>
+
+    <!-- Product Option -->
+    <string-array name="product_types_array">
+        <item>Select</item>
+        <item>Product 1</item>
+        <item>Product 2</item>
+        <item>Product 3</item>
+        <!-- Add more items as needed -->
+    </string-array>
+    <string-array name="case_tag">
+        <item>Select</item>
+        <item>Product 1</item>
+        <item>Product 2</item>
+        <item>Product 3</item>
+        <!-- Add more items as needed -->
+    </string-array>
+    <string-array name="customer_type">
+        <item>Select</item>
+        <item>Product 1</item>
+        <item>Product 2</item>
+        <item>Product 3</item>
+
+    </string-array>
+    <!-- Add more items as needed -->
+
 </resources>
