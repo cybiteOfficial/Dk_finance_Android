@@ -15,6 +15,15 @@
         android:theme="@style/Theme.BankApp"
         tools:targetApi="31">
         <activity
+            android:name=".LeadsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KycActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".KycActivity1"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity

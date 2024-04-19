@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <!-- Leads Title -->
+    <TextView
+        android:id="@+id/leads_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leads"
+        android:textSize="24sp"
+        android:textColor="#703273"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- ScrollView for leads -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Vertical LinearLayout to hold leads -->
+        <LinearLayout
+            android:id="@+id/leads_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+    </ScrollView>
+</LinearLayout>

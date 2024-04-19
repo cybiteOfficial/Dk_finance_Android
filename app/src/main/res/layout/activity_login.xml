@@ -11,8 +11,8 @@
     android:background="@color/white"
     tools:context=".LoginActivity">
     <ImageView
-        android:layout_width="312sp"
-        android:layout_height="100sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/vector1"
         />
     <LinearLayout
@@ -120,10 +120,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom">
         <ImageView
-            android:layout_width="312sp"
-            android:layout_height="100sp"
-
-            android:background="@drawable/vector2"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/vector2" />
     </LinearLayout>
 </LinearLayout>

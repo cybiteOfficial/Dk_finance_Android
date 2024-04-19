@@ -19,7 +19,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Redirect to OTPActivity
-                startActivity(new Intent(NewRegistrationActivity.this, NewRegistrationActivity2.class));
+                startActivity(new Intent(NewRegistrationActivity.this, KycActivity1.class));
             }
         });
     }

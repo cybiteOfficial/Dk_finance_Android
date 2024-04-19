@@ -8,41 +8,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Box at the top of the screen -->
-
     <LinearLayout
         android:id="@+id/topBox"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:background="#1A7A306c"
         android:orientation="horizontal"
-        android:padding="10dp"
-
-        >
+        android:padding="10dp">
 
         <!-- Home button on the left -->
-        <ImageButton
+        <ImageView
             android:id="@+id/homeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-
-            android:background="@drawable/baseline_add_home_24" />
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/baseline_add_home_24" />
 
         <!-- Text in the center -->
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:layout_width="317sp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:textSize="18dp"
-            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Lead Generation"
             android:textColor="@color/primary"
-            android:text="New Application"
-            android:layout_marginLeft="90dp"  />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -165,7 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="agent code"
+                    android:text="Agent code"
                     android:layout_marginTop="10dp"
                     android:textSize="16sp"
                     android:gravity="left" />
