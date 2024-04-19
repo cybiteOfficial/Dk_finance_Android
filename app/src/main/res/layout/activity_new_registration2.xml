@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <!-- Box at the top of the screen -->
-
     <LinearLayout
         android:id="@+id/topBox"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:background="#1A7A306c"
         android:orientation="horizontal"
-        android:padding="10dp"
-
-        >
+        android:padding="10dp">
 
         <!-- Home button on the left -->
         <ImageButton
@@ -25,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-
             android:background="@drawable/baseline_add_home_24" />
 
         <!-- Text in the center -->
@@ -35,25 +30,31 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
+            android:layout_marginLeft="90dp"
             android:text="New Application"
-            android:layout_marginLeft="90dp"  />
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Content area inside CardView -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+    <!-- GIF -->
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardElevation="0dp"/>
+        android:src="@drawable/gif_application_id"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Content area inside CardView -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center">
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,6 +62,7 @@
             android:textSize="24sp"
             android:textColor="@color/primary"
             android:text="Application Id : 345789"
+            android:paddingBottom="8dp"
             android:gravity="center" />
     </LinearLayout>
 
@@ -69,17 +71,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal|bottom"
+        android:gravity="center_horizontal"
         android:padding="10dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="50dp">
 
         <!-- Exit button -->
         <Button
-            android:id="@+id/exitButton"
+            android:id="@+id/saveButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Exit"
+            android:text="Save"
             android:textSize="20sp"
             android:layout_marginEnd="8dp"
             android:backgroundTint="@color/white"
@@ -88,7 +90,7 @@
 
         <!-- Continue button -->
         <Button
-            android:id="@+id/continue_payment"
+            android:id="@+id/continueButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

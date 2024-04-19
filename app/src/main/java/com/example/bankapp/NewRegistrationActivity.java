@@ -14,7 +14,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_registration);
 
-        Button generateOTPButton = findViewById(R.id.generate_otp_button);
+        Button generateOTPButton = findViewById(R.id.submit_button);
         generateOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

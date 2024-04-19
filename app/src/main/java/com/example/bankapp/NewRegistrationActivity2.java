@@ -14,13 +14,13 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_registration2);
 
-        Button continueButton = findViewById(R.id.continue_payment);
+        Button continueButton = findViewById(R.id.continueButton);
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(NewRegistrationActivity2.this, payment.class));
+                startActivity(new Intent(NewRegistrationActivity2.this, DashboardActivity.class));
             }
         });
     }

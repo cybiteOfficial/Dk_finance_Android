@@ -70,7 +70,15 @@ public class payment extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            // Handle the result of the PhonePe transaction
+            if (resultCode == RESULT_OK) {
+                // Payment successful, redirect to main page
+                Intent intent = new Intent(payment.this, NewRegistrationActivity2.class);
+                startActivity(intent);
+                finish(); // Finish the current activity to prevent going back to it with back button
+            } else {
+                // Payment failed or cancelled, show a message to the user
+                Toast.makeText(this, "Payment was not successful", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

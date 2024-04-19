@@ -26,7 +26,7 @@ public class OtpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (verifyOTP()) {
                     // If OTP is correct, start the splash screen activity
-                    Intent intent = new Intent(OtpActivity.this, SplashActivity.class);
+                    Intent intent = new Intent(OtpActivity.this, DashboardActivity.class);
                     startActivity(intent);
                     finish(); // Close the OTP activity
                 } else {

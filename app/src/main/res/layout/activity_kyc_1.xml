@@ -185,46 +185,38 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- White Space -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        android:layout_weight="1">
-    </LinearLayout>
-
-    <!-- Bottom Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
         android:orientation="horizontal"
-        android:gravity="bottom"
-        android:padding="10dp">
+        android:gravity="center_horizontal">
 
-        <!-- Exit Text -->
-        <TextView
+        <Button
             android:id="@+id/btn_save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SAVE"
-            android:layout_marginStart="16dp"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/white"
+            android:text="Save"
             android:textColor="@color/primary"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            android:layout_gravity="start|bottom"/>
 
-        <!-- Next Button -->
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="60dp"
-            android:text="SUBMIT"
-            android:textSize="16sp"
+            android:layout_marginTop="30dp"
             android:backgroundTint="@color/primary"
-            android:textColor="@android:color/white"
-            android:layout_marginEnd="16dp"
-            app:cornerRadius="8dp"/>
-
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            android:layout_gravity="bottom|right"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -2,7 +2,12 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.BankApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!-- Change action bar color -->
+        <item name="android:colorPrimaryDark">@color/black</item>
+
+        <!-- Change the primary color of buttons -->
+        <item name="android:colorButtonNormal">@color/primary</item>
     </style>
 
     <style name="Theme.BankApp" parent="Base.Theme.BankApp" />

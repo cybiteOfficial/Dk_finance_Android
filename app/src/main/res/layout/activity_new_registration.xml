@@ -278,17 +278,39 @@
                     android:inputType="time"
                     />
 
-                <Button
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:backgroundTint="@color/primary"
-                    android:text="Submit"
-                    android:id="@+id/generate_otp_button"
-                    android:textSize="18sp"
-                    android:layout_marginTop="30dp"
-                    app:cornerRadius="8dp"
-                    android:textColor="@color/white"/>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center_horizontal">
 
+                    <Button
+                        android:id="@+id/save_button"
+                        android:layout_width="160dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/white"
+                        android:text="Save"
+                        android:textColor="@color/primary"
+                        android:textSize="18sp"
+                        app:cornerRadius="8dp"
+                        android:layout_gravity="bottom|left"/>
+
+                    <Button
+                        android:id="@+id/submit_button"
+                        android:layout_width="160dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="30dp"
+                        android:backgroundTint="@color/primary"
+                        android:text="Submit"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:cornerRadius="8dp"
+                        android:layout_gravity="bottom|right"/>
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
