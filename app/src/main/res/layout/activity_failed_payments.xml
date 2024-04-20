@@ -46,46 +46,6 @@
         android:spinnerMode="dropdown"
         android:popupBackground="@color/white"/>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/approved_loans_section"-->
-<!--        android:layout_width="350dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/top_section"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="16dp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:background="@drawable/lead_background">-->
-
-<!--        &lt;!&ndash; Icon &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:id="@+id/icon_approved_loans"-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:src="@drawable/icon_failed_payments"-->
-<!--            android:layout_gravity="center_vertical" />-->
-
-<!--        &lt;!&ndash; Text &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/text_approved_loans"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="Failed Payments"-->
-<!--            android:textColor="#000000"-->
-<!--            android:textSize="18sp"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:layout_marginStart="8dp" />-->
-
-<!--        &lt;!&ndash; Arrow Icon &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:id="@+id/icon_arrow_down"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:src="@drawable/icon_arrow_down"-->
-<!--            android:layout_gravity="center_vertical|end" />-->
-<!--    </LinearLayout>-->
-
-
     <!-- Linear Layout for Search Bar and Sort Icon -->
     <LinearLayout
         android:id="@+id/search_sort_layout"

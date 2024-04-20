@@ -59,7 +59,6 @@ public class payment extends AppCompatActivity {
                     B2BPGRequest b2BPGRequest = createB2BPGRequest(base64Body, "/pg/v1/pay");
                     startActivityForResult(PhonePe.getImplicitIntent(payment.this, b2BPGRequest, ""), 1);
                 } catch (PhonePeInitException e) {
-                    // Handle PhonePe initialization exception
                     e.printStackTrace();
                 }
             }
@@ -71,12 +70,12 @@ public class payment extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                // Payment successful, redirect to main page
+                // Payment successful, redirecting to main page
                 Intent intent = new Intent(payment.this, NewRegistrationActivity2.class);
                 startActivity(intent);
-                finish(); // Finish the current activity to prevent going back to it with back button
+                finish();
             } else {
-                // Payment failed or cancelled, show a message to the user
+                // Payment failed or cancelled, showing a message to the user
                 Toast.makeText(this, "Payment was not successful", Toast.LENGTH_SHORT).show();
             }
         }
@@ -99,7 +98,7 @@ public class payment extends AppCompatActivity {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return null; // Handle the error as needed
+            return null;
         }
     }
 

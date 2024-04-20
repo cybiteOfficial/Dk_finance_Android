@@ -19,7 +19,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     EditText loginUsername, loginPassword;
-    Button loginButton, forgotPasswordButton; // Declare the forgot password button
+    Button loginButton, forgotPasswordButton;
     SharedPreferences sharedPreferences;
 
     @SuppressLint("MissingInflatedId")
@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         loginUsername = findViewById(R.id.login_userID);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
-        TextView forgotPasswordText = findViewById(R.id.forgot_password_text); // Initialize the forgot password button
+        TextView forgotPasswordText = findViewById(R.id.forgot_password_text);
         SpannableString content = new SpannableString("Forgot Password?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -39,11 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Validate username and password here if needed
-                // For simplicity, let's assume they are valid
-                // If you want to validate, uncomment the code in the validateUsername and validatePassword methods
-
-                // For now, let's just start the DashboardActivity
                 startDashboardActivity();
 
             }
@@ -53,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Implement the logic for handling forgot password action here
-                // For example, display a dialog or navigate to a password recovery activity
                 Toast.makeText(LoginActivity.this, "Forgot Password clicked", Toast.LENGTH_SHORT).show();
             }
         });
@@ -65,28 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         // Start the DashboardActivity
         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         startActivity(intent);
-        finish(); // Finish LoginActivity so the user can't navigate back to it
+        finish();
     }
 }
-
-//    public Boolean validateUsername() {
-//        String val = loginUsername.getText().toString();
-//        if (val.isEmpty()) {
-//            loginUsername.setError("Username cannot be empty");
-//            return false;
-//        } else {
-//            loginUsername.setError(null);
-//            return true;
-//        }
-//    }
-//
-//    public Boolean validatePassword(){
-//        String val = loginPassword.getText().toString();
-//        if (val.isEmpty()) {
-//            loginPassword.setError("Password cannot be empty");
-//            return false;
-//        } else {
-//            loginPassword.setError(null);
-//            return true;
-//        }
-//    }

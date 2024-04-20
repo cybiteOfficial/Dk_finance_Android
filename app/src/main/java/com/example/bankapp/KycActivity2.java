@@ -25,14 +25,13 @@ public class KycActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
 
-        // Initialize phoneNumberEditText after setContentView
         phoneNumberEditText = findViewById(R.id.phoneNumber);
         Button submitButton = findViewById(R.id.submit_button);
 
         TextView btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        // Set OnClickListener for phoneNumberEditText
+        // OnClickListener for phoneNumberEditText
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,28 +39,25 @@ public class KycActivity2 extends AppCompatActivity {
             }
         });
 
-        // Set OnClickListener for submitButton
+        // OnClickListener for submitButton
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirect to payment activity
+                // Redirecting to payment activity
                 Intent intent = new Intent(KycActivity2.this, payment.class);
                 startActivity(intent);
             }
         });
     }
 
-    // Define the onUploadDocumentClick method
     public void onUploadDocumentClick(View view) {
-        // Open a file picker or document upload dialog here
-        // For example:
+        // Opening a file picker or document upload dialog here
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*"); // Allow any file type to be selected
+        intent.setType("*/*"); // Allowing any file type to be selected
         try {
             startActivityForResult(intent, 1);
         } catch (ActivityNotFoundException e) {
-            // Handle the case where no app can handle the intent
-            // Show a message to the user indicating that they need to install a file manager app
+            // Showing a message to the user indicating that they need to install a file manager app
             Toast.makeText(this, "Please install a file manager app to proceed.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -70,12 +66,9 @@ public class KycActivity2 extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            // The user has selected a document
-            // Now, you can handle the selected document
-            // For example, you can retrieve the URI of the selected document
             Uri selectedFileUri = data.getData();
 
-            // Get the filename from the URI and set it as the text of the EditText
+            // Getting the filename from the URI and setting it as the text of the EditText
             if (selectedFileUri != null) {
                 String filename = getFileName(selectedFileUri);
                 phoneNumberEditText.setText(filename);

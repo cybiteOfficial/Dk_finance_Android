@@ -37,8 +37,7 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private boolean verifyOTP() {
-        // Implement your OTP verification logic here
-        // Return true if OTP is correct, false otherwise
-        return true; // For demonstration, always return true
+
+        return true; // For demonstration, always returning true
     }
 }

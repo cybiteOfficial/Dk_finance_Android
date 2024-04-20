@@ -17,11 +17,10 @@ public class KycActivity1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_1);
 
-        // Add underline to the "Save" button text
+        // Adding underline to the "Save" button text
         TextView btnSave = findViewById(R.id.btn_save);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        // Set listeners for buttons
         setListeners();
     }
 
@@ -30,8 +29,7 @@ public class KycActivity1 extends AppCompatActivity {
         findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Implement Save button action here
-                // Example: Perform some save operation
+
             }
         });
 
@@ -51,7 +49,7 @@ public class KycActivity1 extends AppCompatActivity {
             public void onClick(View v) {
                 // Move to DashboardActivity
                 startActivity(new Intent(KycActivity1.this, DashboardActivity.class));
-                finish(); // Optional: Close this activity if needed
+                finish();
             }
         });
     }

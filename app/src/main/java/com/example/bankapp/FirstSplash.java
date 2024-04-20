@@ -14,7 +14,6 @@ public class FirstSplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_splash);
 
-        // Handler to delay the start of the main activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

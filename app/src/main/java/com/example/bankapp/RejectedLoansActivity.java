@@ -70,7 +70,7 @@ public class RejectedLoansActivity extends AppCompatActivity {
             }
         });
 
-        // Add 6 cards dynamically with dummy data
+        // Adding cards dynamically with dummy data
         for (int i = 0; i < 6; i++) {
             View cardView = getLayoutInflater().inflate(R.layout.card_layout, null);
 

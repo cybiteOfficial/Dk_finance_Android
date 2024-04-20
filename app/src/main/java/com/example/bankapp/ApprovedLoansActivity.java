@@ -33,7 +33,6 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         icons.add(R.drawable.icon_approved_loans);
         icons.add(R.drawable.icon_rejected_loans);
         icons.add(R.drawable.icon_failed_payments);
-        // Add more icons corresponding to loan statuses
 
         CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, loanStatuses, icons);
         loanStatusSpinner.setAdapter(adapter);
@@ -45,23 +44,18 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        // Handle Rejected Loans
-                        // Start RejectedLoansActivity
                         startActivity(new Intent(ApprovedLoansActivity.this, RejectedLoansActivity.class));
-                        finish(); // Finish current activity
+                        finish();
                         break;
                     case 2:
-                        // Handle Failed Payments
-                        // Start FailedPaymentsActivity
                         startActivity(new Intent(ApprovedLoansActivity.this, FailedPaymentsActivity.class));
-                        finish(); // Finish current activity
+                        finish();
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing if nothing is selected
             }
         });
 
@@ -72,24 +66,23 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate back to the DashboardActivity
+                // Navigating back to the DashboardActivity
                 Intent intent = new Intent(ApprovedLoansActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
 
-        // Add 6 cards dynamically with dummy data
+        // Add cards dynamically with dummy data
         for (int i = 0; i < 6; i++) {
             View cardView = getLayoutInflater().inflate(R.layout.card_layout, null);
 
-            // Add spacing between cards
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
             if (i != 0) {
-                params.topMargin = dpToPx(12); // Add 12dp spacing between cards
+                params.topMargin = dpToPx(12);
             }
             cardView.setLayoutParams(params);
 
@@ -117,7 +110,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
 
 
     }
-    // Function to convert dp to pixels
+
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);

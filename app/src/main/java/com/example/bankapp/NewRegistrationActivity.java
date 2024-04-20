@@ -18,7 +18,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
         generateOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirect to OTPActivity
+                // Redirecting to OTPActivity
                 startActivity(new Intent(NewRegistrationActivity.this, KycActivity1.class));
             }
         });

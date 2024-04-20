@@ -12,7 +12,7 @@ import java.util.List;
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
     private Context mContext;
     private List<String> mValues;
-    private List<Integer> mIcons;  // List of icon resource IDs
+    private List<Integer> mIcons;
 
     public CustomSpinnerAdapter(Context context, List<String> values, List<Integer> icons) {
         super(context, 0, values);
