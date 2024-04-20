@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Style for the whole application's date picker dialogs -->
+    <style name="AppDatePickerDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <!-- Customize the background color -->
+        <item name="android:background">#1A7A306c</item>
+        <!-- Customize the text color -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!-- Customize other properties as needed -->
+    </style>
+
+    <!-- Custom style for TabLayout text appearance -->
+    <style name="TabLayoutTextStyle" parent="Widget.Design.TabLayout">
+        <item name="tabTextColor">@android:color/black</item>
+    </style>
+
+</resources>

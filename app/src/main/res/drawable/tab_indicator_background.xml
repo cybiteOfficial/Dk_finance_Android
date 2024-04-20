@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background for the tab indicator -->
+    <item android:gravity="bottom">
+        <shape android:shape="rectangle">
+            <solid android:color="#FBFBFB" />
+            <size android:height="1dp" /> <!-- Height of the indicator -->
+        </shape>
+    </item>
+</layer-list>

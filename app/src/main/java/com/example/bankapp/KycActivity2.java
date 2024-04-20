@@ -44,7 +44,7 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Redirecting to payment activity
-                Intent intent = new Intent(KycActivity2.this, payment.class);
+                Intent intent = new Intent(KycActivity2.this, AddressActivity.class);
                 startActivity(intent);
             }
         });

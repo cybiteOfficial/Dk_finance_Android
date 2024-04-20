@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- Box at the top of the screen -->
+    <LinearLayout
+        android:id="@+id/topBox"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="#1A7A306c"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <!-- Home button on the left -->
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/baseline_add_home_24" />
+
+        <!-- Text in the center -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="90dp"
+            android:text="Address"
+            android:layout_marginStart="124dp"
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Tab Layout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tab_layout_background"
+        app:tabIndicatorColor="@color/tab_indicator_selector"
+        app:tabIndicatorHeight="3dp"
+        app:tabBackground="@drawable/tab_indicator_background"
+        app:tabTextColor="@android:color/black"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabMode="fixed"
+        app:tabGravity="fill" />
+
+
+    <!-- View Pager -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="50dp">
+
+        <!-- Save button -->
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/white"
+            android:text="Save"
+            android:textColor="@color/primary"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            android:layout_gravity="bottom|left"/>
+
+        <!-- Submit button -->
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:backgroundTint="@color/primary"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="8dp"
+            android:layout_gravity="bottom|right"/>
+    </LinearLayout>
+</LinearLayout>

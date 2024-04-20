@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected tab indicator color -->
+    <item android:color="#7A306D" android:state_selected="true" />
+    <!-- Default tab indicator color -->
+    <item android:color="#00000000" />
+</selector>

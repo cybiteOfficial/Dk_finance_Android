@@ -20,7 +20,7 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(NewRegistrationActivity2.this, DashboardActivity.class));
+                startActivity(new Intent(NewRegistrationActivity2.this, CreatCustomer.class));
             }
         });
     }
