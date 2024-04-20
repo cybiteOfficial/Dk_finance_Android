@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="defaultTextColor">#000000</color>
     <color name="primary">#7A306c</color>
+    <color name="green_completed">#4CA6A8</color>
 </resources>
