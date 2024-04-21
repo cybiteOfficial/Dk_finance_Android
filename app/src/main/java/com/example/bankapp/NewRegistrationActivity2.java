@@ -24,7 +24,6 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 startActivity(new Intent(NewRegistrationActivity2.this, AddCustomerActivity.class));
             }
         });

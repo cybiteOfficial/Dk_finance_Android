@@ -34,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -64,11 +65,29 @@ public class NewRegistrationActivity extends AppCompatActivity {
         loanAmount = findViewById(R.id.loanAmount);
         date = findViewById(R.id.date);
         time = findViewById(R.id.time);
-        caseTag = findViewById(R.id.caseTag);
         productType = findViewById(R.id.productType);
         customerType = findViewById(R.id.customerType);
+// Case Tag Spinner
+        Spinner caseTagSpinner = findViewById(R.id.caseTag);
+        String[] caseTagItems = getResources().getStringArray(R.array.case_tag);
+        ArrayAdapter<String> caseTagAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, caseTagItems);
+        caseTagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        caseTagSpinner.setAdapter(caseTagAdapter);
 
-        // Auto-fetch current date and time
+// Product Spinner
+        Spinner productSpinner = findViewById(R.id.productType);
+        String[] productItems = getResources().getStringArray(R.array.product_types_array);
+        ArrayAdapter<String> productAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, productItems);
+        productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        productSpinner.setAdapter(productAdapter);
+
+// Customer Type Spinner
+        Spinner customerTypeSpinner = findViewById(R.id.customerType);
+        String[] customerTypeItems = getResources().getStringArray(R.array.customer_type);
+        ArrayAdapter<String> customerTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customerTypeItems);
+        customerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        customerTypeSpinner.setAdapter(customerTypeAdapter);
+
         autofetchDate();
         autofetchTime();
 

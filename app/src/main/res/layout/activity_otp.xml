@@ -12,22 +12,22 @@
     android:orientation="vertical">
     <!-- Box at the top of the screen -->
 
-    <LinearLayout
+    <!-- Box at the top of the screen -->
+    <RelativeLayout
         android:id="@+id/topBox"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:background="#1A7A306c"
-        android:orientation="horizontal"
         android:padding="20dp"
-        android:paddingTop="20dp"
-        >
+        android:paddingTop="20dp">
 
         <!-- Home button on the left -->
         <ImageView
             android:id="@+id/homeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/baseline_add_home_24" />
@@ -35,15 +35,14 @@
         <!-- Text in the center -->
         <TextView
             android:id="@+id/textView"
-            android:layout_width="317sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:text="New Registration"
             android:textColor="@color/primary"
             android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textStyle="bold"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,7 +81,7 @@
                 android:gravity="left"
                 android:textStyle="bold"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/phoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -94,6 +93,21 @@
                 android:inputType="phone"
                 android:padding="8dp"
                 android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/phoneNumberEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_border"
+                android:digits="0123456789"
+                android:drawablePadding="8dp"
+                android:elevation="4dp"
+                android:inputType="phone"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/change_number"
                 android:layout_width="match_parent"
@@ -187,15 +201,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/primary"
-                android:text="Didn’t recieved OTP? Resend"
+                android:text="Didn’t receive OTP? Resend"
                 android:layout_marginTop="15dp"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:paddingTop="10dp"/>
-
-
-
-
 
         </LinearLayout>
 

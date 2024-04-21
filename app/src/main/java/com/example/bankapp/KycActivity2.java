@@ -1,29 +1,25 @@
 package com.example.bankapp;
-
-import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
 
 public class KycActivity2 extends AppCompatActivity {
     EditText adharNumberEditText;
     EditText panNumberEditText;
+    Button submitButton;
+
+    // Request codes for document types
+    private static final int REQUEST_ADHAR_DOCUMENT = 1;
+    private static final int REQUEST_PAN_DOCUMENT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,52 +28,41 @@ public class KycActivity2 extends AppCompatActivity {
 
         adharNumberEditText = findViewById(R.id.adharDocs);
         panNumberEditText = findViewById(R.id.panDocs);
+        submitButton = findViewById(R.id.submit_button);
 
-        Button submitButton = findViewById(R.id.submit_button);
-
-        TextView btnSave = findViewById(R.id.save_button);
-        btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
+        // Set click listeners for EditText fields
         adharNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onUploadDocumentClick(adharNumberEditText);
+                onUploadDocumentClick(REQUEST_ADHAR_DOCUMENT);
             }
         });
 
         panNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onUploadDocumentClick(panNumberEditText);
+                onUploadDocumentClick(REQUEST_PAN_DOCUMENT);
             }
         });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (validateInputs()) {
-                    Intent intent = new Intent(KycActivity2.this, OtpActivity.class);
-                    startActivity(intent);
-                }
-//            }
+                Intent intent = new Intent(KycActivity2.this, OtpActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
-    public void onUploadDocumentClick(View view) {
+
+    public void onUploadDocumentClick(int requestCode) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("application/pdf"); // Allow only PDF files
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File("/sdcard/tmp")));
-
-        // Create a chooser with both intents
-        Intent chooser = Intent.createChooser(intent, "Select Document");
-        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { cameraIntent });
-
         try {
-            startActivityForResult(chooser, 1);
+            startActivityForResult(intent, requestCode);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, "Please install a file manager app to proceed.", Toast.LENGTH_SHORT).show();
         }
@@ -86,48 +71,47 @@ public class KycActivity2 extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedFileUri = data.getData();
-            EditText editText = getCurrentFocus() instanceof EditText ? (EditText) getCurrentFocus() : null;
-            if (editText != null && selectedFileUri != null) {
-                String filename = getFileName(selectedFileUri);
-                editText.setText(filename);
+            EditText editTextToUpdate = null;
+            switch (requestCode) {
+                case REQUEST_ADHAR_DOCUMENT:
+                    editTextToUpdate = adharNumberEditText;
+                    break;
+                case REQUEST_PAN_DOCUMENT:
+                    editTextToUpdate = panNumberEditText;
+                    break;
             }
-        }
-    }
-
-    @SuppressLint("Range")
-    private String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
-            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            if (editTextToUpdate != null) {
+                String filePath = getFileName(selectedFileUri);
+                if (filePath != null) {
+                    editTextToUpdate.setText(filePath);
+                } else {
+                    editTextToUpdate.setText(selectedFileUri.toString());
                 }
             }
         }
-        if (result == null) {
-            result = uri.getLastPathSegment();
-        }
-        return result;
     }
 
-//    private boolean validateInputs() {
-//        boolean isValid = true;
-//
-//        String adharNumber = adharNumberEditText.getText().toString().trim();
-//        String panNumber = panNumberEditText.getText().toString().trim();
-//
-//        if (TextUtils.isEmpty(adharNumber)) {
-//            adharNumberEditText.setError("Aadhar number is required");
-//            isValid = false;
-//        }
-//
-//        if (TextUtils.isEmpty(panNumber)) {
-//            panNumberEditText.setError("PAN number is required");
-//            isValid = false;
-//        }
-//
-//        return isValid;
-//    }
+    private String getFileName(Uri uri) {
+        String fileName = null;
+        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) {
+                        fileName = cursor.getString(displayNameIndex);
+                    }
+                }
+            }
+        }
+        if (fileName == null) {
+            fileName = uri.getLastPathSegment();
+        }
+        return fileName;
+    }
+
+
+
+
 }
