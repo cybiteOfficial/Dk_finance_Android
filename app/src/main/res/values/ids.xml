@@ -2,4 +2,5 @@
 <resources>
     <item name="spinner_item_icon" type="id" />
     <item name="spinner_item_text" type="id" />
+    <item name="agentCode" type="id" />
 </resources>

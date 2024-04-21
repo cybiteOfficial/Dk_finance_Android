@@ -16,17 +16,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class OtpActivity extends AppCompatActivity {
 
-    private EditText otpEditText;
-    private EditText editTextDigit4;
+    private EditText otpEditText; // Add this line
+
     private EditText editTextDigit1;
     private EditText editTextDigit2;
     private EditText editTextDigit3;
+    private EditText editTextDigit4;
     private Button submit_otp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
+
+        // Initialize otpEditText
+        otpEditText = findViewById(R.id.editTextDigit1); // You can choose any of the editTextDigit fields to initialize it
+
         editTextDigit1 = findViewById(R.id.editTextDigit1);
         editTextDigit2 = findViewById(R.id.editTextDigit2);
         editTextDigit3 = findViewById(R.id.editTextDigit3);
@@ -34,6 +39,7 @@ public class OtpActivity extends AppCompatActivity {
 
         // Setup EditText listeners
         setupEditTextListeners();
+
         // Find the submit_otp button by its ID
         submit_otp = findViewById(R.id.submit_otp);
 
@@ -61,9 +67,13 @@ public class OtpActivity extends AppCompatActivity {
             }
         });
     }
+
     private boolean verifyOTP() {
         // Get the OTP entered by the user from the EditText
-        String enteredOTP = otpEditText.getText().toString().trim();
+        String enteredOTP = editTextDigit1.getText().toString().trim() +
+                editTextDigit2.getText().toString().trim() +
+                editTextDigit3.getText().toString().trim() +
+                editTextDigit4.getText().toString().trim();
 
         // Implement your OTP verification logic here
         // For demonstration, let's assume the correct OTP is "1234"
@@ -72,6 +82,7 @@ public class OtpActivity extends AppCompatActivity {
         // Compare the entered OTP with the correct OTP
         return enteredOTP.equals(correctOTP);
     }
+
     private void setupEditTextListeners() {
         editTextDigit1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -127,5 +138,4 @@ public class OtpActivity extends AppCompatActivity {
             }
         });
     }
-
 }

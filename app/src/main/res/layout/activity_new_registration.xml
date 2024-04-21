@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -41,15 +40,14 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_margin="20dp"
-
         app:cardElevation="0dp">
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/topBox"
-            android:layout_marginTop="0dp"
+            android:layout_height="match_parent"
             android:scrollbars="none"
             android:overScrollMode="never">
             <LinearLayout
@@ -278,41 +276,44 @@
                     android:inputType="time"
                     />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="40dp"
-                    android:gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/save_button"
-                        android:layout_width="160dp"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/white"
-                        android:text="Save"
-                        android:textColor="@color/primary"
-                        android:textSize="18sp"
-                        app:cornerRadius="8dp"
-                        android:layout_gravity="bottom|left"/>
-
-                    <Button
-                        android:id="@+id/submit_button"
-                        android:layout_width="160dp"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="30dp"
-                        android:backgroundTint="@color/primary"
-                        android:text="Submit"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        app:cornerRadius="8dp"
-                        android:layout_gravity="bottom|right"/>
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
     </androidx.cardview.widget.CardView>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="40dp">
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/white"
+            android:text="SAVE"
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/primary"
+            android:text="SUBMIT"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
 </LinearLayout>

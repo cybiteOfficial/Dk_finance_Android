@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,47 +19,66 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+
 public class KycActivity2 extends AppCompatActivity {
-    EditText phoneNumberEditText;
+    EditText adharNumberEditText;
+    EditText panNumberEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
 
-        phoneNumberEditText = findViewById(R.id.phoneNumber);
+        adharNumberEditText = findViewById(R.id.adharDocs);
+        panNumberEditText = findViewById(R.id.panDocs);
+
         Button submitButton = findViewById(R.id.submit_button);
 
         TextView btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        // OnClickListener for phoneNumberEditText
-        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
+        adharNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onUploadDocumentClick(v);
+                onUploadDocumentClick(adharNumberEditText);
             }
         });
 
-        // OnClickListener for submitButton
+        panNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUploadDocumentClick(panNumberEditText);
+            }
+        });
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirecting to payment activity
-                Intent intent = new Intent(KycActivity2.this, AddressActivity.class);
-                startActivity(intent);
-            }
+//                if (validateInputs()) {
+                    Intent intent = new Intent(KycActivity2.this, OtpActivity.class);
+                    startActivity(intent);
+                }
+//            }
         });
     }
 
     public void onUploadDocumentClick(View view) {
-        // Opening a file picker or document upload dialog here
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*"); // Allowing any file type to be selected
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/pdf"); // Allow only PDF files
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File("/sdcard/tmp")));
+
+        // Create a chooser with both intents
+        Intent chooser = Intent.createChooser(intent, "Select Document");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { cameraIntent });
+
         try {
-            startActivityForResult(intent, 1);
+            startActivityForResult(chooser, 1);
         } catch (ActivityNotFoundException e) {
-            // Showing a message to the user indicating that they need to install a file manager app
             Toast.makeText(this, "Please install a file manager app to proceed.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -65,40 +86,48 @@ public class KycActivity2 extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedFileUri = data.getData();
-
-            // Getting the filename from the URI and setting it as the text of the EditText
-            if (selectedFileUri != null) {
+            EditText editText = getCurrentFocus() instanceof EditText ? (EditText) getCurrentFocus() : null;
+            if (editText != null && selectedFileUri != null) {
                 String filename = getFileName(selectedFileUri);
-                phoneNumberEditText.setText(filename);
+                editText.setText(filename);
             }
         }
     }
 
-    // Method to extract filename from URI
     @SuppressLint("Range")
     private String getFileName(Uri uri) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
+        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
                 }
             }
         }
         if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
+            result = uri.getLastPathSegment();
         }
         return result;
     }
+
+//    private boolean validateInputs() {
+//        boolean isValid = true;
+//
+//        String adharNumber = adharNumberEditText.getText().toString().trim();
+//        String panNumber = panNumberEditText.getText().toString().trim();
+//
+//        if (TextUtils.isEmpty(adharNumber)) {
+//            adharNumberEditText.setError("Aadhar number is required");
+//            isValid = false;
+//        }
+//
+//        if (TextUtils.isEmpty(panNumber)) {
+//            panNumberEditText.setError("PAN number is required");
+//            isValid = false;
+//        }
+//
+//        return isValid;
+//    }
 }

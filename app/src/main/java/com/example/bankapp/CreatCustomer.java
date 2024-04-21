@@ -3,11 +3,14 @@ package com.example.bankapp;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.app.DatePickerDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,12 +23,18 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import java.io.IOException;
+import java.util.List;
 
 public class CreatCustomer extends AppCompatActivity {
     private EditText dobEditText;
     private static final int PICK_IMAGE_REQUEST = 1;
     private Button submit_btn;
     private ImageView imageView;
+
+    private EditText firstNameEditText;
+    private EditText middleNameEditText;
+    private EditText lastNameEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +44,60 @@ public class CreatCustomer extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
 
         dobEditText.setOnClickListener(v -> showDatePickerDialog());
-        TextView btnSave = findViewById(R.id.btn_save);
+        Button btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         submit_btn = findViewById(R.id.submit_button);
-        submit_btn.setOnClickListener(new View.OnClickListener() {
+
+        // building the full name
+
+        firstNameEditText = findViewById(R.id.customerName);
+        middleNameEditText = findViewById(R.id.customerMiddleName);
+        lastNameEditText = findViewById(R.id.customerLastName);
+
+        Button submitButton = findViewById(R.id.submit_button);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirecting to payment activity
+                String firstName = firstNameEditText.getText().toString().trim();
+                String middleName = middleNameEditText.getText().toString().trim();
+                String lastName = lastNameEditText.getText().toString().trim();
+
+                String fullName = firstName + " " + middleName + " " + lastName;
+
+                // Create an Intent to pass back the customer name
                 Intent intent = new Intent(CreatCustomer.this, AddressActivity.class);
+                intent.putExtra("customerName", fullName);
+
+                // Get the existing co-applicant names from the previous activity
+                List<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
+
+                // Create a new list to avoid modifying the original list
+                List<String> updatedCoApplicantNames = new ArrayList<>();
+                if (coApplicantNames != null) {
+                    updatedCoApplicantNames.addAll(coApplicantNames); // Copy existing names
+                }
+
+                // Add the new customer name to the list
+                updatedCoApplicantNames.add(fullName);
+
+                // Log the co-applicant names before adding the new name
+                Log.d("CreatCustomer", "Co-Applicant Names before adding: " + coApplicantNames);
+
+                // Log the updated co-applicant names after adding the new name
+                Log.d("CreatCustomer", "Co-Applicant Names after adding: " + updatedCoApplicantNames);
+
+                // Pass the updated list back to the AddCustomerActivity
+                intent.putStringArrayListExtra("coApplicantNames", new ArrayList<>(updatedCoApplicantNames));
+
+                // Start the AddressActivity with the updated intent
                 startActivity(intent);
             }
         });
+
+
+
     }
 
 

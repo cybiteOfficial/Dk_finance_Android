@@ -105,7 +105,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/phoneNumber"
+                    android:id="@+id/adharDocs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -120,6 +120,78 @@
                     android:inputType="none"
                     android:focusable="false"
                     android:onClick="onUploadDocumentClick" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="PAN Card Number"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <EditText
+                    android:id="@+id/pan_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:digits="0123456789"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:inputType="phone"
+                    android:padding="8dp"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Upload PAN Card "
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <EditText
+                    android:id="@+id/panDocs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
+                    android:drawableEnd="@drawable/attach_file"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:onClick="onUploadDocumentClick" />
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="25dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/plus_svgrepo_com__1_"
+                        android:layout_gravity="center_vertical" /> <!-- Center the ImageView vertically -->
+
+                    <TextView
+                        android:id="@+id/addDocs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="Add more documents"
+                        android:textColor="@color/primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"/>
+                </LinearLayout>
 
 
 
@@ -134,7 +206,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
@@ -145,9 +217,10 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/white"
-            android:text="Save"
+            android:text="SAVE"
             android:textColor="@color/primary"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:cornerRadius="8dp"
             android:layout_gravity="bottom|left"/>
 
@@ -157,9 +230,10 @@
             android:layout_height="60dp"
             android:layout_marginTop="30dp"
             android:backgroundTint="@color/primary"
-            android:text="Submit"
+            android:text="SUBMIT"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:cornerRadius="8dp"
             android:layout_gravity="bottom|right"/>
     </LinearLayout>
