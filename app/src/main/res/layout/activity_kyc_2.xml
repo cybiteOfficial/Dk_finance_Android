@@ -9,37 +9,40 @@
     android:orientation="vertical">
 
     <!-- Box at the top of the screen -->
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/topBox"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:background="#1A7A306c"
+        android:orientation="horizontal"
         android:padding="20dp"
-        android:paddingTop="20dp">
+        android:paddingTop="20dp"
+        >
 
         <!-- Home button on the left -->
         <ImageView
             android:id="@+id/homeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/baseline_add_home_24" />
+            android:src="@drawable/baseline_add_home_24"
+            android:background="@drawable/home_button_background"/>
 
         <!-- Text in the center -->
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:layout_width="317sp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="KYC Details (2/2)"
             android:textColor="@color/primary"
             android:textSize="18sp"
-            android:textStyle="bold"/>
-    </RelativeLayout>
-
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -113,7 +116,7 @@
                     android:padding="8dp"
                     android:textSize="14dp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/primary"
                     android:drawableEnd="@drawable/attach_file"
                     android:inputType="none"
                     android:focusable="false"
@@ -159,7 +162,7 @@
                     android:padding="8dp"
                     android:textSize="14dp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/primary"
                     android:drawableEnd="@drawable/attach_file"
                     android:inputType="none"
                     android:focusable="false"
@@ -170,13 +173,9 @@
                     android:layout_height="50dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="25dp">
+                    android:layout_marginTop="25dp"
+                    android:visibility="gone">
 
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/plus_svgrepo_com__1_"
-                        android:layout_gravity="center_vertical" /> <!-- Center the ImageView vertically -->
 
                     <TextView
                         android:id="@+id/addDocs"
@@ -204,6 +203,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="0dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 

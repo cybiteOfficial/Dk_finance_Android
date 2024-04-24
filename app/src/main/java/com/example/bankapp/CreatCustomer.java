@@ -30,9 +30,7 @@ import java.util.List;
 public class CreatCustomer extends AppCompatActivity {
     private EditText dobEditText;
     private static final int PICK_IMAGE_REQUEST = 1;
-    private Button submit_btn;
     private ImageView imageView;
-
     private EditText firstNameEditText;
     private EditText middleNameEditText;
     private EditText lastNameEditText;
@@ -45,11 +43,13 @@ public class CreatCustomer extends AppCompatActivity {
         dobEditText = findViewById(R.id.dobEditText);
         imageView = findViewById(R.id.imageView);
 
+        ImageView homeBtn = findViewById(R.id.homeButton);
+        
         dobEditText.setOnClickListener(v -> showDatePickerDialog());
         Button btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        submit_btn = findViewById(R.id.submit_button);
+        Button submit_btn = findViewById(R.id.submit_button);
 
         // building the full name
 
@@ -93,9 +93,17 @@ public class CreatCustomer extends AppCompatActivity {
         agricultureLandOwnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         agricultureLandOwnerSpinner.setAdapter(agricultureLandOwnerAdapter);
 
-        Button submitButton = findViewById(R.id.submit_button);
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
+        
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreatCustomer.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        
+        submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String firstName = firstNameEditText.getText().toString().trim();
@@ -133,9 +141,6 @@ public class CreatCustomer extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }
 
 
@@ -158,8 +163,7 @@ public class CreatCustomer extends AppCompatActivity {
                 month,
                 day
         );
-
-        // Show the DatePickerDialog
+        
         datePickerDialog.show();
     }
     public void openFileChooser(View view) {
@@ -193,19 +197,15 @@ public class CreatCustomer extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the image URI from the intent
             Uri imageUri = data.getData();
 
             try {
-                // Convert the image URI to a Bitmap and set it to the ImageView
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 imageView.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getExtras() != null) {
-            // If the result is from the camera intent
-            // Get the captured image bitmap from the extras and set it to the ImageView
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
         }

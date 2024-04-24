@@ -1,6 +1,9 @@
 package com.example.bankapp;
 
+import static com.example.bankapp.environment.BaseUrl.BASE_URL;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,9 +16,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class KycActivity1 extends AppCompatActivity {
 
     EditText firstName, lastName, phoneNumber, emailId;
+    Button submitButton; // declare submitButton
+    ImageView homeButton;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +47,12 @@ public class KycActivity1 extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         emailId = findViewById(R.id.emailId);
 
-        setListeners();
-    }
+        // Initialize submitButton
+        submitButton = findViewById(R.id.btn_submit);
 
-    private void setListeners() {
-        // "Save" button listener
+        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("accessToken", "");
+
         findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,28 +64,30 @@ public class KycActivity1 extends AppCompatActivity {
             }
         });
 
-        // "Submit" button listener
-        findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateFields()) {
+                if (validateFields()) {
                     // Move to KycActivity2
-                    startActivity(new Intent(KycActivity1.this, KycActivity2.class));
-
+                    makeHttpRequest(accessToken);
                 }
             }
         });
 
         // "Home" icon listener
-        ImageView homeButton = findViewById(R.id.homeButton);
+        homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Move to DashboardActivity
-                startActivity(new Intent(KycActivity1.this, DashboardActivity.class));
+                Intent mainIntent = new Intent(KycActivity1.this, DashboardActivity.class);
+                startActivity(mainIntent);
                 finish();
             }
         });
+
+        // "Submit" button listener
+
     }
 
     private boolean validateFields() {
@@ -112,4 +130,55 @@ public class KycActivity1 extends AppCompatActivity {
     private boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
+
+    private void makeHttpRequest(String accessToken) {
+
+        String url = BASE_URL + "api/v1/leads";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                RequestBody formBody = new FormBody.Builder()
+                        .add("first_name", firstName.getText().toString().trim())
+                        .add("last_name", lastName.getText().toString().trim())
+                        .add("mobile_number", phoneNumber.getText().toString().trim())
+                        .add("email", emailId.getText().toString().trim())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(formBody)
+                        .addHeader("Authorization", "Bearer " + accessToken)
+                        .build();
+
+                OkHttpClient client = new OkHttpClient();
+                Call call = client.newCall(request);
+
+                Response response = null;
+                try {
+                    response = call.execute();
+                    final String serverResponse = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Display the response in a Toast message
+                            if (serverResponse.contains("false")) {
+                                Toast.makeText(KycActivity1.this, "KYC Step 1 Successful", Toast.LENGTH_SHORT).show();
+                                Intent mainIntent = new Intent(KycActivity1.this, KycActivity2.class);
+                                startActivity(mainIntent);
+                                finish();
+                            } else {
+                                Toast.makeText(KycActivity1.this, "Enter all the necessary details", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 }

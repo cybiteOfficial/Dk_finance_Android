@@ -52,6 +52,7 @@ public class payment extends AppCompatActivity {
         data.put("paymentInstrument",mPaymentInstrument);
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 String base64Body = encodeDataToString(new JSONObject(data));

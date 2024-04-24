@@ -25,7 +25,8 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/baseline_add_home_24" />
+            android:src="@drawable/baseline_add_home_24"
+            android:background="@drawable/home_button_background"/>
 
         <!-- Text in the center -->
         <TextView
@@ -60,25 +61,69 @@
                 android:background="@color/white"
                 android:elevation="0dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Customer Name"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
 
-                <EditText
-                    android:id="@+id/customerName"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:elevation="4dp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary"
+                            android:text="First Name"
+                            android:textSize="16sp"
+                            android:gravity="left"
+                            android:layout_marginTop="10dp"/>
+
+                        <EditText
+                            android:id="@+id/firstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:drawablePadding="8dp"
+                            android:padding="8dp"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@android:color/black"
+                            android:elevation="4dp"/>
+                    </LinearLayout>
+
+                    <!-- Last Name -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary"
+                            android:text="Last Name"
+                            android:textSize="16sp"
+                            android:gravity="left"
+                            android:layout_marginTop="10dp"/>
+
+                        <EditText
+                            android:id="@+id/lastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:drawablePadding="8dp"
+                            android:padding="8dp"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@android:color/black"
+                            android:elevation="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +155,7 @@
                     android:textSize="16sp"
                     android:gravity="left" />
                 <Spinner
-                    android:id="@+id/caseTag"
+                    android:id="@+id/productType"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -118,7 +163,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:elevation="4dp" />
+                    android:popupBackground="@color/white"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,7 +173,7 @@
                     android:textSize="16sp"
                     android:gravity="left" />
                 <Spinner
-                    android:id="@+id/productType"
+                    android:id="@+id/caseTag"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -136,7 +181,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:elevation="4dp" />
+                    android:popupBackground="@color/white"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -154,7 +199,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:elevation="4dp" />
+                    android:popupBackground="@color/white"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -242,17 +287,18 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
+                <TextView
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_text_border_fixed"
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp"
                     android:inputType="date"
+                    android:textSize="16sp"
+
                     />
 
                 <TextView
@@ -264,17 +310,17 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
+                <TextView
                     android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/edit_text_border_fixed"
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp"
                     android:inputType="time"
+                    android:textSize="16sp"
                     />
 
             </LinearLayout>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ public class AddCustomerActivity extends AppCompatActivity {
 
     private static final String TAG = "AddCustomerActivity";
     private LinearLayout coApplicantsLayout;
+    ImageView homeBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,19 @@ public class AddCustomerActivity extends AppCompatActivity {
 
 
         TextView btnSave = findViewById(R.id.save_button);
+        homeBtn = findViewById(R.id.homeButton);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         coApplicantsLayout = findViewById(R.id.coApplicantsLayout);
+
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddCustomerActivity.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         // Get the co-applicant names passed from AddressActivity
         ArrayList<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");

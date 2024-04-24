@@ -107,8 +107,6 @@ public class ApprovedLoansActivity extends AppCompatActivity {
             loanStatusTextView.setTextColor(Color.parseColor("#4CA6A8"));
             loanStatusTextView.setBackgroundResource(R.drawable.status_completed_background);
         }
-
-
     }
 
     private int dpToPx(int dp) {
