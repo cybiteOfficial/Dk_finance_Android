@@ -25,7 +25,6 @@ public class KycActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
-
         adharNumberEditText = findViewById(R.id.adharDocs);
         panNumberEditText = findViewById(R.id.panDocs);
         submitButton = findViewById(R.id.submit_button);
@@ -110,8 +109,5 @@ public class KycActivity2 extends AppCompatActivity {
         }
         return fileName;
     }
-
-
-
 
 }
