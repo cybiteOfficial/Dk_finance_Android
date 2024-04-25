@@ -190,7 +190,12 @@ public class NewRegistrationActivity extends AppCompatActivity {
                         .add("mobile_number", phoneNumberText)
                         .add("last_name", lastName.getText().toString().trim())
                         .add("email", "admin@gmail.com")
-                        .add("agent_code", agentCode.getText().toString().trim());
+                        .add("agent_code", agentCode.getText().toString().trim())
+                        .add("loan_amount", loanAmount.getText().toString().trim())
+                        .add("product_type", "normal")
+                        .add("case_tag", "normal")
+                        .add("customer_type", "home_loan")
+                        .add("comment", "testing");
 
                 // Check if loan amount is provided
                 String loanAmountText = loanAmount.getText().toString().trim();

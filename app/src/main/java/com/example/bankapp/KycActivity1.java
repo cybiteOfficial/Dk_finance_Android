@@ -185,7 +185,6 @@ public class KycActivity1 extends AppCompatActivity {
                                 mainIntent.putExtra("leadId", leadID);
                                 mainIntent.putExtra("uuid", uuid);
                                 startActivity(mainIntent);
-                                finish();
                             } else {
                                 Toast.makeText(KycActivity1.this, serverResponse, Toast.LENGTH_LONG).show();
                             }

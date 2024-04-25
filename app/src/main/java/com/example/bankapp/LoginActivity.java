@@ -91,40 +91,49 @@ public class LoginActivity extends AppCompatActivity {
                 // Inside your try-catch block
                 try {
                     response = call.execute();
-                    assert response.body() != null;
-                    String serverResponse = response.body().string();
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        String serverResponse = response.body().string();
 
-                    Gson gson = new Gson();
-                    LoginResponse loginResponse = gson.fromJson(serverResponse, LoginResponse.class);
+                        Gson gson = new Gson();
+                        LoginResponse loginResponse = gson.fromJson(serverResponse, LoginResponse.class);
 
-                    // Check if the response contains an error
-                    if (!loginResponse.isError() && loginResponse.getData() != null) {
-                        String accessToken = loginResponse.getData().getAccessToken();
+                        // Check if the response contains an error
+                        if (!loginResponse.isError() && loginResponse.getData() != null) {
+                            String accessToken = loginResponse.getData().getAccessToken();
 
-                        // Save access token in SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("accessToken", accessToken);
-                        editor.apply();
+                            // Save access token in SharedPreferences
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("accessToken", accessToken);
+                            editor.apply();
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                // Proceed with the login process (e.g., start DashboardActivity)
-                                Intent mainIntent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                startActivity(mainIntent);
-                                mainIntent.putExtra("userId", email);
-                                finish();
-                            }
-                        });
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    // Proceed with the login process (e.g., start DashboardActivity)
+                                    Intent mainIntent = new Intent(LoginActivity.this, DashboardActivity.class);
+                                    mainIntent.putExtra("userId", email);
+                                    startActivity(mainIntent);
+                                    finish();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                                    // Clear the password field
+                                    loginUsername.setText("");
+                                    loginPassword.setText("");
+                                }
+                            });
+                        }
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                                // Clear the password field
-                                loginUsername.setText("");
-                                loginPassword.setText("");
+                                Toast.makeText(LoginActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

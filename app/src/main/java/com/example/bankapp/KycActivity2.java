@@ -56,6 +56,7 @@ public class KycActivity2 extends AppCompatActivity {
 
         String mobNo = getIntent().getStringExtra("phoneNumber");
         String uuid = getIntent().getStringExtra("uuid");
+        String leadID = getIntent().getStringExtra("leadId");
 
         // Check and request READ_EXTERNAL_STORAGE permission if not granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -115,7 +116,7 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateAdharNumber() && validatePanNumber()) {
-                    makeHttpRequest(accessToken, mobNo, uuid);
+                    makeHttpRequest(accessToken, mobNo, uuid, leadID);
                 } else {
                     if (!validateAdharNumber()) {
                         Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhar number", Toast.LENGTH_SHORT).show();
@@ -236,7 +237,7 @@ public class KycActivity2 extends AppCompatActivity {
         }
     }
 
-    private void makeHttpRequest(String accessToken, String mobNo, String uuid) {
+    private void makeHttpRequest(String accessToken, String mobNo, String uuid, String leadID) {
         String url = BASE_URL + "api/v1/upload_document";
 
         new Thread(new Runnable() {
@@ -269,6 +270,7 @@ public class KycActivity2 extends AppCompatActivity {
                                 Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
                                 Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
                                 mainIntent.putExtra("phoneNumber", mobNo);
+                                mainIntent.putExtra("leadId", leadID);
                                 startActivity(mainIntent);
                                 finish();
                             } else {

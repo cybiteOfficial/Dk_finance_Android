@@ -26,7 +26,6 @@
             android:id="@+id/actual_id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1234556789"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:layout_marginStart="4dp"
@@ -45,7 +44,8 @@
         android:layout_height="wrap_content"
         android:text="John Doe"
         android:textColor="@color/primary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <!-- Customer Type -->
     <TextView
@@ -55,7 +55,8 @@
         android:text="Individual"
         android:textColor="@android:color/black"
         android:textSize="14sp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
 
     <!-- Vertical Space -->
     <View
@@ -75,7 +76,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <!-- Loan Amount Text -->
             <TextView

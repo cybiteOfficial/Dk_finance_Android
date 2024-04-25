@@ -1,0 +1,9 @@
+<!-- dialog_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="16dp" />
+    <solid android:color="#FBFBFB" />
+    <stroke
+        android:width="2dp"
+        android:color="#1A7A306C" />
+</shape>

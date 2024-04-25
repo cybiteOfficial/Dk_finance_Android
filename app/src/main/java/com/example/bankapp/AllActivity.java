@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,51 +25,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ApprovedLoansActivity extends AppCompatActivity {
+public class AllActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_approved_loans);
-
-        Spinner loanStatusSpinner = findViewById(R.id.page_spinner);
-
-        List<String> loanStatuses = new ArrayList<>();
-        loanStatuses.add("Approved loans");
-        loanStatuses.add("Rejected Loans");
-        loanStatuses.add("Failed Payments");
-
-        List<Integer> icons = new ArrayList<>();
-        icons.add(R.drawable.icon_approved_loans);
-        icons.add(R.drawable.icon_rejected_loans);
-        icons.add(R.drawable.icon_failed_payments);
-
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, loanStatuses, icons);
-        loanStatusSpinner.setAdapter(adapter);
-
-        loanStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        break;
-                    case 1:
-                        startActivity(new Intent(ApprovedLoansActivity.this, RejectedLoansActivity.class));
-                        finish();
-                        break;
-                    case 2:
-                        startActivity(new Intent(ApprovedLoansActivity.this, FailedPaymentsActivity.class));
-                        finish();
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        setContentView(R.layout.activity_all);
 
         ImageView backButton = findViewById(R.id.back_btn);
         LinearLayout cardContainer = findViewById(R.id.card_container);
@@ -80,7 +40,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ApprovedLoansActivity.this, DashboardActivity.class);
+                Intent intent = new Intent(AllActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -112,44 +72,43 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("Failed to fetch applicants");
+                        showToast("Failed to fetch applicants 1");
                     }
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
+                String responseBody = response.body().string();
+                if (response.isSuccessful() && response.body() != null) {
+
+                    // Process JSON response
+                    Gson gson = new Gson();
+                    ApplicantResponse applicantResponse = gson.fromJson(responseBody, ApplicantResponse.class);
+                    final List<ApplicantData> applicants = Arrays.asList(applicantResponse.getResults());
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showToast("Failed to fetch applicants");
+                            displayApplicants(applicants, cardContainer);
                         }
                     });
-                    return;
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast(responseBody);
+                        }
+                    });
                 }
-
-                String responseBody = response.body().string();
-
-                // Process JSON response
-                Gson gson = new Gson();
-                ApplicantResponseApproved applicantResponse = gson.fromJson(responseBody, ApplicantResponseApproved.class);
-                final List<ApplicantDataApproved> applicants = Arrays.asList(applicantResponse.getResults());
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        displayApplicants(applicants, cardContainer);
-                    }
-                });
             }
         });
     }
 
-    private void displayApplicants(List<ApplicantDataApproved> applicants, LinearLayout cardContainer) {
+    private void displayApplicants(List<ApplicantData> applicants, LinearLayout cardContainer) {
         cardContainer.removeAllViews(); // Clear existing views
 
-        for (ApplicantDataApproved applicant : applicants) {
+        for (ApplicantData applicant : applicants) {
             View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
             // Find views in the card layout
@@ -175,11 +134,11 @@ public class ApprovedLoansActivity extends AppCompatActivity {
     }
 }
 
-class ApplicantResponseApproved {
+class ApplicantResponse {
     private int count;
     private String next;
     private String previous;
-    private ApplicantDataApproved[] results;
+    private ApplicantData[] results;
 
     public int getCount() {
         return count;
@@ -193,12 +152,12 @@ class ApplicantResponseApproved {
         return previous;
     }
 
-    public ApplicantDataApproved[] getResults() {
+    public ApplicantData[] getResults() {
         return results;
     }
 }
 
-class ApplicantDataApproved {
+class ApplicantData {
     private String uuid;
     private String created_at;
     private String updated_at;

@@ -18,6 +18,7 @@ public class DashboardActivity extends AppCompatActivity {
         LinearLayout approvedLoansButton = findViewById(R.id.approved_loans_btn);
         LinearLayout rejectedLoansButton = findViewById(R.id.rejected_loans_btn);
         LinearLayout failedPaymentsButton = findViewById(R.id.failed_payments_btn);
+        LinearLayout allBtn = findViewById(R.id.all_btn);
         LinearLayout leadsButton = findViewById(R.id.leads_btn);
 
         // Setting onClick listeners for buttons
@@ -54,6 +55,14 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardActivity.this, LeadsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        allBtn.setOnClickListener(new View.OnClickListener() { // Added
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, AllActivity.class);
                 startActivity(intent);
             }
         });

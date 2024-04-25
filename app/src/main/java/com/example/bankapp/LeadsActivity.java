@@ -2,6 +2,7 @@ package com.example.bankapp;
 
 import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,11 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -142,7 +149,7 @@ public class LeadsActivity extends AppCompatActivity {
 
         for (int i = leads.length - 1; i >= 0; i--) {
             LeadData lead = leads[i];
-            View leadItem = inflater.inflate(R.layout.lead_item_layout, leadsContainer, false);
+            View leadItem = inflater.inflate(R.layout.lead_item_layout, leadsContainer, false); // Move the creation inside the loop
             TextView leadNumberTextView = leadItem.findViewById(R.id.lead_number);
             TextView NameTextView = leadItem.findViewById(R.id.customer_name_text);
             TextView loanAmount = leadItem.findViewById(R.id.loan_amount_text);
@@ -155,15 +162,85 @@ public class LeadsActivity extends AppCompatActivity {
             loanAmount.setText(lead.getLoan_amount());
 
             String custType = lead.getCustomer_type();
-            if(Objects.equals(custType, "home_loan")){
+            if (Objects.equals(custType, "home_loan")) {
                 customerType.setText("Home Loan");
             }
 
             // Add lead item to container
             leadsContainer.addView(leadItem);
+
+            // Add click listener to lead item
+            leadItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Show lead details in a custom dialog
+                    showLeadDetailDialog(lead);
+                }
+            });
+        }
+    }
+
+
+    private void showLeadDetailDialog(LeadData lead) {
+        // Inflate the custom dialog layout
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.lead_detail_dialog, null);
+
+        // Find views in the custom dialog layout
+        TextView leadIdTextView = dialogView.findViewById(R.id.lead_id);
+        TextView leadNameTextView = dialogView.findViewById(R.id.lead_name);
+        TextView emailTextView = dialogView.findViewById(R.id.email);
+        TextView mobileNumberTextView = dialogView.findViewById(R.id.mobile_number);
+        TextView productTypeTextView = dialogView.findViewById(R.id.product_type);
+        TextView caseTagTextView = dialogView.findViewById(R.id.case_tag);
+        TextView createdAtTextView = dialogView.findViewById(R.id.created_at);
+        TextView customerTypeTextView = dialogView.findViewById(R.id.customer_type);
+
+        // Set lead details to TextViews
+        leadIdTextView.setText("Lead ID: " + lead.getLead_id());
+        String fullName = lead.getFirst_name() + " " + lead.getLast_name();
+        leadNameTextView.setText("Name: " + fullName);
+        emailTextView.setText("Email: " + lead.getEmail());
+        mobileNumberTextView.setText("Mobile Number: " + lead.getMobile_number());
+        productTypeTextView.setText("Product Type: " + lead.getProduct_type());
+        caseTagTextView.setText("Case Tag: " + lead.getCase_tag());
+        createdAtTextView.setText("Created At: " + formatDate(lead.getCreated_at()));
+        String custType = lead.getCustomer_type();
+        if (Objects.equals(custType, "home_loan")) {
+            customerTypeTextView.setText("Customer Type: Home Loan");
         }
 
+        // Create and show the dialog
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        builder.setBackground(getResources().getDrawable(R.drawable.lead_dialogue_background)); // Add custom background
+        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
     }
+
+    // Method to format date and time
+    private String formatDate(String dateTimeString) {
+        try {
+            // Parse the input date and time string
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
+            Date date = inputFormat.parse(dateTimeString);
+
+            // Format the parsed date to extract only the date
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return ""; // Return empty string in case of parsing error
+        }
+    }
+
+
+
 
 
     // LeadResponse class for JSON parsing

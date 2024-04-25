@@ -71,41 +71,42 @@ public class RejectedLoansActivity extends AppCompatActivity {
         });
 
         // Adding cards dynamically with dummy data
-        for (int i = 0; i < 6; i++) {
-            View cardView = getLayoutInflater().inflate(R.layout.card_layout, null);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            if (i != 0) {
-                params.topMargin = dpToPx(12);
-            }
-            cardView.setLayoutParams(params);
-
-            cardContainer.addView(cardView);
-
-            TextView applicationIdTextView = cardView.findViewById(R.id.application_id_text);
-            TextView actualIdTextView = cardView.findViewById(R.id.actual_id_text);
-            TextView customerNameTextView = cardView.findViewById(R.id.customer_name_text);
-            TextView customerTypeTextView = cardView.findViewById(R.id.customer_type_text);
-            TextView loanAmountTitleTextView = cardView.findViewById(R.id.loan_amount_title_text);
-            TextView loanAmountTextView = cardView.findViewById(R.id.loan_amount_text);
-            TextView loanStatusTextView = cardView.findViewById(R.id.loan_status_text);
-
-            applicationIdTextView.setText("Application ID: ");
-            actualIdTextView.setText("12345" + (i + 1));
-            customerNameTextView.setText("Customer Name " + (i + 1));
-            customerTypeTextView.setText("Individual");
-            loanAmountTextView.setText("₹10,000" + (i + 1));
-            loanStatusTextView.setText("Rejected");
-            loanStatusTextView.setTextColor(Color.parseColor("#A04949"));
-            loanStatusTextView.setBackgroundResource(R.drawable.status_rejected_background);
-        }
-    }
-
-    private int dpToPx(int dp) {
-        float density = getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
+//        for (int i = 0; i < 6; i++) {
+//            View cardView = getLayoutInflater().inflate(R.layout.card_layout, null);
+//
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            );
+//            if (i != 0) {
+//                params.topMargin = dpToPx(12);
+//            }
+//            cardView.setLayoutParams(params);
+//
+//            cardContainer.addView(cardView);
+//
+//            TextView applicationIdTextView = cardView.findViewById(R.id.application_id_text);
+//            TextView actualIdTextView = cardView.findViewById(R.id.actual_id_text);
+//            TextView customerNameTextView = cardView.findViewById(R.id.customer_name_text);
+//            TextView customerTypeTextView = cardView.findViewById(R.id.customer_type_text);
+//            TextView loanAmountTitleTextView = cardView.findViewById(R.id.loan_amount_title_text);
+//            TextView loanAmountTextView = cardView.findViewById(R.id.loan_amount_text);
+//            TextView loanStatusTextView = cardView.findViewById(R.id.loan_status_text);
+//
+//            applicationIdTextView.setText("Application ID: ");
+//            actualIdTextView.setText("12345" + (i + 1));
+//            customerNameTextView.setText("Customer Name " + (i + 1));
+//            customerTypeTextView.setText("Individual");
+//            loanAmountTextView.setText("₹10,000" + (i + 1));
+//            loanStatusTextView.setText("Rejected");
+//            loanStatusTextView.setTextColor(Color.parseColor("#A04949"));
+//            loanStatusTextView.setBackgroundResource(R.drawable.status_rejected_background);
+//        }
+//    }
+//
+//    private int dpToPx(int dp) {
+//        float density = getResources().getDisplayMetrics().density;
+//        return Math.round((float) dp * density);
+//    }
     }
 }

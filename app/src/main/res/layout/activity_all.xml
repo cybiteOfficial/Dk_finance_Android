@@ -45,7 +45,8 @@
         android:layout_centerHorizontal="true"
         android:padding="16dp"
         android:spinnerMode="dropdown"
-        android:popupBackground="@color/white"/>
+        android:popupBackground="@color/white"
+        android:visibility="gone"/>
 
     <!-- Linear Layout for Search Bar and Sort Icon -->
     <LinearLayout

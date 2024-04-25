@@ -1,5 +1,8 @@
 package com.example.bankapp;
+import static com.example.bankapp.environment.BaseUrl.BASE_URL;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,23 +13,39 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.gson.Gson;
 import com.phonepe.intent.sdk.api.B2BPGRequest;
 import com.phonepe.intent.sdk.api.B2BPGRequestBuilder;
 import com.phonepe.intent.sdk.api.PhonePe;
 import com.phonepe.intent.sdk.api.PhonePeInitException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import android.content.SharedPreferences;
+
 public class payment extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
+        final String leadID = getIntent().getStringExtra("leadId");
+
         setContentView(R.layout.activity_payment);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -55,15 +74,70 @@ public class payment extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                String base64Body = encodeDataToString(new JSONObject(data));
+
+                sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String accessToken = sharedPreferences.getString("accessToken", "");
+
+                makeHttpRequest(accessToken, leadID);
+//                String base64Body = encodeDataToString(new JSONObject(data));
+//                try {
+//                    B2BPGRequest b2BPGRequest = createB2BPGRequest(base64Body, "/pg/v1/pay");
+//                    startActivityForResult(PhonePe.getImplicitIntent(payment.this, b2BPGRequest, ""), 1);
+//                } catch (PhonePeInitException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        });
+    }
+
+    private void makeHttpRequest(String accessToken, String leadID) {
+
+        String url = BASE_URL + "api/v1/create_app_id";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                RequestBody formBody = new FormBody.Builder()
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(formBody)
+                        .addHeader("Authorization", "Bearer " + accessToken)
+                        .build();
+
+                OkHttpClient client = new OkHttpClient();
+                Call call = client.newCall(request);
+
+                Response response = null;
                 try {
-                    B2BPGRequest b2BPGRequest = createB2BPGRequest(base64Body, "/pg/v1/pay");
-                    startActivityForResult(PhonePe.getImplicitIntent(payment.this, b2BPGRequest, ""), 1);
-                } catch (PhonePeInitException e) {
+                    response = call.execute();
+                    assert response.body() != null;
+                    final String serverResponse = response.body().string();
+                    Gson gson = new Gson();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            // Display the response in a Toast message
+                            if (serverResponse.contains("Applicant created successfully")) {
+                                Toast.makeText(payment.this, "Payment Successful", Toast.LENGTH_SHORT).show();
+                                Intent mainIntent = new Intent(payment.this, NewRegistrationActivity2.class);
+                                startActivity(mainIntent);
+                                finish();
+                            } else {
+                                Toast.makeText(payment.this, serverResponse, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
     }
 
     @Override
