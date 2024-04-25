@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -54,10 +53,7 @@ public class KycActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
 
-        String mobNo = getIntent().getStringExtra("phoneNumber");
-        String uuid = getIntent().getStringExtra("uuid");
-        String leadID = getIntent().getStringExtra("leadId");
-
+        final String mobNo = getIntent().getStringExtra("phoneNumber");
         // Check and request READ_EXTERNAL_STORAGE permission if not granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -116,10 +112,10 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateAdharNumber() && validatePanNumber()) {
-                    makeHttpRequest(accessToken, mobNo, uuid, leadID);
+                    makeHttpRequest(accessToken, mobNo);
                 } else {
                     if (!validateAdharNumber()) {
-                        Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhar number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhar number", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(KycActivity2.this, "Enter a valid 9-character PAN number", Toast.LENGTH_SHORT).show();
                     }
@@ -147,18 +143,16 @@ public class KycActivity2 extends AppCompatActivity {
             // You can perform any actions that require this permission here
         }
     }
-
     private boolean validateAdharNumber() {
         String adharNumberText = adhar_number.getText().toString().trim();
 
-        // Check if Aadhar number is exactly 12 digits
+        // Check if Aadhar number is exactly 14 digits
         if (adharNumberText.length() != 12) {
             return false;
         }
 
         return true;
     }
-
     private boolean validatePanNumber() {
         String panNumberText = pan_number.getText().toString().trim();
 
@@ -182,6 +176,7 @@ public class KycActivity2 extends AppCompatActivity {
             Toast.makeText(this, "Please install a file manager app to proceed.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -237,8 +232,9 @@ public class KycActivity2 extends AppCompatActivity {
         }
     }
 
-    private void makeHttpRequest(String accessToken, String mobNo, String uuid, String leadID) {
+    private void makeHttpRequest(String accessToken, String phoneNumber) {
         String url = BASE_URL + "api/v1/upload_document";
+        String uuid = sharedPreferences.getString("uuid", "");
 
         new Thread(new Runnable() {
             @Override
@@ -267,14 +263,13 @@ public class KycActivity2 extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (serverResponse.contains("false")) {
-                                Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(KycActivity2.this, "Documents Uploaded Successfull", Toast.LENGTH_SHORT).show();
                                 Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
-                                mainIntent.putExtra("phoneNumber", mobNo);
-                                mainIntent.putExtra("leadId", leadID);
+                                mainIntent.putExtra("phoneNumber", phoneNumber);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
-                                Toast.makeText(KycActivity2.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(KycActivity2.this,"Upload Failed", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

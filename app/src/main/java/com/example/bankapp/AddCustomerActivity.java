@@ -29,6 +29,7 @@ public class AddCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_customer);
 
+
         TextView applicationID = findViewById(R.id.applicationID);
         TextView btnSave = findViewById(R.id.save_button);
         homeBtn = findViewById(R.id.homeButton);

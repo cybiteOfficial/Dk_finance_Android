@@ -91,15 +91,13 @@ public class payment extends AppCompatActivity {
     }
 
     private void makeHttpRequest(String accessToken, String leadID) {
-
         String url = BASE_URL + "api/v1/create_app_id";
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                RequestBody formBody = new FormBody.Builder()
-                        .build();
+                RequestBody formBody = new FormBody.Builder().build();
 
                 Request request = new Request.Builder()
                         .url(url)
@@ -114,26 +112,34 @@ public class payment extends AppCompatActivity {
                 try {
                     response = call.execute();
                     assert response.body() != null;
-                    final String serverResponse = response.body().string();
-                    Gson gson = new Gson();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // Display the response in a Toast message
-                            if (serverResponse.contains("Applicant created successfully")) {
+                    final String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    boolean isError = jsonObject.getBoolean("error");
+                    if (!isError) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        String applicationId = data.getString("application_id");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Display the response in a Toast message
                                 Toast.makeText(payment.this, "Payment Successful", Toast.LENGTH_SHORT).show();
+                                // Pass the application ID to the next activity
                                 Intent mainIntent = new Intent(payment.this, NewRegistrationActivity2.class);
+                                mainIntent.putExtra("applicationId", applicationId);
                                 startActivity(mainIntent);
                                 finish();
-                            } else {
-                                Toast.makeText(payment.this, serverResponse, Toast.LENGTH_LONG).show();
                             }
-                        }
-                    });
-
-                } catch (IOException e) {
+                        });
+                    } else {
+                        final String message = jsonObject.getString("message");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(payment.this, message, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             }

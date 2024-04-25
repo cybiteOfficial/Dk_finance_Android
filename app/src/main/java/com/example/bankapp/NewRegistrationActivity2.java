@@ -18,14 +18,15 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_registration2);
 
+        final String application_ID = getIntent().getStringExtra("applicationId");
+
         TextView btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         applicationID = findViewById(R.id.applicationID);
 
-        // Generate and set random application ID
-        String randomApplicationID = generateApplicationID();
-        applicationID.setText(randomApplicationID);
+        applicationID.setText(application_ID);
+
 
         Button continueButton = findViewById(R.id.submit_button);
 
@@ -34,16 +35,10 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
             public void onClick(View v) {
                 // Send data to AddCustomerActivity using Intent
                 Intent intent = new Intent(NewRegistrationActivity2.this, AddCustomerActivity.class);
-                intent.putExtra("applicationID", randomApplicationID); // Put the random application ID
+                intent.putExtra("applicationID", application_ID);
                 startActivity(intent);
             }
         });
     }
 
-    // Generate random application ID
-    private String generateApplicationID() {
-        // Generate a random 3-digit number
-        int randomNumber = (int) (Math.random() * 900) + 100; // Generates a random number between 100 and 999
-        return "app_241884" + randomNumber; // Concatenate with the fixed prefix
-    }
 }
