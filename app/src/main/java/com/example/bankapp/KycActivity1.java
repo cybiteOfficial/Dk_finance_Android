@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -27,8 +30,9 @@ import okhttp3.Response;
 
 public class KycActivity1 extends AppCompatActivity {
 
-    EditText firstName, lastName, phoneNumber, emailId;
-    Button submitButton; // declare submitButton
+    TextView firstName, lastName, phoneNumber;
+    EditText emailId;
+    Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
 
@@ -37,17 +41,24 @@ public class KycActivity1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_1);
 
-        // Adding underline to the "Save" button text
-        TextView btnSave = findViewById(R.id.btn_save);
-        btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        // Retrieve the values from Intent
+        String fName = getIntent().getStringExtra("firstName");
+        String lName = getIntent().getStringExtra("lastName");
+        String phone = getIntent().getStringExtra("phoneNumber");
+        String leadID = getIntent().getStringExtra("leadId");
 
-        // Initialize EditText fields
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         phoneNumber = findViewById(R.id.phoneNumber);
-        emailId = findViewById(R.id.emailId);
 
-        // Initialize submitButton
+        firstName.setText(fName);
+        lastName.setText(lName);
+        phoneNumber.setText(phone);
+
+        // Adding underline to the "Save" button text
+        TextView btnSave = findViewById(R.id.btn_save);
+        btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        emailId = findViewById(R.id.emailId);
         submitButton = findViewById(R.id.btn_submit);
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -68,13 +79,11 @@ public class KycActivity1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateFields()) {
-                    // Move to KycActivity2
-                    makeHttpRequest(accessToken);
+                    makeHttpRequest(accessToken, leadID);
                 }
             }
         });
 
-        // "Home" icon listener
         homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,9 +94,6 @@ public class KycActivity1 extends AppCompatActivity {
                 finish();
             }
         });
-
-        // "Submit" button listener
-
     }
 
     private boolean validateFields() {
@@ -113,10 +119,11 @@ public class KycActivity1 extends AppCompatActivity {
 
         if (TextUtils.isEmpty(emailText)) {
             emailId.setError("Email is required");
-            return false;
-        } else if (!isValidEmail(emailText)) {
-            emailId.setError("Enter a valid email address");
-            return false;
+
+            if (!isValidEmail(emailText)) {
+                emailId.setError("Enter a valid email address");
+                return false;
+            }
         }
 
         return true;
@@ -131,19 +138,23 @@ public class KycActivity1 extends AppCompatActivity {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-    private void makeHttpRequest(String accessToken) {
+    private void makeHttpRequest(String accessToken, final String leadID) {
 
-        String url = BASE_URL + "api/v1/leads";
+        String url = BASE_URL + "api/v1/kyc";
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
+                String phoneNumberText = phoneNumber.getText().toString().trim();
+                phoneNumberText = phoneNumberText.substring(4);
+
                 RequestBody formBody = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
                         .add("last_name", lastName.getText().toString().trim())
-                        .add("mobile_number", phoneNumber.getText().toString().trim())
+                        .add("mobile_number", "+91" + phoneNumberText)
                         .add("email", emailId.getText().toString().trim())
+                        .add("lead_id", leadID)
                         .build();
 
                 Request request = new Request.Builder()
@@ -159,21 +170,27 @@ public class KycActivity1 extends AppCompatActivity {
                 try {
                     response = call.execute();
                     final String serverResponse = response.body().string();
+                    String finalPhoneNumberText = phoneNumberText;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             // Display the response in a Toast message
                             if (serverResponse.contains("false")) {
                                 Toast.makeText(KycActivity1.this, "KYC Step 1 Successful", Toast.LENGTH_SHORT).show();
+                                // Extracting UUID from the server response
+                                String uuid = extractUUID(serverResponse);
+                                // Passing UUID to KycActivity2
                                 Intent mainIntent = new Intent(KycActivity1.this, KycActivity2.class);
+                                mainIntent.putExtra("phoneNumber", finalPhoneNumberText);
+                                mainIntent.putExtra("leadId", leadID);
+                                mainIntent.putExtra("uuid", uuid);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
-                                Toast.makeText(KycActivity1.this, "Enter all the necessary details", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(KycActivity1.this, serverResponse, Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -181,4 +198,15 @@ public class KycActivity1 extends AppCompatActivity {
         }).start();
     }
 
+    // Method to extract UUID from server response
+    private String extractUUID(String response) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            JSONObject data = jsonResponse.getJSONObject("data");
+            return data.getString("uuid");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

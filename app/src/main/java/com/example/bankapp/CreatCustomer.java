@@ -60,7 +60,7 @@ public class CreatCustomer extends AppCompatActivity {
         // gender Spinner
         Spinner genderSpinner = findViewById(R.id.gender);
         String[] gender_type = getResources().getStringArray(R.array.gender_type);
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,gender_type);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item,gender_type);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
 
@@ -68,28 +68,28 @@ public class CreatCustomer extends AppCompatActivity {
         // title Spinner
         Spinner titleSpinner = findViewById(R.id.title);
         String[] titleItems = getResources().getStringArray(R.array.title_type);
-        ArrayAdapter<String> titleAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, titleItems);
+        ArrayAdapter<String> titleAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, titleItems);
         titleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         titleSpinner.setAdapter(titleAdapter);
 
         // customer_segment Spinner
         Spinner customer_segmentSpinner = findViewById(R.id.customer_segment);
         String[] customer_segment = getResources().getStringArray(R.array.customer_segment);
-        ArrayAdapter<String> customer_segmentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customer_segment);
+        ArrayAdapter<String> customer_segmentAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, customer_segment);
         customer_segmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         customer_segmentSpinner.setAdapter(customer_segmentAdapter);
 
         // residenceOwner Spinner
         Spinner residenceOwnerSpinner = findViewById(R.id.residenceOwner);
         String[] residenceOwner = getResources().getStringArray(R.array.customer_segment);
-        ArrayAdapter<String> residenceOwnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, residenceOwner);
+        ArrayAdapter<String> residenceOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, residenceOwner);
         residenceOwnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         residenceOwnerSpinner.setAdapter(residenceOwnerAdapter);
 
         // customer_segment Spinner
         Spinner agricultureLandOwnerSpinner = findViewById(R.id.agricultureLandOwner);
         String[] agricultureLandOwner = getResources().getStringArray(R.array.customer_segment);
-        ArrayAdapter<String> agricultureLandOwnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, agricultureLandOwner);
+        ArrayAdapter<String> agricultureLandOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, agricultureLandOwner);
         agricultureLandOwnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         agricultureLandOwnerSpinner.setAdapter(agricultureLandOwnerAdapter);
 

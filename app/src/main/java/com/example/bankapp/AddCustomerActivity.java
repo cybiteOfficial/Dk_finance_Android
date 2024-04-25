@@ -20,6 +20,7 @@ public class AddCustomerActivity extends AppCompatActivity {
 
     private static final String TAG = "AddCustomerActivity";
     private LinearLayout coApplicantsLayout;
+    TextView applicationID;
     ImageView homeBtn;
 
 
@@ -28,13 +29,14 @@ public class AddCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_customer);
 
-
+        TextView applicationID = findViewById(R.id.applicationID);
         TextView btnSave = findViewById(R.id.save_button);
         homeBtn = findViewById(R.id.homeButton);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         coApplicantsLayout = findViewById(R.id.coApplicantsLayout);
 
-
+        String applicationId = getIntent().getStringExtra("applicationID");
+        applicationID.setText(applicationId);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

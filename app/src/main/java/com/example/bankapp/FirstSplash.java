@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class FirstSplash extends AppCompatActivity {
 
-    private static final int SPLASH_DISPLAY_LENGTH = 3000; // in milliseconds
+    private static final int SPLASH_DISPLAY_LENGTH = 2000; // in milliseconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

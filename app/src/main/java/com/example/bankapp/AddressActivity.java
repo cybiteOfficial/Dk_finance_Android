@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import java.util.List;
 public class AddressActivity extends AppCompatActivity {
 
     private Button submitBtn;
+    private ImageView homeButton;
     private static final String TAG = "AddressActivity";
 
     @Override
@@ -46,6 +48,16 @@ public class AddressActivity extends AppCompatActivity {
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#7A306D"));
 
 
+        homeButton = findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Move to DashboardActivity
+                Intent mainIntent = new Intent(AddressActivity.this, DashboardActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        });
         submitBtn = findViewById(R.id.submit_button);
 
         submitBtn.setOnClickListener(v -> {

@@ -13,6 +13,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        String userID = getIntent().getStringExtra("userId");
         LinearLayout newRegistrationButton = findViewById(R.id.open_account_btn);
         LinearLayout approvedLoansButton = findViewById(R.id.approved_loans_btn);
         LinearLayout rejectedLoansButton = findViewById(R.id.rejected_loans_btn);
@@ -24,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardActivity.this, NewRegistrationActivity.class);
+                intent.putExtra("userId", userID);
                 startActivity(intent);
             }
         });

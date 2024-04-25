@@ -2,72 +2,177 @@ package com.example.bankapp;
 
 import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.provider.OpenableColumns;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
-import java.io.IOException;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import okhttp3.Call;
+
+import okhttp3.FormBody;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import android.content.SharedPreferences;
+
+import java.io.IOException;
+
 public class KycActivity2 extends AppCompatActivity {
-    EditText adharNumberEditText, panNumberEditText;
-    SharedPreferences sharedPreferences;
-
-
-    // Request codes for document types
-    private static final int REQUEST_ADHAR_DOCUMENT = 1;
+    private static final int FILE_PICKER_REQUEST_CODE = 2;
     private static final int REQUEST_PAN_DOCUMENT = 2;
+    private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 101;
+    private static final int REQUEST_ADHAR_DOCUMENT = 1;
 
+    EditText adhar_number, pan_number;
+    EditText adharDocsEditText, panDocsEditText;
+    Button submitButton;
+    ImageView homeButton;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
 
+        String mobNo = getIntent().getStringExtra("phoneNumber");
+        String uuid = getIntent().getStringExtra("uuid");
+
+        // Check and request READ_EXTERNAL_STORAGE permission if not granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String access_token = sharedPreferences.getString("accessToken", "");
-        adharNumberEditText = findViewById(R.id.adharDocs);
-        panNumberEditText = findViewById(R.id.panDocs);
+        String accessToken = sharedPreferences.getString("accessToken", "");
 
-        // Set click listeners for EditText fields
-        adharNumberEditText.setOnClickListener(v -> onUploadDocumentClick(REQUEST_ADHAR_DOCUMENT));
+        adhar_number = findViewById(R.id.adhar_number);
+        pan_number = findViewById(R.id.pan_number);
+        adharDocsEditText = findViewById(R.id.adhardocs);
+        panDocsEditText = findViewById(R.id.pandocs); // Initialize panDocsEditText
+        EditText panNumberEditText = findViewById(R.id.pandocs);
 
-        panNumberEditText.setOnClickListener(v -> onUploadDocumentClick(REQUEST_PAN_DOCUMENT));
-        Button submitButton = findViewById(R.id.submit_button);
-        submitButton.setOnClickListener(v -> {
-            // Call makeHttpRequest method with the file paths of uploaded documents
-            String adharFilePath = adharNumberEditText.getText().toString().trim();
-            String panFilePath = panNumberEditText.getText().toString().trim();
-            Toast.makeText(KycActivity2.this, "Documents uploaded successfully", Toast.LENGTH_SHORT).show();
-            Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
-            startActivity(mainIntent);
-            finish();
-           // makeHttpRequest(access_token, adharFilePath, panFilePath);
+        panNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not used
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not used
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString().toUpperCase(); // Convert to uppercase
+                if (!s.toString().equals(text)) {
+                    panNumberEditText.setText(text);
+                    panNumberEditText.setSelection(text.length());
+                }
+            }
         });
+
+        adharDocsEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUploadDocumentClick(REQUEST_ADHAR_DOCUMENT);
+            }
+        });
+        panDocsEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUploadDocumentClick(REQUEST_PAN_DOCUMENT); // Change the request code to REQUEST_PAN_DOCUMENT
+            }
+        });
+
+        submitButton = findViewById(R.id.submit_button);
+        homeButton = findViewById(R.id.homeButton);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(validateAdharNumber() && validatePanNumber()) {
+                    makeHttpRequest(accessToken, mobNo, uuid);
+                } else {
+                    if (!validateAdharNumber()) {
+                        Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhar number", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(KycActivity2.this, "Enter a valid 9-character PAN number", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainIntent = new Intent(KycActivity2.this, DashboardActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        });
+
+        // Check READ_EXTERNAL_STORAGE permission again
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_EXTERNAL_STORAGE_REQUEST_CODE);
+        } else {
+            // Permission already granted, proceed with your code
+            // You can perform any actions that require this permission here
+        }
     }
 
+    private boolean validateAdharNumber() {
+        String adharNumberText = adhar_number.getText().toString().trim();
+
+        // Check if Aadhar number is exactly 12 digits
+        if (adharNumberText.length() != 12) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validatePanNumber() {
+        String panNumberText = pan_number.getText().toString().trim();
+
+        // Check if PAN number is exactly 9 characters
+        if (panNumberText.length() != 9) {
+            return false;
+        }
+
+        return true;
+    }
 
     public void onUploadDocumentClick(int requestCode) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/pdf"); // Allow only PDF files
+        // Open file picker to select any type of file
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         try {
@@ -82,108 +187,98 @@ public class KycActivity2 extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedFileUri = data.getData();
-            EditText editTextToUpdate = null;
-            switch (requestCode) {
-                case REQUEST_ADHAR_DOCUMENT:
-                    editTextToUpdate = adharNumberEditText;
-                    break;
-                case REQUEST_PAN_DOCUMENT:
-                    editTextToUpdate = panNumberEditText;
-                    break;
-            }
-            if (editTextToUpdate != null) {
-                String filePath = getFileName(selectedFileUri);
-                if (filePath != null) {
-                    editTextToUpdate.setText(filePath);
-                } else {
-                    editTextToUpdate.setText(selectedFileUri.toString());
+            String filePath = getFilePathFromUri(selectedFileUri);
+            if (filePath != null) {
+                if (requestCode == REQUEST_ADHAR_DOCUMENT) {
+                    adharDocsEditText.setText(filePath); // Set Aadhar document path
+                } else if (requestCode == REQUEST_PAN_DOCUMENT) {
+                    panDocsEditText.setText(filePath); // Set PAN document path
                 }
+            } else {
+                Toast.makeText(this, "File path not found.", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private String getFileName(Uri uri) {
-        String fileName = null;
-        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
-            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (displayNameIndex != -1) {
-                        fileName = cursor.getString(displayNameIndex);
-                    }
+    private String getFilePathFromUri(Uri uri) {
+        String filePath = null;
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (displayNameIndex != -1) {
+                    filePath = cursor.getString(displayNameIndex);
                 }
             }
+        } finally {
+            if (cursor != null) {
+                cursor.close(); // Close the cursor to avoid memory leaks
+            }
         }
-        if (fileName == null) {
-            fileName = uri.getLastPathSegment();
-        }
-        return fileName;
+        return filePath;
     }
 
-    private void makeHttpRequest(final String accessToken, final String adharFilePath, final String panFilePath) {
-        String url = BASE_URL + "api/v1/kyc";
+    // onRequestPermissionsResult method to handle permission request result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        new Thread(() -> {
-            try {
-                MultipartBody.Builder builder = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("adharNumber", adharNumberEditText.getText().toString().trim())
-                        .addFormDataPart("panNumber", panNumberEditText.getText().toString().trim());
+        if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE) {
+            // Check if the permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with your code
+            } else {
+                // Permission denied
+                // You can show a message to the user indicating that the permission is required for the app to function properly
+                Toast.makeText(this, "Permission denied. File access is required for the app to function properly.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-                // Add Aadhar document if file path is available
-                if (!TextUtils.isEmpty(adharFilePath)) {
-                    File adharFile = new File(adharFilePath);
-                    if (adharFile.exists()) {
-                        String adharFileName = adharFile.getName();
-                        builder.addFormDataPart("adharDocument", adharFileName, RequestBody.create(adharFile, MediaType.parse("application/pdf")));
-                    } else {
-                        runOnUiThread(() -> {
-                            Toast.makeText(KycActivity2.this, "Aadhar file not found", Toast.LENGTH_SHORT).show();
-                        });
-                        return;
-                    }
-                }
+    private void makeHttpRequest(String accessToken, String mobNo, String uuid) {
+        String url = BASE_URL + "api/v1/upload_document";
 
-                // Add PAN document if file path is available
-                if (!TextUtils.isEmpty(panFilePath)) {
-                    File panFile = new File(panFilePath);
-                    if (panFile.exists()) {
-                        String panFileName = panFile.getName();
-                        builder.addFormDataPart("panDocument", panFileName, RequestBody.create(panFile, MediaType.parse("application/pdf")));
-                    } else {
-                        runOnUiThread(() -> {
-                            Toast.makeText(KycActivity2.this, "PAN file not found", Toast.LENGTH_SHORT).show();
-                        });
-                        return; // Exit the method
-                    }
-                }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestBody formBody = new FormBody.Builder()
+                        .add("adhar_document_name", "Adhar Card")
+                        .add("adhar_document_id", adhar_number.getText().toString().trim())
+                        .add("adhar_document_type", "KYC")
+                        .add("kyc_id", uuid)
+                        .build();
 
-                // Build the request body
-                RequestBody formBody = builder.build();
-
-                // Create the request
                 Request request = new Request.Builder()
                         .url(url)
                         .post(formBody)
                         .addHeader("Authorization", "Bearer " + accessToken)
                         .build();
 
-                // Execute the request
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
-                Response response = call.execute();
 
-                // Process the response on the UI thread
-                final String serverResponse = response.body().string();
-                runOnUiThread(() -> {
-                    // Display the response in a Toast message
-                    Toast.makeText(KycActivity2.this, "Documents uploaded successfully", Toast.LENGTH_SHORT).show();
-                    Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
-                    startActivity(mainIntent);
-                    finish();
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+                Response response = null;
+                try {
+                    response = call.execute();
+                    String serverResponse = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (serverResponse.contains("false")) {
+                                Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                                Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
+                                mainIntent.putExtra("phoneNumber", mobNo);
+                                startActivity(mainIntent);
+                                finish();
+                            } else {
+                                Toast.makeText(KycActivity2.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }

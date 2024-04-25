@@ -110,7 +110,7 @@
                 android:drawablePadding="8dp"
                 android:padding="8dp"
                 android:textColor="@color/black"
-                android:elevation="4dp" />
+                android:elevation="4dp"/>
           </LinearLayout>
 
           <LinearLayout
@@ -138,7 +138,8 @@
                 android:drawablePadding="8dp"
                 android:padding="8dp"
                 android:textColor="@color/black"
-                android:elevation="4dp" />
+                android:elevation="4dp"
+                />
           </LinearLayout>
         </LinearLayout>
 
@@ -161,7 +162,9 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:textColor="@android:color/black"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:inputType="text"
+            android:maxLength="12"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -181,7 +184,9 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:textColor="@android:color/black"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:inputType="text"
+            android:maxLength="12"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -201,7 +206,9 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:textColor="@android:color/black"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:inputType="text"
+            android:maxLength="12"/>
 
         <!-- DOB and Age -->
         <LinearLayout
@@ -258,7 +265,7 @@
                 android:layout_marginTop="10dp"/>
 
             <EditText
-                android:id="@+id/phoneNumber"
+                android:id="@+id/age"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
@@ -310,7 +317,9 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:textColor="@android:color/black"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:inputType="text"
+            android:maxLength="20"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -330,7 +339,9 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:textColor="@android:color/black"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:inputType="text"
+            android:maxLength="40"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -350,7 +361,8 @@
             android:drawablePadding="8dp"
             android:elevation="4dp"
             android:padding="8dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:inputType="text" />
 
         <!-- Monthly Income, Family Income -->
         <TextView
@@ -468,7 +480,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/primary"
-        android:text="SUBMIT"
+        android:text="NEXT"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:cornerRadius="8dp"

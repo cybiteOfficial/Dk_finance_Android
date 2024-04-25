@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -94,16 +95,17 @@
                             android:gravity="left"
                             android:layout_marginTop="10dp"/>
 
-                        <EditText
+                        <TextView
                             android:id="@+id/firstName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_border"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/edit_text_border_fixed"
                             android:drawablePadding="8dp"
                             android:padding="8dp"
-                            android:layout_marginTop="5dp"
                             android:textColor="@android:color/black"
-                            android:elevation="4dp"/>
+                            android:textSize="16sp"
+                            android:gravity="center_vertical" />
                     </LinearLayout>
 
                     <!-- Last Name -->
@@ -123,16 +125,17 @@
                             android:gravity="left"
                             android:layout_marginTop="10dp"/>
 
-                        <EditText
+                        <TextView
                             android:id="@+id/lastName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_border"
+                            android:background="@drawable/edit_text_border_fixed"
                             android:drawablePadding="8dp"
                             android:padding="8dp"
                             android:layout_marginTop="5dp"
                             android:textColor="@android:color/black"
-                            android:elevation="4dp"/>
+                            android:textSize="16sp"
+                            android:gravity="center_vertical"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -146,18 +149,19 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
+                <TextView
                     android:id="@+id/phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/edit_text_border_fixed"
                     android:digits="0123456789"
                     android:drawablePadding="8dp"
-                    android:elevation="4dp"
                     android:inputType="phone"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"/>
 
                 <!-- Email -->
                 <TextView
@@ -179,6 +183,7 @@
                     android:elevation="4dp"
                     android:inputType="textEmailAddress"
                     android:padding="8dp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black" />
 
             </LinearLayout>
@@ -205,7 +210,8 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:cornerRadius="8dp"
-            android:layout_gravity="start|bottom"/>
+            android:layout_gravity="start|bottom"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_submit"

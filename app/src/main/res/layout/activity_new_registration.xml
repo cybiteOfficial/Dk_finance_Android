@@ -91,7 +91,10 @@
                             android:padding="8dp"
                             android:layout_marginTop="5dp"
                             android:textColor="@android:color/black"
-                            android:elevation="4dp"/>
+                            android:elevation="4dp"
+                            android:maxLength="12"
+                            android:inputType="text"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>/>
                     </LinearLayout>
 
                     <!-- Last Name -->
@@ -120,7 +123,10 @@
                             android:padding="8dp"
                             android:layout_marginTop="5dp"
                             android:textColor="@android:color/black"
-                            android:elevation="4dp"/>
+                            android:elevation="4dp"
+                            android:maxLength="12"
+                            android:inputType="text"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -136,7 +142,7 @@
                 <EditText
                     android:id="@+id/phoneNumber"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:digits="0123456789"
@@ -144,7 +150,11 @@
                     android:elevation="4dp"
                     android:inputType="phone"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:maxLength="14"
+                    android:text="+91 "
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -163,7 +173,8 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:popupBackground="@color/white"/>
+                    android:hint="Select"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -181,7 +192,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:popupBackground="@color/white"/>
+                    android:hint="Select" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -199,7 +210,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:popupBackground="@color/white"/>
+                    android:hint="Select" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -209,54 +220,40 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
+                <TextView
                     android:id="@+id/agentCode"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/edit_text_border_fixed"
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Branch Code"
-                    android:layout_marginTop="10dp"
+                    android:elevation="4dp"
                     android:textSize="16sp"
-                    android:gravity="left" />
+                    android:gravity="center_vertical"/>
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/primary"-->
+<!--                    android:text="Branch Code"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:gravity="left" />-->
 
-                <EditText
-                    android:id="@+id/branchCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:elevation="4dp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Branch Name"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
+<!--                <TextView-->
+<!--                    android:id="@+id/branchCode"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:background="@drawable/edit_text_border_fixed"-->
+<!--                    android:drawablePadding="8dp"-->
+<!--                    android:padding="8dp"-->
+<!--                    android:textColor="@android:color/black"-->
+<!--                    android:elevation="4dp"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:gravity="center_vertical"/>-->
 
-                <EditText
-                    android:id="@+id/branchName"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:elevation="4dp" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -298,30 +295,9 @@
                     android:textColor="@android:color/black"
                     android:inputType="date"
                     android:textSize="16sp"
+                    android:gravity="center_vertical" />
 
-                    />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Time"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border_fixed"
-                    android:drawablePadding="8dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:inputType="time"
-                    android:textSize="16sp"
-                    />
 
             </LinearLayout>
         </ScrollView>
@@ -346,7 +322,8 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:cornerRadius="8dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/submit_button"

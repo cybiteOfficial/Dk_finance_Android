@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,24 +16,39 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class OtpActivity extends AppCompatActivity {
 
-    private EditText otpEditText;
-    private TextView phoneNumber;
-    private EditText phoneNumberEditTxt;
     private EditText editTextDigit1;
     private EditText editTextDigit2;
     private EditText editTextDigit3;
     private EditText editTextDigit4;
     private Button submit_otp;
+    private TextView phoneNumber;
+    private EditText phoneNumberEditTxt;
+    private ImageView homeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
 
+        String phone = getIntent().getStringExtra("phoneNumber");
+
         phoneNumber = findViewById(R.id.phoneNumber);
+        phoneNumber.setText(phone);
+
         phoneNumberEditTxt = findViewById(R.id.phoneNumberEditText);
 
         TextView changeNumber = findViewById(R.id.change_number);
+
+        homeBtn = findViewById(R.id.homeButton);
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OtpActivity.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         changeNumber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,8 +57,6 @@ public class OtpActivity extends AppCompatActivity {
                 phoneNumberEditTxt.setVisibility(View.VISIBLE);
             }
         });
-
-        otpEditText = findViewById(R.id.editTextDigit1);
 
         editTextDigit1 = findViewById(R.id.editTextDigit1);
         editTextDigit2 = findViewById(R.id.editTextDigit2);
