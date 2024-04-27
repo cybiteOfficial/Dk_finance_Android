@@ -2,6 +2,7 @@ package com.example.bankapp;
 
 import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -146,10 +147,11 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void displayApplicants(List<ApplicantDataApproved> applicants, LinearLayout cardContainer) {
-        cardContainer.removeAllViews(); // Clear existing views
-
-        for (ApplicantDataApproved applicant : applicants) {
+        cardContainer.removeAllViews();
+        for (int i = applicants.size() - 1; i >= 0; i--) {
+            ApplicantDataApproved applicant = applicants.get(i);
             View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
             // Find views in the card layout
@@ -168,6 +170,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
             cardContainer.addView(cardView);
         }
     }
+
 
     // Show toast message
     private void showToast(String message) {

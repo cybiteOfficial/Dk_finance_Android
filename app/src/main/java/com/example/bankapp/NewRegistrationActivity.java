@@ -61,7 +61,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
         homeButton = findViewById(R.id.homeButton);
 
 
-        agentCode.setText(userID);
+//        agentCode.setText(userID);
 
         phoneNumber.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -76,8 +76,6 @@ public class NewRegistrationActivity extends AppCompatActivity {
                     return true; // Consume the key event
                 }
 
-                // If the user deletes characters and the cursor position goes before the country code,
-                // reset the cursor position to the start of the country code
                 if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
                     if (cursorPosition <= 4) {
                         // Move the cursor to the end of the country code
@@ -232,6 +230,12 @@ public class NewRegistrationActivity extends AppCompatActivity {
                         mainIntent.putExtra("lastName", lastName.getText().toString().trim());
                         mainIntent.putExtra("phoneNumber", phoneNumber.getText().toString().trim());
                         mainIntent.putExtra("leadId", leadId); // Pass lead ID as extra
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast("Lead created successfully"); // Fixed toast message
+                            }
+                        });
                         startActivity(mainIntent);
                         finish();
                     } else {
@@ -256,6 +260,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             }
         }).start();
     }
+
 
 
     private void showToast(String message) {

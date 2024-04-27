@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -227,32 +228,37 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border_fixed"
                     android:drawablePadding="8dp"
+                    android:text="DKFE001"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp"
                     android:textSize="16sp"
                     android:gravity="center_vertical"/>
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textColor="@color/primary"-->
-<!--                    android:text="Branch Code"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:gravity="left" />-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Branch Code"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/branchCode"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:background="@drawable/edit_text_border_fixed"-->
-<!--                    android:drawablePadding="8dp"-->
-<!--                    android:padding="8dp"-->
-<!--                    android:textColor="@android:color/black"-->
-<!--                    android:elevation="4dp"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:gravity="center_vertical"/>-->
+                <TextView
+                    android:id="@+id/branchCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border_fixed"
+                    android:drawablePadding="8dp"
+                    android:text="DKF001"
+                    android:padding="8dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:editable="false"
+                    android:focusable="false"
+                    tools:ignore="Deprecated" />
 
                 <TextView
                     android:layout_width="match_parent"
