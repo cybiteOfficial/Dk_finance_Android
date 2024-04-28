@@ -165,10 +165,14 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
     public void onUploadDocumentClick(int requestCode) {
-        // Open file picker to select any type of file
+        // Open file picker to select only PDF and image files
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Specify MIME types for PDF and image files
+        String[] mimeTypes = {"application/pdf", "image/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         try {
             startActivityForResult(intent, requestCode);
@@ -176,6 +180,7 @@ public class KycActivity2 extends AppCompatActivity {
             Toast.makeText(this, "Please install a file manager app to proceed.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     @Override
@@ -227,7 +232,7 @@ public class KycActivity2 extends AppCompatActivity {
             } else {
                 // Permission denied
                 // You can show a message to the user indicating that the permission is required for the app to function properly
-                Toast.makeText(this, "Permission denied. File access is required for the app to function properly.", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Permission denied. File access is required for the app to function properly.", Toast.LENGTH_SHORT).show();
             }
         }
     }

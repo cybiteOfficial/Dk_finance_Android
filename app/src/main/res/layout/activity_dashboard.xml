@@ -126,14 +126,16 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_approved_loans"
+                android:padding="8dp"
+                android:src="@drawable/icon_pending_loans"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp"
+                android:background="@drawable/pending_icon_background"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Approved Loans"
+                android:text="Pending Loans"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:paddingTop="8dp"
@@ -193,14 +195,14 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_failed_payments"
+                android:src="@drawable/icon_approved_loans"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Failed Payments"
+                android:text="Approved Loans"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:paddingTop="8dp"

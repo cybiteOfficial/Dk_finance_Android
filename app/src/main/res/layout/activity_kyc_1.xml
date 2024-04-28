@@ -173,18 +173,18 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
+                <TextView
                     android:id="@+id/emailId"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/edit_text_border_fixed"
                     android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:inputType="textEmailAddress"
                     android:padding="8dp"
+                    android:text="dkfinance.com"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black" />
+                    android:gravity="center_vertical" />
 
             </LinearLayout>
         </ScrollView>

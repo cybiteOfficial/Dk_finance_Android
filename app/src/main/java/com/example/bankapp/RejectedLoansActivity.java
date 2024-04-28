@@ -27,13 +27,13 @@ public class RejectedLoansActivity extends AppCompatActivity {
 
         List<String> loanStatuses = new ArrayList<>();
         loanStatuses.add("Rejected Loans");
+        loanStatuses.add("Pending Loans");
         loanStatuses.add("Approved Loans");
-        loanStatuses.add("Failed Payments");
 
         List<Integer> icons = new ArrayList<>();
         icons.add(R.drawable.icon_rejected_loans);
+        icons.add(R.drawable.icon_pending_loans);
         icons.add(R.drawable.icon_approved_loans);
-        icons.add(R.drawable.icon_failed_payments);
 
         CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, loanStatuses, icons);
         loanStatusSpinner.setAdapter(adapter);

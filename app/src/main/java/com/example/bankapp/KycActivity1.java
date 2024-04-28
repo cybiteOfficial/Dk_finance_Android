@@ -31,7 +31,7 @@ import okhttp3.Response;
 public class KycActivity1 extends AppCompatActivity {
 
     TextView firstName, lastName, phoneNumber;
-    EditText emailId;
+    TextView emailId;
     Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;

@@ -25,7 +25,6 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         applicationID = findViewById(R.id.applicationID);
-
         applicationID.setText(application_ID);
 
 
