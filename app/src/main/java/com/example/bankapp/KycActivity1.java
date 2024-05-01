@@ -117,7 +117,7 @@ public class KycActivity1 extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(emailText)) {
+        if (!TextUtils.isEmpty(emailText)) {
             emailId.setError("Email is required");
 
             if (!isValidEmail(emailText)) {

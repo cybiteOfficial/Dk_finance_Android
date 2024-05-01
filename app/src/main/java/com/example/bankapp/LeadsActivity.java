@@ -8,12 +8,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -36,7 +37,8 @@ public class LeadsActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
 
-    ImageView backBtn ;
+    ImageView backBtn;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class LeadsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         backBtn = findViewById(R.id.back_btn);
+        progressBar = findViewById(R.id.progressBar);
 
         // Set click listener for back button
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +68,7 @@ public class LeadsActivity extends AppCompatActivity {
 
     // Method to fetch leads using GET request
     private void getLeads() {
+        showProgressBar(); // Show progress bar when fetching leads
         String accessToken = sharedPreferences.getString("accessToken", "");
         String url = BASE_URL + "api/v1/leads";
 
@@ -80,6 +84,8 @@ public class LeadsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                // Hide progress bar on failure
+                hideProgressBar();
                 // Handle failure
                 runOnUiThread(new Runnable() {
                     @Override
@@ -104,9 +110,12 @@ public class LeadsActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     displayLeads(leads);
+                                    hideProgressBar(); // Hide progress bar after fetching leads
                                 }
                             });
                         } else {
+                            // Hide progress bar on error
+                            hideProgressBar();
                             // Handle error if needed
                             final String errorMessage = leadResponse.getMessage();
                             runOnUiThread(new Runnable() {
@@ -118,6 +127,8 @@ public class LeadsActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        // Hide progress bar on exception
+                        hideProgressBar();
                         // Handle exception
                         runOnUiThread(new Runnable() {
                             @Override
@@ -127,6 +138,8 @@ public class LeadsActivity extends AppCompatActivity {
                         });
                     }
                 } else {
+                    // Hide progress bar on unsuccessful response
+                    hideProgressBar();
                     // Handle unsuccessful response
                     runOnUiThread(new Runnable() {
                         @Override
@@ -188,18 +201,32 @@ public class LeadsActivity extends AppCompatActivity {
         // Find views in the custom dialog layout
         TextView leadIdTextView = dialogView.findViewById(R.id.lead_id);
         TextView leadNameTextView = dialogView.findViewById(R.id.lead_name);
-        TextView emailTextView = dialogView.findViewById(R.id.email);
+//        TextView emailTextView = dialogView.findViewById(R.id.email);
         TextView mobileNumberTextView = dialogView.findViewById(R.id.mobile_number);
         TextView productTypeTextView = dialogView.findViewById(R.id.product_type);
         TextView caseTagTextView = dialogView.findViewById(R.id.case_tag);
         TextView createdAtTextView = dialogView.findViewById(R.id.created_at);
         TextView customerTypeTextView = dialogView.findViewById(R.id.customer_type);
+        Button kycBtn = dialogView.findViewById(R.id.kycButton);
 
-        // Set lead details to TextViews
+        kycBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LeadsActivity.this, KycActivity1.class);
+                intent.putExtra("firstName", lead.getFirst_name());
+                intent.putExtra("lastName", lead.getLast_name());
+                intent.putExtra("phoneNumber", lead.getMobile_number());
+                intent.putExtra("leadId", lead.getLead_id());
+                startActivity(intent);
+                finish();
+            }
+        });
+
         leadIdTextView.setText("Lead ID: " + lead.getLead_id());
         String fullName = lead.getFirst_name() + " " + lead.getLast_name();
         leadNameTextView.setText("Name: " + fullName);
-        emailTextView.setText("Email: " + lead.getEmail());
+//        emailTextView.setText("Email: " + lead.getEmail());
         mobileNumberTextView.setText("Mobile Number: " + lead.getMobile_number());
         productTypeTextView.setText("Product Type: " + lead.getProduct_type());
         caseTagTextView.setText("Case Tag: " + lead.getCase_tag());
@@ -219,6 +246,7 @@ public class LeadsActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
         builder.show();
 
     }
@@ -239,9 +267,26 @@ public class LeadsActivity extends AppCompatActivity {
         }
     }
 
+    // Method to show progress bar
+    private void showProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE); // Show progress bar
+                progressBar.bringToFront(); // Bring it to the front
+            }
+        });
+    }
 
-
-
+    // Method to hide progress bar
+    private void hideProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE); // Hide progress bar
+            }
+        });
+    }
 
     // LeadResponse class for JSON parsing
     public class LeadResponse {

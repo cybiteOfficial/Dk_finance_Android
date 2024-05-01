@@ -67,7 +67,8 @@
                 android:elevation="4dp"
                 android:inputType="text"
                 android:digits="abcdefghijklmnopqrstuvwxyz0123456789@."
-                android:maxLength="15"/>
+                android:singleLine="true"
+                android:maxLength="32"/>
             <TextView
                 android:id="@+id/password"
                 android:layout_width="match_parent"

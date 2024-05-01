@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import okhttp3.Response;
 public class AllActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class AllActivity extends AppCompatActivity {
 
         ImageView backButton = findViewById(R.id.back_btn);
         LinearLayout cardContainer = findViewById(R.id.card_container);
+        progressBar = findViewById(R.id.progressBar);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +58,7 @@ public class AllActivity extends AppCompatActivity {
     }
 
     private void fetchApplicants(LinearLayout cardContainer) {
+        showProgressBar(); // Show progress bar when fetching applicants
         String accessToken = sharedPreferences.getString("accessToken", "");
         OkHttpClient client = new OkHttpClient();
         String url = BASE_URL + "api/v1/applicants/";
@@ -69,17 +73,19 @@ public class AllActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                hideProgressBar(); // Hide progress bar on failure
                 // Handle failure
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("Failed to fetch applicants 1");
+                        showToast("Failed to fetch applicants");
                     }
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                hideProgressBar(); // Hide progress bar after response
                 String responseBody = response.body().string();
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -134,6 +140,26 @@ public class AllActivity extends AppCompatActivity {
     // Show toast message
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // Method to show progress bar
+    private void showProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE); // Show progress bar
+            }
+        });
+    }
+
+    // Method to hide progress bar
+    private void hideProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE); // Hide progress bar
+            }
+        });
     }
 }
 

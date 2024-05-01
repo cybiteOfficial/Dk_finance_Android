@@ -24,15 +24,15 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email:"
-        android:layout_marginTop="2dp"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="4dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/email"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Email:"-->
+<!--        android:layout_marginTop="2dp"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:layout_marginBottom="4dp"/>-->
 
     <TextView
         android:id="@+id/mobile_number"
@@ -82,5 +82,17 @@
         android:text="Customer Type:"
         android:textSize="18sp"
         android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/kycButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete your KYC"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+
+        />
 
 </LinearLayout>

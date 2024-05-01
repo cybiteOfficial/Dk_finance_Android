@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import okhttp3.Response;
 public class ApprovedLoansActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         setContentView(R.layout.activity_approved_loans);
 
         Spinner loanStatusSpinner = findViewById(R.id.page_spinner);
+        progressBar = findViewById(R.id.progressBar);
 
         List<String> loanStatuses = new ArrayList<>();
         loanStatuses.add("Pending loans");
@@ -95,6 +98,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
     }
 
     private void fetchApplicants(LinearLayout cardContainer) {
+        showProgressBar(); // Show progress bar when fetching applicants
         String accessToken = sharedPreferences.getString("accessToken", "");
         OkHttpClient client = new OkHttpClient();
         String url = BASE_URL + "api/v1/applicants/";
@@ -109,6 +113,8 @@ public class ApprovedLoansActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                // Hide progress bar on failure
+                hideProgressBar();
                 // Handle failure
                 runOnUiThread(new Runnable() {
                     @Override
@@ -121,6 +127,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
+                    hideProgressBar(); // Hide progress bar on unsuccessful response
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -140,6 +147,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        hideProgressBar(); // Hide progress bar after fetching applicants
                         displayApplicants(applicants, cardContainer);
                     }
                 });
@@ -171,10 +179,29 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         }
     }
 
-
     // Show toast message
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // Method to show progress bar
+    private void showProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE); // Show progress bar
+            }
+        });
+    }
+
+    // Method to hide progress bar
+    private void hideProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE); // Hide progress bar
+            }
+        });
     }
 }
 

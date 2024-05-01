@@ -26,8 +26,7 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/baseline_add_home_24"
-            android:background="@drawable/home_button_background"/>
+            android:src="@drawable/icon_back"/>
 
         <!-- Text in the center -->
         <TextView
@@ -62,74 +61,54 @@
                 android:background="@color/white"
                 android:elevation="0dp">
 
-                <LinearLayout
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:textColor="@color/primary"
+                    android:text="First Name"
+                    android:textSize="16sp"
+                    android:gravity="left"
+                    android:layout_marginTop="10dp"/>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                <EditText
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:singleLine="true"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/primary"
-                            android:text="First Name"
-                            android:textSize="16sp"
-                            android:gravity="left"
-                            android:layout_marginTop="10dp"/>
 
-                        <EditText
-                            android:id="@+id/firstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_border"
-                            android:drawablePadding="8dp"
-                            android:padding="8dp"
-                            android:layout_marginTop="5dp"
-                            android:textColor="@android:color/black"
-                            android:elevation="4dp"
-                            android:maxLength="12"
-                            android:inputType="text"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>/>
-                    </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Last Name"
+                    android:textSize="16sp"
+                    android:gravity="left"
+                    android:layout_marginTop="10dp"/>
 
-                    <!-- Last Name -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="10dp">
+                <EditText
+                    android:id="@+id/lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:singleLine="true"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/primary"
-                            android:text="Last Name"
-                            android:textSize="16sp"
-                            android:gravity="left"
-                            android:layout_marginTop="10dp"/>
-
-                        <EditText
-                            android:id="@+id/lastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_border"
-                            android:drawablePadding="8dp"
-                            android:padding="8dp"
-                            android:layout_marginTop="5dp"
-                            android:textColor="@android:color/black"
-                            android:elevation="4dp"
-                            android:maxLength="12"
-                            android:inputType="text"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
-                    </LinearLayout>
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -219,7 +198,8 @@
                     android:text="Agent code"
                     android:layout_marginTop="10dp"
                     android:textSize="16sp"
-                    android:gravity="left" />
+                    android:gravity="left"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/agentCode"
@@ -233,7 +213,8 @@
                     android:textColor="@android:color/black"
                     android:elevation="4dp"
                     android:textSize="16sp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:visibility="gone"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,7 +222,9 @@
                     android:text="Branch Code"
                     android:layout_marginTop="10dp"
                     android:textSize="16sp"
-                    android:gravity="left" />
+                    android:gravity="left"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/branchCode"
@@ -258,7 +241,8 @@
                     android:gravity="center_vertical"
                     android:editable="false"
                     android:focusable="false"
-                    tools:ignore="Deprecated" />
+                    tools:ignore="Deprecated"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
