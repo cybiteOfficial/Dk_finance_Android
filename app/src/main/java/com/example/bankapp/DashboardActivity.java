@@ -43,27 +43,27 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        approvedLoansButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, ApprovedLoansActivity.class);
-                startActivity(intent);
-            }
-        });
-        rejectedLoansButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, RejectedLoansActivity.class);
-                startActivity(intent);
-            }
-        });
-        failedPaymentsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, FailedPaymentsActivity.class);
-                startActivity(intent);
-            }
-        });
+//        approvedLoansButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DashboardActivity.this, ApprovedLoansActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//        rejectedLoansButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DashboardActivity.this, RejectedLoansActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//        failedPaymentsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DashboardActivity.this, FailedPaymentsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         leadsButton.setOnClickListener(new View.OnClickListener() { // Added
             @Override
             public void onClick(View v) {
@@ -72,13 +72,13 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        allBtn.setOnClickListener(new View.OnClickListener() { // Added
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, AllActivity.class);
-                startActivity(intent);
-            }
-        });
+//        allBtn.setOnClickListener(new View.OnClickListener() { // Added
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DashboardActivity.this, AllActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
 

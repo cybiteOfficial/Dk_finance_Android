@@ -44,7 +44,8 @@ public class NewRegistrationActivity extends AppCompatActivity {
     EditText firstName, lastName, phoneNumber, branchName, loanAmount;
     Spinner caseTag, productType, customerType;
     ImageView homeButton;
-    TextView date, agentCode, branchCode;
+    TextView date, agentCode, branchCode, timeTextView;
+
 
     SharedPreferences sharedPreferences;
 
@@ -55,12 +56,14 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
         String userID = getIntent().getStringExtra("userId");
 
+
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         phoneNumber = findViewById(R.id.phoneNumber);
         agentCode = findViewById(R.id.agentCode);
         loanAmount = findViewById(R.id.loanAmount);
         date = findViewById(R.id.date);
+        timeTextView = findViewById(R.id.time);
         homeButton = findViewById(R.id.homeButton);
 
 
@@ -160,6 +163,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
         customerTypeSpinner.setAdapter(customerTypeAdapter);
 
         autofetchDate();
+        autoTime();
 
         Button submitButton = findViewById(R.id.submit_button);
         Button btnSave = findViewById(R.id.save_button);
@@ -188,6 +192,13 @@ public class NewRegistrationActivity extends AppCompatActivity {
         // Set the current date in the TextView
         date.setText(currentDate);
     }
+    private void autoTime(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        String currentTime = timeFormat.format(calendar.getTime());
+        timeTextView.setText(currentTime);
+    }
+
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(firstName.getText().toString().trim())) {

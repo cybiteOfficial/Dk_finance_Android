@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.io.IOException;
 import okhttp3.Call;
@@ -22,11 +23,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import android.content.SharedPreferences;
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText loginUsername, loginPassword;
     Button loginButton;
     OkHttpClient client;
+    ProgressBar progressBar;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -39,6 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         client = new OkHttpClient();
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Initialize the ProgressBar
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickPost(String email, String password) {
+        progressBar.setVisibility(View.VISIBLE);
         String url = BASE_URL + "auth/signin";
 
         new Thread(new Runnable() {
@@ -146,7 +154,14 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
             }
+
         }).start();
     }
 }

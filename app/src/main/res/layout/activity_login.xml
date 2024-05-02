@@ -19,12 +19,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="50dp">
         <ImageView
             android:layout_width="312sp"
             android:layout_height="100sp"
             android:src="@drawable/logo_login"
-            android:layout_marginTop="50dp" />
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/primary"
                 android:text="User ID"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:textSize="18sp"
                 android:gravity="left" />
 
@@ -105,19 +105,20 @@
                 android:layout_gravity="right"
                 app:cornerRadius="8dp" />
 
-            <TextView
-                android:id="@+id/forgot_password_text"
+            <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/primary"
-                android:textSize="18dp"
-                android:layout_marginTop="70dp"
-                android:text="Forgot Password?"
+                android:textSize="8dp"
+                android:layout_marginTop="20dp"
                 android:visibility="gone"
                 />
 
+
         </LinearLayout>
+
 
 
     </androidx.cardview.widget.CardView>
