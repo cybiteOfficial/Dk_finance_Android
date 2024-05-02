@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -61,6 +64,42 @@ public class NewRegistrationActivity extends AppCompatActivity {
         homeButton = findViewById(R.id.homeButton);
 
 
+        // Define a DecimalFormat to format the number
+        DecimalFormat formatter = new DecimalFormat("#,##,##0");
+
+// Set text change listener to format the number as user types
+        loanAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No action needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No action needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loanAmount.removeTextChangedListener(this);
+                try {
+                    String str = s.toString().replaceAll(",", "");
+                    if(str.length() > 15) {
+                        // If the length exceeds 15, trim it
+                        str = str.substring(0, 15);
+                    }
+                    long number = Long.parseLong(str);
+                    // Format the number
+                    String formattedNumber = formatter.format(number);
+                    // Set the formatted number back to the EditText
+                    loanAmount.setText(formattedNumber);
+                    loanAmount.setSelection(formattedNumber.length());
+                } catch (NumberFormatException e) {
+                    // Not a valid number
+                }
+                loanAmount.addTextChangedListener(this);
+            }
+        });
 //        agentCode.setText(userID);
 
         phoneNumber.setOnKeyListener(new View.OnKeyListener() {

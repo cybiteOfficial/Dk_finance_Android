@@ -92,6 +92,7 @@
         android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/primary"
         android:textColor="@color/white"
+        android:visibility="gone"
 
         />
 

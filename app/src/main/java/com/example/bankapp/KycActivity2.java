@@ -15,6 +15,7 @@ import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +55,7 @@ public class KycActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_kyc_2);
 
         final String mobNo = getIntent().getStringExtra("phoneNumber");
+        final String kyc_id = getIntent().getStringExtra("kyc_id");
         // Check and request READ_EXTERNAL_STORAGE permission if not granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -112,7 +114,8 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateAdharNumber() && validatePanNumber()) {
-                    makeHttpRequest(accessToken, mobNo);
+                    makeHttpRequest1(accessToken, mobNo, kyc_id);
+
                 } else {
                     if (!validateAdharNumber()) {
                         Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhar number", Toast.LENGTH_SHORT).show();
@@ -146,7 +149,7 @@ public class KycActivity2 extends AppCompatActivity {
     private boolean validateAdharNumber() {
         String adharNumberText = adhar_number.getText().toString().trim();
 
-        // Check if Aadhar number is exactly 14 digits
+        // Check if Aadhar number is exactly 12 digits
         if (adharNumberText.length() != 12) {
             return false;
         }
@@ -156,8 +159,8 @@ public class KycActivity2 extends AppCompatActivity {
     private boolean validatePanNumber() {
         String panNumberText = pan_number.getText().toString().trim();
 
-        // Check if PAN number is exactly 9 characters
-        if (panNumberText.length() != 9) {
+        // Check if PAN number is exactly 10 characters
+        if (panNumberText.length() != 10) {
             return false;
         }
 
@@ -237,8 +240,9 @@ public class KycActivity2 extends AppCompatActivity {
         }
     }
 
-    private void makeHttpRequest(String accessToken, String phoneNumber) {
-        String url = BASE_URL + "api/v1/upload_document";
+    private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id) {
+        String url1 = BASE_URL + "api/v1/upload_document";
+
         String uuid = sharedPreferences.getString("uuid", "");
 
         new Thread(new Runnable() {
@@ -252,7 +256,7 @@ public class KycActivity2 extends AppCompatActivity {
                         .build();
 
                 Request request = new Request.Builder()
-                        .url(url)
+                        .url(url1)
                         .post(formBody)
                         .addHeader("Authorization", "Bearer " + accessToken)
                         .build();
@@ -268,13 +272,57 @@ public class KycActivity2 extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (serverResponse.contains("false")) {
-                                Toast.makeText(KycActivity2.this, "Documents Uploaded Successfull", Toast.LENGTH_SHORT).show();
+                                makeHttpRequest2(accessToken, phoneNumber, kyc_id);
+                                Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(KycActivity2.this,"Upload Failed 1", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+    private void makeHttpRequest2(String accessToken, String phoneNumber, String kyc_id) {
+
+        String url2 = BASE_URL + "api/v1/kyc?kyc_id=" + kyc_id;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestBody formBody = new FormBody.Builder()
+
+                        .add("kyc_document_verified", "true")
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(url2)
+                        .put(formBody)
+                        .addHeader("Authorization", "Bearer " + accessToken)
+                        .build();
+
+                OkHttpClient client = new OkHttpClient();
+                Call call = client.newCall(request);
+
+                Response response = null;
+                try {
+                    response = call.execute();
+                    String serverResponse2 = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("serv2resp", serverResponse2);
+                            if (serverResponse2.contains("Successfully updated.")) {
                                 Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
                                 mainIntent.putExtra("phoneNumber", phoneNumber);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
-                                Toast.makeText(KycActivity2.this,"Upload Failed", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(KycActivity2.this,"Upload Failed 2", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
