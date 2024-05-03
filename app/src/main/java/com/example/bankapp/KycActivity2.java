@@ -126,6 +126,7 @@ public class KycActivity2 extends AppCompatActivity {
             }
         });
 
+
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
