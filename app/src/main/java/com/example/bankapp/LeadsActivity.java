@@ -213,8 +213,13 @@ public class LeadsActivity extends AppCompatActivity {
         String fullName = lead.getFirst_name() + " " + lead.getLast_name();
         leadNameTextView.setText("Name: " + fullName);
         mobileNumberTextView.setText("Mobile Number: " + lead.getMobile_number());
-        productTypeTextView.setText("Product Type: " + lead.getProduct_type());
-        caseTagTextView.setText("Case Tag: " + lead.getCase_tag());
+        if(Objects.equals(lead.getProduct_type(), "normal")){
+            productTypeTextView.setText("Product Type: Normal");
+        }
+
+        if(Objects.equals(lead.getCase_tag(), "normal")){
+            caseTagTextView.setText("Case Tag: Normal");
+        }
         createdAtTextView.setText("Created At: " + formatDate(lead.getCreated_at()));
         String custType = lead.getCustomer_type();
         Log.d(lead.getMobile_number(),"Mobile no");
