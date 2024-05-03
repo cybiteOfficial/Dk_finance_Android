@@ -177,7 +177,7 @@ public class LeadsActivity extends AppCompatActivity {
 
             String custType = lead.getCustomer_type();
             if (Objects.equals(custType, "home_loan")) {
-                customerType.setText("Home Loan");
+                customerType.setText("Normal");
             }
 
             // Add lead item to container
@@ -219,7 +219,7 @@ public class LeadsActivity extends AppCompatActivity {
         String custType = lead.getCustomer_type();
         Log.d(lead.getMobile_number(),"Mobile no");
         if (Objects.equals(custType, "home_loan")) {
-            customerTypeTextView.setText("Customer Type: Home Loan");
+            customerTypeTextView.setText("Customer Type: Normal");
         }
 
         // Check if KYC is done for the lead

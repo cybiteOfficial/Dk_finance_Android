@@ -120,7 +120,7 @@ public class KycActivity2 extends AppCompatActivity {
                     if (!validateAdharNumber()) {
                         Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhar number", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(KycActivity2.this, "Enter a valid 9-character PAN number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KycActivity2.this, "Enter a valid 10-character PAN number", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -158,6 +158,11 @@ public class KycActivity2 extends AppCompatActivity {
     }
     private boolean validatePanNumber() {
         String panNumberText = pan_number.getText().toString().trim();
+
+        // If PAN number is empty, consider it valid
+        if (panNumberText.isEmpty()) {
+            return true;
+        }
 
         // Check if PAN number is exactly 10 characters
         if (panNumberText.length() != 10) {

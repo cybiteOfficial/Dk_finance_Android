@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -105,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         Gson gson = new Gson();
                         LoginResponse loginResponse = gson.fromJson(serverResponse, LoginResponse.class);
-
+                        Log.d("login log", String.valueOf(loginResponse));
                         // Check if the response contains an error
                         if (!loginResponse.isError() && loginResponse.getData() != null) {
                             String accessToken = loginResponse.getData().getAccessToken();
