@@ -82,7 +82,7 @@
                     android:textColor="@android:color/black"
                     android:elevation="4dp"
                     android:inputType="text"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                     android:singleLine="true"/>
 
 
@@ -106,7 +106,7 @@
                     android:textColor="@android:color/black"
                     android:elevation="4dp"
                     android:inputType="text"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                     android:singleLine="true"/>
 
 
@@ -284,7 +284,6 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:inputType="date"
                     android:textSize="16sp"
                     android:gravity="center_vertical" />
                 <TextView
@@ -304,7 +303,6 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:inputType="date"
                     android:textSize="16sp"
                     android:gravity="center_vertical" />
 

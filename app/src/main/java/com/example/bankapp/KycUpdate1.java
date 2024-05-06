@@ -82,6 +82,7 @@ public class KycUpdate1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateFields()) {
+                    submitButton.setEnabled(false);
                     makeHttpRequest(accessToken, leadID, kyc_id, phone);
                 }
             }
@@ -184,6 +185,7 @@ public class KycUpdate1 extends AppCompatActivity {
                                 mainIntent.putExtra("kyc_id", kyc_id);
                                 mainIntent.putExtra("phoneNumber", phone);
                                 startActivity(mainIntent);
+                                finish();
                             } else {
                                 Toast.makeText(KycUpdate1.this, serverResponse, Toast.LENGTH_LONG).show();
                             }
