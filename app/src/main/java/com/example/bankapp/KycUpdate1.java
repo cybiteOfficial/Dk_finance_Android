@@ -82,6 +82,7 @@ public class KycUpdate1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateFields()) {
+                    submitButton.setEnabled(false);
                     makeHttpRequest(accessToken, leadID, kyc_id, phone);
                 }
             }

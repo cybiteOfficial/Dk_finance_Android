@@ -120,13 +120,11 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
                 if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
                     if (cursorPosition <= 4) {
-                        // Move the cursor to the end of the country code
                         phoneNumber.setSelection(4);
-                        return true; // Consume the key event
+                        return true;
                     }
                 }
-
-                return false; // Let the system handle the key event
+                return false;
             }
         });
 
@@ -233,13 +231,25 @@ public class NewRegistrationActivity extends AppCompatActivity {
                 String phoneNumberText = phoneNumber.getText().toString().trim();
                 phoneNumberText = phoneNumberText.substring(4);
 
+                // Get the loan amount as a string without commas
+                String loanAmountText = loanAmount.getText().toString().replaceAll(",", "");
+
+                // Parse the loan amount string to an integer
+//                int loanAmountInt = 0;
+//                try {
+//                    loanAmountInt = Integer.parseInt(loanAmountText);
+//                } catch (NumberFormatException e) {
+//                    // Handle the case where the loan amount is not a valid integer
+//                    e.printStackTrace(); // Or show an error message
+//                }
+
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
                         .add("mobile_number", phoneNumberText)
                         .add("last_name", lastName.getText().toString().trim())
                         .add("email", "")
 //                        .add("agent_code", agentCode.getText().toString().trim())
-                        .add("loan_amount", loanAmount.getText().toString().trim())
+                        .add("loan_amount", loanAmountText)
                         .add("agent_code", "DKFE001")
                         .add("product_type", "normal")
                         .add("case_tag", "normal")
@@ -247,10 +257,10 @@ public class NewRegistrationActivity extends AppCompatActivity {
                         .add("comment", "testing");
 
                 // Check if loan amount is provided
-                String loanAmountText = loanAmount.getText().toString().trim();
-                if (!TextUtils.isEmpty(loanAmountText)) {
-                    formBodyBuilder.add("loan_amount", loanAmountText);
-                }
+//                String loanAmountText = loanAmount.getText().toString().trim();
+//                if (!TextUtils.isEmpty(loanAmountText)) {
+//                    formBodyBuilder.add("loan_amount", loanAmountText);
+//                }
 
                 RequestBody formBody = formBodyBuilder.build();
 

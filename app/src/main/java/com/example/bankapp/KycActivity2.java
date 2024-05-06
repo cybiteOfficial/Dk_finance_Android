@@ -36,6 +36,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class KycActivity2 extends AppCompatActivity {
     private static final int FILE_PICKER_REQUEST_CODE = 2;
@@ -114,13 +116,22 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateAdharNumber() && validatePanNumber()) {
+                    submitButton.setEnabled(false);
                     makeHttpRequest1(accessToken, mobNo, kyc_id);
 
                 } else {
                     if (!validateAdharNumber()) {
-                        Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhar number", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(KycActivity2.this, "Enter a valid 10-character PAN number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhaar number", Toast.LENGTH_SHORT).show();
+                    }
+
+                    else if(!validatePanNumber()){
+
+                        Toast.makeText(KycActivity2.this, "Enter a valid PAN", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    else {
+                        Toast.makeText(KycActivity2.this, "Enter valid credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -149,28 +160,49 @@ public class KycActivity2 extends AppCompatActivity {
     private boolean validateAdharNumber() {
         String adharNumberText = adhar_number.getText().toString().trim();
 
-        // Check if Aadhar number is exactly 12 digits
+        // Check if Aadhaar number is exactly 12 digits
         if (adharNumberText.length() != 12) {
             return false;
         }
 
         return true;
     }
-    private boolean validatePanNumber() {
-        String panNumberText = pan_number.getText().toString().trim();
 
-        // If PAN number is empty, consider it valid
-        if (panNumberText.isEmpty()) {
+    // Function to validate the PAN Card number.
+
+    private boolean validatePanNumber()
+    {
+
+        String panCardNo = pan_number.getText().toString().trim();
+        // Regex to check valid PAN Card number.
+
+        if (panCardNo.isEmpty()) {
             return true;
         }
 
-        // Check if PAN number is exactly 10 characters
-        if (panNumberText.length() != 10) {
+        String regex = "[A-Z]{5}[0-9]{4}[A-Z]{1}";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        Matcher m = p.matcher(panCardNo);
+
+        // Return if the PAN Card number matched the ReGex
+        if (!m.matches()) {
+            showToast("Invalid PAN Card number");
             return false;
         }
 
+        // If everything is fine, return true
         return true;
     }
+
+    // Method to show toast
+    public static void showToast(String message) {
+        // Replace this line with your actual toast implementation
+        System.out.println("Toast: " + message);
+    }
+
 
     public void onUploadDocumentClick(int requestCode) {
         // Open file picker to select only PDF and image files

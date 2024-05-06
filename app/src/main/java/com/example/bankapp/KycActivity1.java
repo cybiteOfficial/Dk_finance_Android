@@ -85,6 +85,7 @@ public class KycActivity1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateFields()) {
+                    submitButton.setEnabled(false);
                     makeHttpRequest(accessToken, leadID, kycId); // Use stored kycId
                 }
             }
