@@ -227,6 +227,7 @@ public class KycActivity1 extends AppCompatActivity {
                                 mainIntent.putExtra("leadId", leadID);
                                 mainIntent.putExtra("kyc_id", kycId);
                                 startActivity(mainIntent);
+                                finish();
                             } else {
                                 Toast.makeText(KycActivity1.this, "An error occurred", Toast.LENGTH_LONG).show();
                             }
