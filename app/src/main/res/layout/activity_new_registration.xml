@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -83,7 +84,8 @@
                     android:elevation="4dp"
                     android:inputType="text"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    />
 
 
                 <TextView
@@ -119,22 +121,44 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
-                <EditText
-                    android:id="@+id/phoneNumber"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:digits="0123456789"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:inputType="phone"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:maxLength="14"
-                    android:text="+91 "
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:orientation="horizontal">
+
+                    <!-- Country Code TextView -->
+                    <TextView
+                        android:id="@+id/countryCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="+91"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
+
+                    <!-- Phone Number EditText -->
+                    <EditText
+                        android:id="@+id/phoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:digits="0123456789"
+                        android:drawablePadding="8dp"
+                        android:elevation="4dp"
+                        android:inputType="phone"
+                        android:padding="8dp"
+                        android:textColor="@android:color/black"
+                        android:maxLength="10"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+                </LinearLayout>
+
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -284,6 +308,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
+                    android:inputType="date"
                     android:textSize="16sp"
                     android:gravity="center_vertical" />
                 <TextView
@@ -303,6 +328,7 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
+                    android:inputType="date"
                     android:textSize="16sp"
                     android:gravity="center_vertical" />
 

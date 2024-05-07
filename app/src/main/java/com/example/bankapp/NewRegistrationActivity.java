@@ -105,30 +105,13 @@ public class NewRegistrationActivity extends AppCompatActivity {
         });
 //        agentCode.setText(userID);
 
-        phoneNumber.setOnKeyListener(new View.OnKeyListener() {
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // Get the cursor position
-                int cursorPosition = phoneNumber.getSelectionStart();
-
-                // If the cursor is positioned before the country code, move it after the country code
-                if (cursorPosition < 4) {
-                    // Move the cursor to the end of the country code
-                    phoneNumber.setSelection(4);
-                    return true; // Consume the key event
-                }
-
-                if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                    if (cursorPosition <= 4) {
-                        phoneNumber.setSelection(4);
-                        return true;
-                    }
-                }
-                return false;
+            public void onClick(View v) {
+                // Move the cursor to the end of the text in the EditText
+                phoneNumber.setSelection(phoneNumber.getText().length());
             }
         });
-
-
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("accessToken", "");
@@ -209,7 +192,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             return false;
         }
 
-        if (phoneNumber.getText().toString().trim().length() < 14) {
+        if (phoneNumber.getText().toString().trim().length() < 10) {
             phoneNumber.setError("Please enter a valid phone number");
             return false;
         }
@@ -245,7 +228,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
-                        .add("mobile_number", phoneNumberText)
+                        .add("mobile_number", phoneNumber.getText().toString())
                         .add("last_name", lastName.getText().toString().trim())
                         .add("email", "")
 //                        .add("agent_code", agentCode.getText().toString().trim())

@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -154,6 +155,20 @@ public class LeadsActivity extends AppCompatActivity {
         });
     }
 
+    private String formatAmount(String amount) {
+        // Parse the string to integer
+        String amt = amount.replace(",","");
+        long loanAmount = Long.parseLong(amt);
+
+        // Create a DecimalFormat object to format the number
+        DecimalFormat formatter = new DecimalFormat("#,##,##,##,###");
+
+        // Format the number with commas
+        String formattedAmount = formatter.format(loanAmount);
+
+        return formattedAmount;
+    }
+
     // Method to dynamically display fetched leads
     private void displayLeads(LeadData[] leads, String accessToken) { // Add accessToken parameter
         LinearLayout leadsContainer = findViewById(R.id.leads_container);
@@ -173,7 +188,11 @@ public class LeadsActivity extends AppCompatActivity {
             leadNumberTextView.setText(lead.getLead_id());
             String fullName = lead.getFirst_name() + " " + lead.getLast_name();
             NameTextView.setText(fullName);
-            loanAmount.setText(lead.getLoan_amount());
+            String loanAmtUnformatted = lead.getLoan_amount();
+            String formattedLoanAmount = formatAmount(loanAmtUnformatted);
+
+            // Set formatted loan amount
+            loanAmount.setText(formattedLoanAmount);
 
             String custType = lead.getCustomer_type();
             if (Objects.equals(custType, "home_loan")) {
