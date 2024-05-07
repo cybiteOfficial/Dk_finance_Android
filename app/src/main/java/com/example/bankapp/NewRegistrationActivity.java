@@ -272,7 +272,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
                         Intent mainIntent = new Intent(NewRegistrationActivity.this, KycActivity1.class);
                         mainIntent.putExtra("firstName", firstName.getText().toString().trim());
                         mainIntent.putExtra("lastName", lastName.getText().toString().trim());
-                        mainIntent.putExtra("phoneNumber", phoneNumber.getText().toString().trim());
+                        mainIntent.putExtra("phoneNumber", "+91 " + phoneNumber.getText().toString().trim());
                         mainIntent.putExtra("leadId", leadId); // Pass lead ID as extra
                         runOnUiThread(new Runnable() {
                             @Override
