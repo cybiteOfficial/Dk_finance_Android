@@ -140,11 +140,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="80dp"
                     android:background="@drawable/addspinnerbg"
                     android:padding="16dp"
                     android:spinnerMode="dropdown"
-                    android:popupBackground="@color/black" />
+                    android:popupBackground="@color/black"
+                    />
 
             </LinearLayout>
         </ScrollView>

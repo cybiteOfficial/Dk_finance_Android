@@ -362,6 +362,7 @@ public class KycActivity2 extends AppCompatActivity {
 
         if(!validateVoterID(voterIdNumber)){
             voterIdEditText.setError("Enter a valid Voter ID number");
+            return;
         }
         findViewById(R.id.voterIdSaveButton).setVisibility(View.GONE);
     }
@@ -379,6 +380,7 @@ public class KycActivity2 extends AppCompatActivity {
 
         if(!validateDrivingLicense(drivingLicenseNumber)){
             drivingLicenseEditText.setError("Enter a valid Driving License number");
+            return;
         }
         findViewById(R.id.drivingLicenseSaveButton).setVisibility(View.GONE);
     }
@@ -396,6 +398,7 @@ public class KycActivity2 extends AppCompatActivity {
 
         if(!validatePassport(passportNumber)){
             passportEdittext.setError("Enter a valid Passport number");
+            return;
         }
         findViewById(R.id.passportSaveButton).setVisibility(View.GONE);
     }
@@ -420,8 +423,6 @@ public class KycActivity2 extends AppCompatActivity {
         spinnerItems.add("Form 60");
     }
 
-
-
     // PAN Card validation
     private boolean validatePAN(String panNumberText) {
         String panPattern = "[A-Z]{5}[0-9]{4}[A-Z]{1}";
@@ -444,6 +445,6 @@ public class KycActivity2 extends AppCompatActivity {
     private boolean validatePassport(String passportText){
         Pattern pattern = Pattern.compile("^[A-PR-WY][1-9]\\d" + "\\s?\\d{4}[1-9]$");
         Matcher matcher = pattern.matcher(passportText);
-        return matcher.matches();
+        return true;
     }
 }
