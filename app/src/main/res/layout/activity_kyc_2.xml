@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:backgroundTint="@color/white">
 
     <!-- Box at the top of the screen -->
-
     <LinearLayout
         android:id="@+id/topBox"
         android:layout_width="match_parent"
@@ -17,8 +15,7 @@
         android:background="#1A7A306c"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:paddingTop="20dp"
-        >
+        android:paddingTop="20dp">
 
         <!-- Home button on the left -->
         <ImageView
@@ -34,8 +31,9 @@
         <!-- Text in the center -->
         <TextView
             android:id="@+id/textView"
-            android:layout_width="317sp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="KYC Details (2/2)"
@@ -46,25 +44,27 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_margin="20dp"
+        app:cardElevation="0dp"
+        android:backgroundTint="@color/white"
+        android:background="@color/white">
 
-        app:cardElevation="0dp">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/topBox"
-            android:layout_marginTop="0dp"
             android:scrollbars="none"
             android:overScrollMode="never">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="center_horizontal"
                 android:padding="2dp"
                 android:background="@color/white"
                 android:elevation="0dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -75,6 +75,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="left" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -102,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Upload Aadhar Card "
+                    android:text="Upload Aadhar Card"
                     android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
@@ -123,122 +124,49 @@
                     android:inputType="none"
                     android:focusable="false"
                     android:onClick="onUploadDocumentClick" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="PAN Card Number"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
 
-                <EditText
-                    android:id="@+id/pan_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:inputType="textCapCharacters"
-                    android:padding="8dp"
-                    android:maxLength="10"
-                    android:textColor="@android:color/black" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Upload PAN Card "
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/pandocs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textSize="14dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary"
-                    android:drawableEnd="@drawable/attach_file"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:onClick="onUploadDocumentClick" />
                 <LinearLayout
-
+                    android:id="@+id/container"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="25dp"
-                    android:visibility="gone">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
 
-                    <TextView
-                        android:id="@+id/addDocs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:gravity="center_vertical"
-                        android:text="Add more documents"
-                        android:textColor="@color/primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:paddingLeft="10dp"/>
+
                 </LinearLayout>
 
-
-
+                <Spinner
+                    android:id="@+id/add_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/addspinnerbg"
+                    android:padding="16dp"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@color/black" />
 
             </LinearLayout>
-
         </ScrollView>
-
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="160dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/white"
-            android:text="SAVE"
-            android:textColor="@color/primary"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:cornerRadius="8dp"
-            android:layout_gravity="bottom|left"
-            android:visibility="gone"/>
 
         <Button
             android:id="@+id/submit_button"
             android:layout_width="160dp"
             android:layout_height="60dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="@color/primary"
             android:text="SUBMIT"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:cornerRadius="8dp"
-            android:layout_gravity="bottom|right"/>
+            app:cornerRadius="8dp" />
     </LinearLayout>
-
-
-
 </LinearLayout>

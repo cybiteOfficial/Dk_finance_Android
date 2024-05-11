@@ -51,9 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Disable the button before attempting login
+                loginButton.setEnabled(false);
+                // Proceed with validation and login attempt
                 validateAndLogin();
             }
         });
+
     }
 
     private void validateAndLogin() {
@@ -62,18 +66,21 @@ public class LoginActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(username)) {
             loginUsername.setError("User ID is required");
+            // Enable the button again since there's an error
+            loginButton.setEnabled(true);
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
             loginPassword.setError("Password is required");
+            // Enable the button again since there's an error
+            loginButton.setEnabled(true);
             return;
         }
 
         // Validation passed, proceed with login
         onClickPost(username, password);
     }
-
     public void onClickPost(String email, String password) {
         progressBar.setVisibility(View.VISIBLE);
         String url = BASE_URL + "auth/signin";
@@ -131,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    loginButton.setEnabled(true);
                                     Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                                     // Clear the password field
                                     loginUsername.setText("");
@@ -142,7 +150,13 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                // Enable the login button
+                                loginButton.setEnabled(true);
+                                // Show error message
                                 Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                                // Clear the password field
+                                loginUsername.setText("");
+                                loginPassword.setText("");
                             }
                         });
                     }
@@ -151,6 +165,8 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            // Enable the login button
+                            loginButton.setEnabled(true);
                             Toast.makeText(LoginActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -164,6 +180,8 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         }).start();
+
+
     }
 }
 
