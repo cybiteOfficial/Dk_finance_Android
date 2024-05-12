@@ -23,7 +23,7 @@ public class AadharTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        String text = s.toString().replaceAll("\\s", ""); // Remove any existing spaces
+        String text = s.toString().replaceAll("\\s", "");
         if (text.length() > 0 && (text.length() % 5) == 0) {
             String formattedText = "";
             for (int i = 0; i < text.length(); i++) {

@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_new_registration2);
 
         final String application_ID = getIntent().getStringExtra("applicationId");
-
+        showToast("Application ID Generated");
         TextView btnSave = findViewById(R.id.save_button);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
@@ -29,6 +30,16 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
 
 
         Button continueButton = findViewById(R.id.submit_button);
+        ImageView homeButton = findViewById(R.id.homeButton);
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewRegistrationActivity2.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +49,7 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
                 intent.putExtra("applicationID", application_ID);
                 startActivity(intent);
                 finish();
-                showToast("Application ID Generated");
+
             }
         });
     }

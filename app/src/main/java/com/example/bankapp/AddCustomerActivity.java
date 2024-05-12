@@ -47,17 +47,16 @@ public class AddCustomerActivity extends AppCompatActivity {
             }
         });
 
-        // Get the co-applicant names passed from AddressActivity
+
         ArrayList<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
 
         if (coApplicantNames != null) {
-            // Display co-applicant names
             displayCoApplicantNames(coApplicantNames);
         } else {
             Log.d(TAG, "No co-applicant names received.");
         }
 
-        // Set click listener for the button
+
         findViewById(R.id.addCustomerButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
