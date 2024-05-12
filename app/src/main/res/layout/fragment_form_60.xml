@@ -15,30 +15,6 @@
         android:background="@color/white"
         android:elevation="0dp">
 
-        <!--        <TextView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:textColor="@color/primary"-->
-        <!--            android:text="Driving License"-->
-        <!--            android:layout_marginTop="10dp"-->
-        <!--            android:textSize="16sp"-->
-        <!--            android:gravity="left" />-->
-
-        <!--        <EditText-->
-        <!--            android:id="@+id/drivingId"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="50dp"-->
-        <!--            android:layout_marginTop="5dp"-->
-        <!--            android:background="@drawable/edit_text_border"-->
-        <!--            android:digits="0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ"-->
-        <!--            android:drawablePadding="8dp"-->
-        <!--            android:elevation="4dp"-->
-        <!--            android:inputType="text"-->
-        <!--            android:singleLine="true"-->
-        <!--            android:maxLength="16"-->
-        <!--            android:padding="8dp"-->
-        <!--            android:textColor="@android:color/black" />-->
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,14 +39,14 @@
             android:drawableEnd="@drawable/attach_file"
             android:inputType="none"
             android:focusable="false"
-            android:onClick="onUploadDocumentClick" />
+            android:onClick="onForm60DocsUploadClick" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp">
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/form60SaveButton"
             android:layout_width="50dp"
@@ -92,7 +68,5 @@
             android:src="@drawable/dustbin"
             android:background="@drawable/edit_text_border"
             android:onClick="onForm60DeleteButtonClick"/>
-
-
     </LinearLayout>
 </LinearLayout>

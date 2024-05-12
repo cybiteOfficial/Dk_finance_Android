@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -129,17 +130,66 @@ public class NewRegistrationActivity extends AppCompatActivity {
         customerType = findViewById(R.id.customerType);
 
         Spinner caseTagSpinner = findViewById(R.id.caseTag);
-        ArrayAdapter<String> caseTagAdapter = new ArrayAdapter<>(this,R.layout.sample_spinner_item, getResources().getStringArray(R.array.case_tag));
+        ArrayAdapter<String> caseTagAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.case_tag)) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+        };
         caseTagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         caseTagSpinner.setAdapter(caseTagAdapter);
 
+
         Spinner productSpinner = findViewById(R.id.productType);
-        ArrayAdapter<String> productAdapter = new ArrayAdapter<>(this,R.layout.sample_spinner_item, getResources().getStringArray(R.array.product_types_array));
+        ArrayAdapter<String> productAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.product_types_array)) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+        };
         productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productSpinner.setAdapter(productAdapter);
 
         Spinner customerTypeSpinner = findViewById(R.id.customerType);
-        ArrayAdapter<String> customerTypeAdapter = new ArrayAdapter<>(this,R.layout.sample_spinner_item, getResources().getStringArray(R.array.customer_type));
+        ArrayAdapter<String> customerTypeAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.customer_type)) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black));
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black));
+                return view;
+            }
+        };
         customerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         customerTypeSpinner.setAdapter(customerTypeAdapter);
 

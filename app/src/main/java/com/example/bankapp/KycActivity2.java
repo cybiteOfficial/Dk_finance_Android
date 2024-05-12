@@ -3,6 +3,7 @@ package com.example.bankapp;
 import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,12 +11,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-
-
 import android.provider.OpenableColumns;
-
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,21 +23,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import okhttp3.Call;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,28 +43,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class KycActivity2 extends AppCompatActivity {
-    private static final int FILE_PICKER_REQUEST_CODE = 2;
-    private static final int REQUEST_PAN_DOCUMENT = 2;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     private static final int REQUEST_ADHAR_DOCUMENT = 1;
+    private static final int REQUEST_PAN_DOCUMENT = 2;
+    private static final int REQUEST_PAN_DOCS = 3;
+    private static final int REQUEST_DRIVING_DOCS = 4;
+    private static final int REQUEST_VOTER_ID_DOCS = 5;
+    private static final int REQUEST_FORM_60_DOCS = 6;
+    private static final int REQUEST_PASSPORT_DOCS = 7;
 
-    EditText adhar_number,panNumber, voterIdNumber, drivingId;
-    EditText adharDocsEditText, panDocsEditText;
+    EditText adhar_number, panNumber, voterIdNumber, drivingId, passportNo;
+    EditText adharDocsEditText, panDocs, formDocs, passportDocs, voterDocs, drivingDocs;
     Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
 
-    // Declare spinnerItems as a class-level variable
     private ArrayList<CharSequence> spinnerItems;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
+
         Spinner spinner = findViewById(R.id.add_spinner);
 
         final String mobNo = getIntent().getStringExtra("phoneNumber");
         final String kyc_id = getIntent().getStringExtra("kyc_id");
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -87,11 +91,36 @@ public class KycActivity2 extends AppCompatActivity {
             }
         });
 
+        ////////////////////////////////////////////
+
+        ///////////////////////////////////////////
+
+
+        // Initialize spinnerItems with the list of document types
         spinnerItems = new ArrayList<>(Arrays.asList(getResources().getTextArray(R.array.addDocs)));
 
-        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, spinnerItems);
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinner_dropdown_item, spinnerItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
+                return view;
+            }
+        };
+
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -101,32 +130,36 @@ public class KycActivity2 extends AppCompatActivity {
                 switch (selectedItem) {
                     case "PAN Card":
                         spinnerItems.remove("PAN Card");
-                        View panCardLayout = getLayoutInflater().inflate(R.layout.fragment_pan_card, null);
-                        container.addView(panCardLayout);
+                        addDocumentLayout(R.layout.fragment_pan_card);
+                        panNumber = findViewById(R.id.panNumber);
+                        panDocs = findViewById(R.id.panDocs);
                         spinner.setSelection(0);
                         break;
                     case "Voter ID Card":
                         spinnerItems.remove("Voter ID Card");
-                        View voterIdCardLayout = getLayoutInflater().inflate(R.layout.fragment_voter_id, null);
-                        container.addView(voterIdCardLayout);
+                        addDocumentLayout(R.layout.fragment_voter_id);
+                        voterIdNumber = findViewById(R.id.voterIdNumber);
+                        voterDocs = findViewById(R.id.voterDocs);
                         spinner.setSelection(0);
                         break;
                     case "Driving License":
                         spinnerItems.remove("Driving License");
-                        View drivingLicenseLayout = getLayoutInflater().inflate(R.layout.fragment_driving_license, null);
-                        container.addView(drivingLicenseLayout);
+                        addDocumentLayout(R.layout.fragment_driving_license);
+                        drivingId = findViewById(R.id.drivingId);
+                        drivingDocs = findViewById(R.id.drivingDocs);
                         spinner.setSelection(0);
                         break;
                     case "Passport":
                         spinnerItems.remove("Passport");
-                        View passportLayout = getLayoutInflater().inflate(R.layout.fragment_passport, null);
-                        container.addView(passportLayout);
+                        addDocumentLayout(R.layout.fragment_passport);
+                        passportNo = findViewById(R.id.passportNo);
+                        passportDocs = findViewById(R.id.passportDocs);
                         spinner.setSelection(0);
                         break;
                     case "Form 60":
                         spinnerItems.remove("Form 60");
-                        View form60Layout = getLayoutInflater().inflate(R.layout.fragment_form_60, null);
-                        container.addView(form60Layout);
+                        addDocumentLayout(R.layout.fragment_form_60);
+                        formDocs = findViewById(R.id.formDocs);
                         spinner.setSelection(0);
                         break;
                 }
@@ -144,11 +177,10 @@ public class KycActivity2 extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validateAdharNumber()) {
-                    Toast.makeText(KycActivity2.this, "Enter a valid 14-digit Aadhaar number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhaar number", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(KycActivity2.this, "Enter valid credentials", Toast.LENGTH_SHORT).show();
+                    makeHttpRequest1(accessToken, mobNo, kyc_id);
                 }
             }
         });
@@ -167,25 +199,68 @@ public class KycActivity2 extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_EXTERNAL_STORAGE_REQUEST_CODE);
-        } else {
-            // Permission already granted, proceed with your code
         }
+    }
+
+    private void addDocumentLayout(int layoutId) {
+        View documentLayout = getLayoutInflater().inflate(layoutId, null);
+        LinearLayout container = findViewById(R.id.container);
+        container.addView(documentLayout);
+
+        // After inflating the layout, find the EditTexts and set up the TextWatchers
+        if (layoutId == R.layout.fragment_pan_card) {
+            panNumber = documentLayout.findViewById(R.id.panNumber);
+            panDocs = documentLayout.findViewById(R.id.panDocs);
+            setUpTextWatcher(panNumber);
+        } else if (layoutId == R.layout.fragment_driving_license) {
+            drivingId = documentLayout.findViewById(R.id.drivingId);
+            drivingDocs = documentLayout.findViewById(R.id.drivingDocs);
+            setUpTextWatcher(drivingId);
+        } else if (layoutId == R.layout.fragment_passport) {
+            passportNo = documentLayout.findViewById(R.id.passportNo);
+            passportDocs = documentLayout.findViewById(R.id.passportDocs);
+            setUpTextWatcher(passportNo);
+        }
+
+    }
+
+
+    // Method to set up TextWatcher for EditText
+    private void setUpTextWatcher(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No need to implement anything here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No need to implement anything here
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Convert all lowercase letters to uppercase
+                String text = s.toString().toUpperCase();
+                if (!s.toString().equals(text)) {
+                    editText.setText(text);
+                    editText.setSelection(text.length()); // Move cursor to the end
+                }
+            }
+        });
     }
 
     private boolean validateAdharNumber() {
         String adharNumberText = adhar_number.getText().toString().trim();
-        if (adharNumberText.length() != 12) {
-            return false;
-        }
-        return true;
+        return adharNumberText.length() == 12;
     }
 
     public void onUploadDocumentClick(int requestCode) {
+        // Open file picker to select any type of file
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("/");
+        intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        String[] mimeTypes = {"application/pdf", "image/*"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
         try {
             startActivityForResult(intent, requestCode);
         } catch (ActivityNotFoundException e) {
@@ -198,28 +273,43 @@ public class KycActivity2 extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedFileUri = data.getData();
-            String filePath = getFilePathFromUri(selectedFileUri);
-            if (filePath != null) {
-                if (requestCode == REQUEST_ADHAR_DOCUMENT) {
-                    adharDocsEditText.setText(filePath);
-                } else if (requestCode == REQUEST_PAN_DOCUMENT) {
-                    panDocsEditText.setText(filePath);
+            String fileName = getFileName(selectedFileUri);
+            if (fileName != null) {
+                switch (requestCode) {
+                    case REQUEST_ADHAR_DOCUMENT:
+                        adharDocsEditText.setText(fileName);
+                        break;
+                    case REQUEST_PAN_DOCS:
+                        panDocs.setText(fileName);
+                        break;
+                    case REQUEST_DRIVING_DOCS:
+                        drivingDocs.setText(fileName);
+                        break;
+                    case REQUEST_VOTER_ID_DOCS:
+                        voterDocs.setText(fileName);
+                        break;
+                    case REQUEST_FORM_60_DOCS:
+                        formDocs.setText(fileName);
+                        break;
+                    case REQUEST_PASSPORT_DOCS:
+                        passportDocs.setText(fileName);
+                        break;
                 }
             } else {
-                Toast.makeText(this, "File path not found.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "File name not found.", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private String getFilePathFromUri(Uri uri) {
-        String filePath = null;
+    private String getFileName(Uri uri) {
+        String fileName = null;
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(uri, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 if (displayNameIndex != -1) {
-                    filePath = cursor.getString(displayNameIndex);
+                    fileName = cursor.getString(displayNameIndex);
                 }
             }
         } finally {
@@ -227,23 +317,23 @@ public class KycActivity2 extends AppCompatActivity {
                 cursor.close();
             }
         }
-        return filePath;
+        return fileName;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, do nothing
             } else {
+                // Permission denied
             }
         }
     }
 
     private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id) {
         String url1 = BASE_URL + "api/v1/upload_document";
-
         String uuid = sharedPreferences.getString("uuid", "");
 
         new Thread(new Runnable() {
@@ -265,7 +355,7 @@ public class KycActivity2 extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response = null;
+                Response response;
                 try {
                     response = call.execute();
                     String serverResponse = response.body().string();
@@ -296,7 +386,6 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void run() {
                 RequestBody formBody = new FormBody.Builder()
-
                         .add("kyc_document_verified", "true")
                         .build();
 
@@ -309,20 +398,20 @@ public class KycActivity2 extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response = null;
+                Response response;
                 try {
                     response = call.execute();
                     String serverResponse2 = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("serv2resp", serverResponse2);
                             if (serverResponse2.contains("Successfully updated.")) {
                                 Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
                                 mainIntent.putExtra("phoneNumber", phoneNumber);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
+                                // Handle error
                             }
                         }
                     });
@@ -339,15 +428,16 @@ public class KycActivity2 extends AppCompatActivity {
         String panNumber = panNumberEditText.getText().toString().trim();
 
         if (!validatePAN(panNumber)) {
-            // PAN card number is invalid, show error message
             panNumberEditText.setError("Enter a valid PAN card number");
             return;
         }
 
-        // PAN card number is valid, proceed with saving the data
         findViewById(R.id.saveButton).setVisibility(View.GONE);
     }
 
+    public void onPANDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_PAN_DOCS);
+    }
 
     public void onPANCardDeleteButtonClick(View view) {
         LinearLayout container = findViewById(R.id.container);
@@ -365,6 +455,10 @@ public class KycActivity2 extends AppCompatActivity {
             return;
         }
         findViewById(R.id.voterIdSaveButton).setVisibility(View.GONE);
+    }
+
+    public void onVoterIDDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_VOTER_ID_DOCS);
     }
 
     public void onVoterIDDeleteButtonClick(View view) {
@@ -385,15 +479,19 @@ public class KycActivity2 extends AppCompatActivity {
         findViewById(R.id.drivingLicenseSaveButton).setVisibility(View.GONE);
     }
 
+    public void onDrivingDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_DRIVING_DOCS);
+    }
+
     public void onDrivingLicenseDeleteButtonClick(View view) {
         LinearLayout container = findViewById(R.id.container);
         container.removeView(findViewById(R.id.drivingLicense));
         spinnerItems.add("Driving License");
     }
 
-
+    // Passport
     public void onPassportSaveButtonClick(View view) {
-        EditText passportEdittext = findViewById(R.id.drivingId);
+        EditText passportEdittext = findViewById(R.id.passportNo);
         String passportNumber = passportEdittext.getText().toString().trim();
 
         if(!validatePassport(passportNumber)){
@@ -403,20 +501,25 @@ public class KycActivity2 extends AppCompatActivity {
         findViewById(R.id.passportSaveButton).setVisibility(View.GONE);
     }
 
-    // Passport delete button click handler
+    public void onPassportDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_PASSPORT_DOCS);
+    }
+
     public void onPassportDeleteButtonClick(View view) {
         LinearLayout container = findViewById(R.id.container);
         container.removeView(findViewById(R.id.passport));
         spinnerItems.add("Passport");
     }
 
-    // Form 60 save button click handler
+    // Form 60
     public void onForm60SaveButtonClick(View view) {
-
         findViewById(R.id.form60SaveButton).setVisibility(View.GONE);
     }
 
-    // Form 60 delete button click handler
+    public void onForm60DocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_FORM_60_DOCS);
+    }
+
     public void onForm60DeleteButtonClick(View view) {
         LinearLayout container = findViewById(R.id.container);
         container.removeView(findViewById(R.id.form60));
@@ -442,9 +545,10 @@ public class KycActivity2 extends AppCompatActivity {
         return matcher.matches();
     }
 
-    private boolean validatePassport(String passportText){
+    // Passport validation
+    private boolean validatePassport(String passportText) {
         Pattern pattern = Pattern.compile("^[A-PR-WY][1-9]\\d" + "\\s?\\d{4}[1-9]$");
         Matcher matcher = pattern.matcher(passportText);
-        return true;
+        return matcher.matches();
     }
 }

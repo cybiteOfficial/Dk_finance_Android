@@ -176,6 +176,9 @@
                     android:padding="8dp"
                     android:textColor="@color/black"
                     android:hint="Select"
+                    android:popupBackground="@color/white"
+                    android:overlapAnchor="false"
+
                     />
                 <TextView
                     android:layout_width="match_parent"
@@ -194,7 +197,10 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:hint="Select" />
+                    android:hint="Select"
+                    android:popupBackground="@color/white"
+                    android:overlapAnchor="false"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -212,7 +218,9 @@
                     android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:hint="Select" />
+                    android:hint="Select"
+                    android:popupBackground="@color/white"
+                    android:overlapAnchor="false"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

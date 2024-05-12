@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -129,10 +130,8 @@
                     android:id="@+id/container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-
-
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp">
                 </LinearLayout>
 
                 <Spinner
@@ -144,9 +143,9 @@
                     android:background="@drawable/addspinnerbg"
                     android:padding="16dp"
                     android:spinnerMode="dropdown"
-                    android:popupBackground="@color/black"
-                    />
-
+                    android:gravity="start"
+                    android:popupBackground="@color/white"
+                    android:overlapAnchor="false"/>
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

@@ -30,7 +30,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/edit_text_border"
-            android:digits="0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:digits="0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
             android:drawablePadding="8dp"
             android:elevation="4dp"
             android:inputType="text"
@@ -63,14 +63,13 @@
             android:drawableEnd="@drawable/attach_file"
             android:inputType="none"
             android:focusable="false"
-            android:onClick="onUploadDocumentClick" />
+            android:onClick="onDrivingDocsUploadClick" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp">
+        android:gravity="center">
         <ImageView
             android:id="@+id/drivingLicenseSaveButton"
             android:layout_width="50dp"
