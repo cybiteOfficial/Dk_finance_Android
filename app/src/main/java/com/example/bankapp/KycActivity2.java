@@ -1,56 +1,55 @@
 package com.example.bankapp;
 
-import static com.example.bankapp.environment.BaseUrl.BASE_URL;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.bankapp.environment.BaseUrl;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class KycActivity2 extends AppCompatActivity {
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     private static final int REQUEST_ADHAR_DOCUMENT = 1;
-    private static final int REQUEST_PAN_DOCUMENT = 2;
-    private static final int REQUEST_PAN_DOCS = 3;
-    private static final int REQUEST_DRIVING_DOCS = 4;
-    private static final int REQUEST_VOTER_ID_DOCS = 5;
-    private static final int REQUEST_FORM_60_DOCS = 6;
-    private static final int REQUEST_PASSPORT_DOCS = 7;
+    private static final int REQUEST_PAN_DOCS = 2;
+    private static final int REQUEST_DRIVING_DOCS = 3;
+    private static final int REQUEST_VOTER_ID_DOCS = 4;
+    private static final int REQUEST_FORM_60_DOCS = 5;
+    private static final int REQUEST_PASSPORT_DOCS = 6;
 
     EditText adhar_number, panNumber, voterIdNumber, drivingId, passportNo;
     EditText adharDocsEditText, panDocs, formDocs, passportDocs, voterDocs, drivingDocs;
@@ -58,15 +57,13 @@ public class KycActivity2 extends AppCompatActivity {
     ImageView homeButton;
     SharedPreferences sharedPreferences;
 
-    private ArrayList<CharSequence> spinnerItems;
+    private Dialog documentSelectionDialog;
 
-    @SuppressLint("WrongViewCast")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_2);
-
-        Spinner spinner = findViewById(R.id.add_spinner);
 
         final String mobNo = getIntent().getStringExtra("phoneNumber");
         final String kyc_id = getIntent().getStringExtra("kyc_id");
@@ -91,88 +88,23 @@ public class KycActivity2 extends AppCompatActivity {
             }
         });
 
-        ////////////////////////////////////////////
 
-        ///////////////////////////////////////////
+        // Initialize popup window
+        documentSelectionDialog = new Dialog(this);
+        documentSelectionDialog.setContentView(R.layout.document_selection_popup);
 
+        LinearLayout addMoreDocumentsButton = findViewById(R.id.addMoreDocumentsButton);
 
-        // Initialize spinnerItems with the list of document types
-        spinnerItems = new ArrayList<>(Arrays.asList(getResources().getTextArray(R.array.addDocs)));
-
-        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinner_dropdown_item, spinnerItems) {
+        addMoreDocumentsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
-                return view;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-                textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
-                return view;
-            }
-        };
-
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedItem = (String) parentView.getItemAtPosition(position);
-                LinearLayout container = findViewById(R.id.container);
-                switch (selectedItem) {
-                    case "PAN Card":
-                        spinnerItems.remove("PAN Card");
-                        addDocumentLayout(R.layout.fragment_pan_card);
-                        panNumber = findViewById(R.id.panNumber);
-                        panDocs = findViewById(R.id.panDocs);
-                        spinner.setSelection(0);
-                        break;
-                    case "Voter ID Card":
-                        spinnerItems.remove("Voter ID Card");
-                        addDocumentLayout(R.layout.fragment_voter_id);
-                        voterIdNumber = findViewById(R.id.voterIdNumber);
-                        voterDocs = findViewById(R.id.voterDocs);
-                        spinner.setSelection(0);
-                        break;
-                    case "Driving License":
-                        spinnerItems.remove("Driving License");
-                        addDocumentLayout(R.layout.fragment_driving_license);
-                        drivingId = findViewById(R.id.drivingId);
-                        drivingDocs = findViewById(R.id.drivingDocs);
-                        spinner.setSelection(0);
-                        break;
-                    case "Passport":
-                        spinnerItems.remove("Passport");
-                        addDocumentLayout(R.layout.fragment_passport);
-                        passportNo = findViewById(R.id.passportNo);
-                        passportDocs = findViewById(R.id.passportDocs);
-                        spinner.setSelection(0);
-                        break;
-                    case "Form 60":
-                        spinnerItems.remove("Form 60");
-                        addDocumentLayout(R.layout.fragment_form_60);
-                        formDocs = findViewById(R.id.formDocs);
-                        spinner.setSelection(0);
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing
+            public void onClick(View v) {
+                showDocumentSelectionPopup();
             }
         });
 
         submitButton = findViewById(R.id.submit_button);
         homeButton = findViewById(R.id.homeButton);
+
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +133,113 @@ public class KycActivity2 extends AppCompatActivity {
                     READ_EXTERNAL_STORAGE_REQUEST_CODE);
         }
     }
+
+/////////////////
+private void showDocumentSelectionPopup() {
+    // Initialize the dialog
+    documentSelectionDialog = new Dialog(this);
+    documentSelectionDialog.setContentView(R.layout.document_selection_popup);
+    // Set background color to white
+    documentSelectionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+
+    LinearLayout notSelectedContainer = documentSelectionDialog.findViewById(R.id.not_selected_container);
+    LinearLayout selectedContainer = documentSelectionDialog.findViewById(R.id.selected_container);
+
+    // Show the popup
+    documentSelectionDialog.show();
+
+    // Set click listeners for add buttons in popup
+    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_pan, R.layout.add_more_pan, "Pan");
+    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_passport, R.layout.add_more_passport, "Passport");
+    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_driving_license, R.layout.add_more_driving_license, "Driving");
+}
+
+
+    // HashSet to store selected document IDs
+    private HashSet<Integer> selectedDocumentIds = new HashSet<>();
+    private HashSet<Integer> notSelectedDocumentIds = new HashSet<>();
+
+    // Add a method to check if a document is selected
+    private boolean isDocumentSelected(int documentId) {
+        return selectedDocumentIds.contains(documentId);
+    }
+
+    // Add a method to toggle document selection
+    private void toggleDocumentSelection(int documentId) {
+        if (selectedDocumentIds.contains(documentId)) {
+            selectedDocumentIds.remove(documentId); // If already selected, remove it
+        } else {
+            selectedDocumentIds.add(documentId); // If not selected, add it
+        }
+    }
+
+    private void setAddButtonClickListener(final LinearLayout notSelectedContainer, final LinearLayout selectedContainer, final int selectedLayoutId, final int notSelectedLayoutId, final String documentType) {
+        // Find the add button
+        ImageView addButton = documentSelectionDialog.findViewById(getResources().getIdentifier("plusIcon" + documentType, "id", getPackageName()));
+        if (addButton == null) {
+            // Button not found, return
+            return;
+        }
+        // Set click listener for add button
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if the selected document is already in the selected container
+                boolean isAlreadySelected = isDocumentSelected(selectedLayoutId);
+                if (!isAlreadySelected) {
+                    // Inflate the selected layout
+                    View selectedView = LayoutInflater.from(KycActivity2.this).inflate(selectedLayoutId, selectedContainer, false);
+                    // Add to selected
+                    selectedContainer.addView(selectedView);
+
+                    // Remove from not selected
+                    View notSelectedViewToRemove = notSelectedContainer.findViewById(notSelectedLayoutId);
+                    if (notSelectedViewToRemove != null) {
+                        notSelectedContainer.removeView(notSelectedViewToRemove);
+                        // Add the document ID to the HashSet
+                        selectedDocumentIds.add(selectedLayoutId);
+                        // Remove document ID from non-selected HashSet
+                        notSelectedDocumentIds.remove(notSelectedLayoutId);
+                    }
+                    // Set click listener for remove button
+                    setRemoveButtonClickListener(selectedContainer, selectedView, notSelectedContainer, notSelectedLayoutId, documentType, selectedLayoutId);
+                }
+            }
+        });
+    }
+
+
+    private void setRemoveButtonClickListener(final LinearLayout selectedContainer, final View selectedView, final LinearLayout notSelectedContainer, final int notSelectedLayoutId, final String documentType, final int selectedLayoutId) {
+        // Find the remove button
+        ImageView removeButton = selectedView.findViewById(getResources().getIdentifier("deleteIcon" + documentType, "id", getPackageName()));
+        if (removeButton == null) {
+            // Button not found, return
+            return;
+        }
+        // Set click listener for remove button
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove from selected
+                selectedContainer.removeView(selectedView);
+                // Remove the document ID from the HashSet
+                selectedDocumentIds.remove(selectedLayoutId);
+                // Inflate the not selected layout
+                View notSelectedView = LayoutInflater.from(KycActivity2.this).inflate(notSelectedLayoutId, notSelectedContainer, false);
+                // Add to not selected
+                notSelectedContainer.addView(notSelectedView);
+                // Set click listener for add button
+                setAddButtonClickListener(notSelectedContainer, selectedContainer, notSelectedLayoutId, selectedLayoutId, documentType);
+                // Add document ID to non-selected HashSet
+                notSelectedDocumentIds.add(notSelectedLayoutId);
+            }
+        });
+    }
+
+
+// /////////////////////
+
+
 
     private void addDocumentLayout(int layoutId) {
         View documentLayout = getLayoutInflater().inflate(layoutId, null);
@@ -249,6 +288,8 @@ public class KycActivity2 extends AppCompatActivity {
             }
         });
     }
+
+
 
     private boolean validateAdharNumber() {
         String adharNumberText = adhar_number.getText().toString().trim();
@@ -333,7 +374,7 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
     private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id) {
-        String url1 = BASE_URL + "api/v1/upload_document";
+        String url1 = BaseUrl.BASE_URL + "api/v1/upload_document";
         String uuid = sharedPreferences.getString("uuid", "");
 
         new Thread(new Runnable() {
@@ -355,9 +396,8 @@ public class KycActivity2 extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response;
                 try {
-                    response = call.execute();
+                    Response response = call.execute();
                     String serverResponse = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -377,10 +417,8 @@ public class KycActivity2 extends AppCompatActivity {
         }).start();
     }
 
-
     private void makeHttpRequest2(String accessToken, String phoneNumber, String kyc_id) {
-
-        String url2 = BASE_URL + "api/v1/kyc?kyc_id=" + kyc_id;
+        String url2 = BaseUrl.BASE_URL + "api/v1/kyc?kyc_id=" + kyc_id;
 
         new Thread(new Runnable() {
             @Override
@@ -398,9 +436,8 @@ public class KycActivity2 extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response;
                 try {
-                    response = call.execute();
+                    Response response = call.execute();
                     String serverResponse2 = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -420,110 +457,6 @@ public class KycActivity2 extends AppCompatActivity {
                 }
             }
         }).start();
-    }
-
-    // PAN Card
-    public void onPANCardSaveButtonClick(View view) {
-        EditText panNumberEditText = findViewById(R.id.panNumber);
-        String panNumber = panNumberEditText.getText().toString().trim();
-
-        if (!validatePAN(panNumber)) {
-            panNumberEditText.setError("Enter a valid PAN card number");
-            return;
-        }
-
-        findViewById(R.id.saveButton).setVisibility(View.GONE);
-    }
-
-    public void onPANDocsUploadClick(View view) {
-        onUploadDocumentClick(REQUEST_PAN_DOCS);
-    }
-
-    public void onPANCardDeleteButtonClick(View view) {
-        LinearLayout container = findViewById(R.id.container);
-        container.removeView(findViewById(R.id.pan));
-        spinnerItems.add("PAN Card");
-    }
-
-    // Voter ID
-    public void onVoterIDSaveButtonClick(View view) {
-        EditText voterIdEditText = findViewById(R.id.voterIdNumber);
-        String voterIdNumber = voterIdEditText.getText().toString().trim();
-
-        if(!validateVoterID(voterIdNumber)){
-            voterIdEditText.setError("Enter a valid Voter ID number");
-            return;
-        }
-        findViewById(R.id.voterIdSaveButton).setVisibility(View.GONE);
-    }
-
-    public void onVoterIDDocsUploadClick(View view) {
-        onUploadDocumentClick(REQUEST_VOTER_ID_DOCS);
-    }
-
-    public void onVoterIDDeleteButtonClick(View view) {
-        LinearLayout container = findViewById(R.id.container);
-        container.removeView(findViewById(R.id.voterId));
-        spinnerItems.add("Voter ID Card");
-    }
-
-    // Driving License
-    public void onDrivingLicenseSaveButtonClick(View view) {
-        EditText drivingLicenseEditText = findViewById(R.id.drivingId);
-        String drivingLicenseNumber = drivingLicenseEditText.getText().toString().trim();
-
-        if(!validateDrivingLicense(drivingLicenseNumber)){
-            drivingLicenseEditText.setError("Enter a valid Driving License number");
-            return;
-        }
-        findViewById(R.id.drivingLicenseSaveButton).setVisibility(View.GONE);
-    }
-
-    public void onDrivingDocsUploadClick(View view) {
-        onUploadDocumentClick(REQUEST_DRIVING_DOCS);
-    }
-
-    public void onDrivingLicenseDeleteButtonClick(View view) {
-        LinearLayout container = findViewById(R.id.container);
-        container.removeView(findViewById(R.id.drivingLicense));
-        spinnerItems.add("Driving License");
-    }
-
-    // Passport
-    public void onPassportSaveButtonClick(View view) {
-        EditText passportEdittext = findViewById(R.id.passportNo);
-        String passportNumber = passportEdittext.getText().toString().trim();
-
-        if(!validatePassport(passportNumber)){
-            passportEdittext.setError("Enter a valid Passport number");
-            return;
-        }
-        findViewById(R.id.passportSaveButton).setVisibility(View.GONE);
-    }
-
-    public void onPassportDocsUploadClick(View view) {
-        onUploadDocumentClick(REQUEST_PASSPORT_DOCS);
-    }
-
-    public void onPassportDeleteButtonClick(View view) {
-        LinearLayout container = findViewById(R.id.container);
-        container.removeView(findViewById(R.id.passport));
-        spinnerItems.add("Passport");
-    }
-
-    // Form 60
-    public void onForm60SaveButtonClick(View view) {
-        findViewById(R.id.form60SaveButton).setVisibility(View.GONE);
-    }
-
-    public void onForm60DocsUploadClick(View view) {
-        onUploadDocumentClick(REQUEST_FORM_60_DOCS);
-    }
-
-    public void onForm60DeleteButtonClick(View view) {
-        LinearLayout container = findViewById(R.id.container);
-        container.removeView(findViewById(R.id.form60));
-        spinnerItems.add("Form 60");
     }
 
     // PAN Card validation

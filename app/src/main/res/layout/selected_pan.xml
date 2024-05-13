@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:id="@+id/panCardAdd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="PAN Card"
+        android:textSize="16sp"
+        android:layout_gravity="start|center_vertical" />
+
+    <ImageView
+        android:id="@+id/deleteIconPan"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="end|center_vertical"
+        android:contentDescription="Add Icon"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:src="@drawable/dustbin" />
+
+</LinearLayout>
+
+
+

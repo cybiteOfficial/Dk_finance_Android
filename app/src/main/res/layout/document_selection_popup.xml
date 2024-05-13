@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <!-- Selected section -->
+    <TextView
+        android:id="@+id/selected_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selected"
+        android:textColor="@color/primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="16dp" />
+
+    <LinearLayout
+        android:id="@+id/selected_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- Selected items will be dynamically added here -->
+    </LinearLayout>
+
+    <!-- Not Selected section -->
+    <TextView
+        android:id="@+id/not_selected_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not Selected"
+        android:textColor="@color/primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="16dp" />
+
+    <LinearLayout
+        android:id="@+id/not_selected_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- Default: Add all add_more_ layouts to not selected section -->
+        <include layout="@layout/add_more_pan"/>
+        <include layout="@layout/add_more_passport"/>
+        <include layout="@layout/add_more_driving_license"/>
+        <!-- Add more add_more_ layouts here if needed -->
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/primary"
+            android:text="SAVE"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+</LinearLayout>
