@@ -65,33 +65,33 @@
             android:focusable="false"
             android:onClick="onPassportDocsUploadClick" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <ImageView
-            android:id="@+id/passportSaveButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/correct_svgrepo_com"
-            android:background="@drawable/edit_text_border"
-            android:onClick="onPassportSaveButtonClick" />
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center">-->
+<!--        <ImageView-->
+<!--            android:id="@+id/passportSaveButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="10dp"-->
+<!--            android:src="@drawable/correct_svgrepo_com"-->
+<!--            android:background="@drawable/edit_text_border"-->
+<!--            android:onClick="onPassportSaveButtonClick" />-->
 
-        <ImageView
-            android:id="@+id/passportDeleteButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/dustbin"
-            android:background="@drawable/edit_text_border"
-            android:onClick="onPassportDeleteButtonClick"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/passportDeleteButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="10dp"-->
+<!--            android:src="@drawable/dustbin"-->
+<!--            android:background="@drawable/edit_text_border"-->
+<!--            android:onClick="onPassportDeleteButtonClick"/>-->
 
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 </LinearLayout>

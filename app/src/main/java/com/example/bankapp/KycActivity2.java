@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,8 @@ import androidx.core.content.ContextCompat;
 import com.example.bankapp.environment.BaseUrl;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,7 +60,6 @@ public class KycActivity2 extends AppCompatActivity {
     SharedPreferences sharedPreferences;
 
     private Dialog documentSelectionDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,133 +136,227 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
 /////////////////
-private void showDocumentSelectionPopup() {
-    // Initialize the dialog
-    documentSelectionDialog = new Dialog(this);
-    documentSelectionDialog.setContentView(R.layout.document_selection_popup);
-    // Set background color to white
-    documentSelectionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
-    LinearLayout notSelectedContainer = documentSelectionDialog.findViewById(R.id.not_selected_container);
-    LinearLayout selectedContainer = documentSelectionDialog.findViewById(R.id.selected_container);
+    // HashMap to store selected document IDs and their types
+    private Map<Integer, String> selectedDocuments = new HashMap<>();
+    private Map<Integer, String> notSelectedDocuments = new HashMap<>();
 
-    // Show the popup
-    documentSelectionDialog.show();
-
-    // Set click listeners for add buttons in popup
-    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_pan, R.layout.add_more_pan, "Pan");
-    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_passport, R.layout.add_more_passport, "Passport");
-    setAddButtonClickListener(notSelectedContainer, selectedContainer, R.layout.selected_driving_license, R.layout.add_more_driving_license, "Driving");
-}
-
-
-    // HashSet to store selected document IDs
-    private HashSet<Integer> selectedDocumentIds = new HashSet<>();
-    private HashSet<Integer> notSelectedDocumentIds = new HashSet<>();
-
-    // Add a method to check if a document is selected
-    private boolean isDocumentSelected(int documentId) {
-        return selectedDocumentIds.contains(documentId);
+    {
+        notSelectedDocuments.put(R.layout.add_more_pan, "Pan");
+        notSelectedDocuments.put(R.layout.add_more_passport, "Passport");
+        notSelectedDocuments.put(R.layout.add_more_driving, "Driving");
     }
 
-    // Add a method to toggle document selection
-    private void toggleDocumentSelection(int documentId) {
-        if (selectedDocumentIds.contains(documentId)) {
-            selectedDocumentIds.remove(documentId); // If already selected, remove it
-        } else {
-            selectedDocumentIds.add(documentId); // If not selected, add it
+
+    private void showDocumentSelectionPopup() {
+        // Initialize the dialog
+        documentSelectionDialog = new Dialog(this);
+        documentSelectionDialog.setContentView(R.layout.document_selection_popup);
+        // Set background color to white
+        documentSelectionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+
+        final LinearLayout notSelectedContainer = documentSelectionDialog.findViewById(R.id.not_selected_container);
+        final LinearLayout selectedContainer = documentSelectionDialog.findViewById(R.id.selected_container);
+
+        // Show the popup
+        documentSelectionDialog.show();
+
+        renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
+
+        Button saveChanges = documentSelectionDialog.findViewById(R.id.save_changes);
+
+        // Set click listener for Save Changes button
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SaveChanges", "Save Changes button clicked");
+                // Clear all views from the container
+                clearDocumentViews();
+                listenChanges(selectedDocuments, notSelectedDocuments);
+
+                // Update the UI with the latest selected documents
+                renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
+
+                // Close the dialog
+                documentSelectionDialog.dismiss();
+            }
+        });
+    }
+
+    private void clearDocumentViews() {
+        LinearLayout container = findViewById(R.id.container);
+        container.removeAllViews();
+    }
+
+    private void listenChanges(Map<Integer, String> selectedDocs, Map<Integer, String> notSelectedDocs){
+        Log.d("ListenChanges", "Called with selectedDocs: " + selectedDocs + ", notSelectedDocs: " + notSelectedDocs);
+        Map<Integer, String> selectedDocumentsToDisplay = new HashMap<>(selectedDocs);
+
+        // Iterate over selected documents and inflate the corresponding layouts
+        for (Map.Entry<Integer, String> entry : selectedDocumentsToDisplay.entrySet()) {
+            int documentId = entry.getKey();
+            String documentType = entry.getValue();
+
+            // Check if the document layout already exists, if not, inflate it
+            if (!layoutExists(documentId)) {
+                addDocumentLayout(documentId, documentType); // Pass both documentId and documentType
+            } else {
+                Log.d("LayoutInflation", "Layout already exists for document ID: " + documentId);
+            }
         }
     }
 
-    private void setAddButtonClickListener(final LinearLayout notSelectedContainer, final LinearLayout selectedContainer, final int selectedLayoutId, final int notSelectedLayoutId, final String documentType) {
+
+
+
+    // Method to check if a layout already exists
+    private boolean layoutExists(int layoutId) {
+        LinearLayout container = findViewById(R.id.container);
+        View existingLayout = container.findViewById(layoutId);
+        boolean exists = existingLayout != null;
+        Log.d("LayoutExistsCheck", "Layout with ID " + layoutId + " exists: " + exists); // Log to check if layout exists
+        return exists;
+    }
+
+
+    // Render documents in a given container
+    private void renderDocuments(LinearLayout selectedContainer, LinearLayout notSelectedContainer, Map<Integer, String> selectedDocs, Map<Integer, String> notSelectedDocs) {
+        // Render selected documents
+        selectedContainer.removeAllViews();
+        for (Map.Entry<Integer, String> entry : selectedDocs.entrySet()) {
+            int documentId = entry.getKey();
+            String documentType = entry.getValue();
+            View documentView = LayoutInflater.from(this).inflate(documentId, selectedContainer, false);
+            selectedContainer.addView(documentView);
+            setRemoveButtonClickListener(selectedContainer,notSelectedContainer, documentView, documentType, documentId);
+        }
+
+        // Render not selected documents
+        notSelectedContainer.removeAllViews();
+        for (Map.Entry<Integer, String> entry : notSelectedDocs.entrySet()) {
+            int documentId = entry.getKey();
+            String documentType = entry.getValue();
+            View documentView = LayoutInflater.from(this).inflate(documentId, notSelectedContainer, false);
+            notSelectedContainer.addView(documentView);
+            setAddButtonClickListener( selectedContainer, notSelectedContainer, documentView, documentType, documentId);
+        }
+    }
+
+
+    private void setAddButtonClickListener(final LinearLayout selectedContainer, final LinearLayout notSelectedContainer, final View documentView, final String documentType, final int documentId) {
+        Log.d("ButtonClickListener", "setAddButtonClickListener called for documentType: " + documentType + ", documentId: " + documentId);
+
         // Find the add button
-        ImageView addButton = documentSelectionDialog.findViewById(getResources().getIdentifier("plusIcon" + documentType, "id", getPackageName()));
+        ImageView addButton = documentView.findViewById(getResources().getIdentifier("plusIcon" + documentType, "id", getPackageName()));
         if (addButton == null) {
             // Button not found, return
+            Log.e("ButtonClickListener", "Add button not found for documentType: " + documentType);
             return;
         }
         // Set click listener for add button
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check if the selected document is already in the selected container
-                boolean isAlreadySelected = isDocumentSelected(selectedLayoutId);
-                if (!isAlreadySelected) {
-                    // Inflate the selected layout
-                    View selectedView = LayoutInflater.from(KycActivity2.this).inflate(selectedLayoutId, selectedContainer, false);
-                    // Add to selected
-                    selectedContainer.addView(selectedView);
-
-                    // Remove from not selected
-                    View notSelectedViewToRemove = notSelectedContainer.findViewById(notSelectedLayoutId);
-                    if (notSelectedViewToRemove != null) {
-                        notSelectedContainer.removeView(notSelectedViewToRemove);
-                        // Add the document ID to the HashSet
-                        selectedDocumentIds.add(selectedLayoutId);
-                        // Remove document ID from non-selected HashSet
-                        notSelectedDocumentIds.remove(notSelectedLayoutId);
-                    }
-                    // Set click listener for remove button
-                    setRemoveButtonClickListener(selectedContainer, selectedView, notSelectedContainer, notSelectedLayoutId, documentType, selectedLayoutId);
-                }
+                notSelectedDocuments.remove(documentId);
+                // Generate selected document ID
+                int selectedDocumentId = generateSelectedDocumentId(documentType);
+                // Add document to selected
+                selectedDocuments.put(selectedDocumentId, documentType);
+                // render all
+                renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
             }
         });
     }
 
+    // Helper method to generate selected document ID
+    private int generateSelectedDocumentId(String documentType) {
+        // Assuming documentType follows the format "Pan", "Passport", "Driving"
+        String selectedDocumentIdString = "selected_" + documentType.toLowerCase().replace(" ", "_");
+        return getResources().getIdentifier(selectedDocumentIdString, "layout", getPackageName());
+    }
 
-    private void setRemoveButtonClickListener(final LinearLayout selectedContainer, final View selectedView, final LinearLayout notSelectedContainer, final int notSelectedLayoutId, final String documentType, final int selectedLayoutId) {
+
+    private void setRemoveButtonClickListener(final LinearLayout selectedContainer, final LinearLayout notSelectedContainer, final View selectedView, final String documentType, final int documentId) {
+        Log.d("ButtonClickListener", "setRemoveButtonClickListener called for documentType: " + documentType + ", documentId: " + documentId);
+
         // Find the remove button
         ImageView removeButton = selectedView.findViewById(getResources().getIdentifier("deleteIcon" + documentType, "id", getPackageName()));
         if (removeButton == null) {
             // Button not found, return
+            Log.e("ButtonClickListener", "Remove button not found for documentType: " + documentType);
             return;
         }
         // Set click listener for remove button
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Remove from selected
-                selectedContainer.removeView(selectedView);
-                // Remove the document ID from the HashSet
-                selectedDocumentIds.remove(selectedLayoutId);
-                // Inflate the not selected layout
-                View notSelectedView = LayoutInflater.from(KycActivity2.this).inflate(notSelectedLayoutId, notSelectedContainer, false);
-                // Add to not selected
-                notSelectedContainer.addView(notSelectedView);
-                // Set click listener for add button
-                setAddButtonClickListener(notSelectedContainer, selectedContainer, notSelectedLayoutId, selectedLayoutId, documentType);
-                // Add document ID to non-selected HashSet
-                notSelectedDocumentIds.add(notSelectedLayoutId);
+                // Remove document from selected
+                selectedDocuments.remove(documentId);
+                // Generate not selected document ID
+                int notSelectedDocumentId = generateNotSelectedDocumentId(documentType);
+                // Add document to not selected
+                notSelectedDocuments.put(notSelectedDocumentId, documentType);
+                // Render all
+                renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
             }
         });
     }
+
+    // Helper method to generate not selected document ID
+    private int generateNotSelectedDocumentId(String documentType) {
+        // Assuming documentType follows the format "Pan", "Passport", "Driving"
+        String notSelectedDocumentIdString = "add_more_" + documentType.toLowerCase().replace(" ", "_");
+        return getResources().getIdentifier(notSelectedDocumentIdString, "layout", getPackageName());
+    }
+
 
 
 // /////////////////////
 
 
 
-    private void addDocumentLayout(int layoutId) {
-        View documentLayout = getLayoutInflater().inflate(layoutId, null);
-        LinearLayout container = findViewById(R.id.container);
-        container.addView(documentLayout);
+    private void addDocumentLayout(int documentId, String documentType) {
+        int layoutId = generateLayoutId(documentType);
+        if (layoutId != -1) { // Check if layout ID is valid
+            View documentLayout = getLayoutInflater().inflate(layoutId, null);
+            documentLayout.setId(documentId); // Set the ID for the layout
+            Log.d("LayoutInflation", "Layout inflated with ID: " + documentId); // Log to check if layout is inflated
+            LinearLayout container = findViewById(R.id.container);
+            container.addView(documentLayout);
 
-        // After inflating the layout, find the EditTexts and set up the TextWatchers
-        if (layoutId == R.layout.fragment_pan_card) {
-            panNumber = documentLayout.findViewById(R.id.panNumber);
-            panDocs = documentLayout.findViewById(R.id.panDocs);
-            setUpTextWatcher(panNumber);
-        } else if (layoutId == R.layout.fragment_driving_license) {
-            drivingId = documentLayout.findViewById(R.id.drivingId);
-            drivingDocs = documentLayout.findViewById(R.id.drivingDocs);
-            setUpTextWatcher(drivingId);
-        } else if (layoutId == R.layout.fragment_passport) {
-            passportNo = documentLayout.findViewById(R.id.passportNo);
-            passportDocs = documentLayout.findViewById(R.id.passportDocs);
-            setUpTextWatcher(passportNo);
+            // After inflating the layout, find the EditTexts and set up the TextWatchers
+            if (layoutId == R.layout.fragment_pan_card) {
+                panNumber = documentLayout.findViewById(R.id.panNumber);
+                panDocs = documentLayout.findViewById(R.id.panDocs);
+                setUpTextWatcher(panNumber);
+            } else if (layoutId == R.layout.fragment_driving_license) {
+                drivingId = documentLayout.findViewById(R.id.drivingId);
+                drivingDocs = documentLayout.findViewById(R.id.drivingDocs);
+                setUpTextWatcher(drivingId);
+            } else if (layoutId == R.layout.fragment_passport) {
+                passportNo = documentLayout.findViewById(R.id.passportNo);
+                passportDocs = documentLayout.findViewById(R.id.passportDocs);
+                setUpTextWatcher(passportNo);
+            }
+        } else {
+            Log.e("LayoutInflation", "Invalid layout ID for document type: " + documentType);
         }
-
     }
+
+    // Helper method to generate layout ID based on document type
+    private int generateLayoutId(String documentType) {
+        if (documentType.equals("Pan")) {
+            return R.layout.fragment_pan_card;
+        } else if (documentType.equals("Driving")) {
+            return R.layout.fragment_driving_license;
+        } else if (documentType.equals("Passport")) {
+            return R.layout.fragment_passport;
+        } else {
+            // Handle other types as needed
+            return -1; // Return an invalid layout ID
+        }
+    }
+
 
 
     // Method to set up TextWatcher for EditText
@@ -484,4 +579,26 @@ private void showDocumentSelectionPopup() {
         Matcher matcher = pattern.matcher(passportText);
         return matcher.matches();
     }
+
+
+    public void onPANDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_PAN_DOCS);
+    }
+
+
+    public void onVoterIDDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_VOTER_ID_DOCS);
+    }
+
+
+    public void onDrivingDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_DRIVING_DOCS);
+    }
+
+
+    public void onPassportDocsUploadClick(View view) {
+        onUploadDocumentClick(REQUEST_PASSPORT_DOCS);
+    }
+
+
 }

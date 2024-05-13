@@ -65,33 +65,33 @@
             android:focusable="false"
             android:onClick="onVoterIDDocsUploadClick" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center">-->
 
-        <ImageView
-            android:id="@+id/voterIdSaveButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/correct_svgrepo_com"
-            android:background="@drawable/edit_text_border"
-            android:onClick="onVoterIDSaveButtonClick"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/voterIdSaveButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="10dp"-->
+<!--            android:src="@drawable/correct_svgrepo_com"-->
+<!--            android:background="@drawable/edit_text_border"-->
+<!--            android:onClick="onVoterIDSaveButtonClick"/>-->
 
-        <ImageView
-            android:id="@+id/voterIdDeleteButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/dustbin"
-            android:background="@drawable/edit_text_border"
-            android:onClick="onVoterIDDeleteButtonClick"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/voterIdDeleteButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="10dp"-->
+<!--            android:src="@drawable/dustbin"-->
+<!--            android:background="@drawable/edit_text_border"-->
+<!--            android:onClick="onVoterIDDeleteButtonClick"/>-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 </LinearLayout>
