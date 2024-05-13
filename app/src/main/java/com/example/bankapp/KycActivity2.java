@@ -1,4 +1,5 @@
 package com.example.bankapp;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -148,24 +150,28 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
 
+
     private void showDocumentSelectionPopup() {
-        // Initialize the dialog
-        documentSelectionDialog = new Dialog(this);
-        documentSelectionDialog.setContentView(R.layout.document_selection_popup);
-        // Set background color to white
-        documentSelectionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        // Initialize MaterialAlertDialogBuilder
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        // Inflate the custom layout for the dialog
+        View dialogView = getLayoutInflater().inflate(R.layout.document_selection_popup, null);
+        builder.setView(dialogView);
+        builder.setBackground(getResources().getDrawable(R.drawable.lead_dialogue_background));
 
-        final LinearLayout notSelectedContainer = documentSelectionDialog.findViewById(R.id.not_selected_container);
-        final LinearLayout selectedContainer = documentSelectionDialog.findViewById(R.id.selected_container);
+        // Get references to containers
+        LinearLayout notSelectedContainer = dialogView.findViewById(R.id.not_selected_container);
+        LinearLayout selectedContainer = dialogView.findViewById(R.id.selected_container);
 
-        // Show the popup
-        documentSelectionDialog.show();
-
+        // Render documents
         renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
 
-        Button saveChanges = documentSelectionDialog.findViewById(R.id.save_changes);
+        // Show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
         // Set click listener for Save Changes button
+        Button saveChanges = dialogView.findViewById(R.id.save_changes);
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,10 +184,11 @@ public class KycActivity2 extends AppCompatActivity {
                 renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
 
                 // Close the dialog
-                documentSelectionDialog.dismiss();
+                dialog.dismiss();
             }
         });
     }
+
 
     private void clearDocumentViews() {
         LinearLayout container = findViewById(R.id.container);
