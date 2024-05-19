@@ -1,5 +1,4 @@
 package com.example.bankapp;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -8,13 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +28,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.bankapp.environment.BaseUrl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +62,7 @@ public class KycActivity2 extends AppCompatActivity {
     Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
+
 
     private Dialog documentSelectionDialog;
 
@@ -112,6 +115,12 @@ public class KycActivity2 extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // print the contents of DocumentNames in logs
+                for (Map.Entry<Integer, String> entry : documentNames.entrySet()) {
+                    Log.d("DocumentNames", "Key: " + entry.getKey() + ", Value: " + entry.getValue());
+                }
+
                 if (!validateAdharNumber()) {
                     Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhaar number", Toast.LENGTH_SHORT).show();
                 } else {
@@ -150,28 +159,24 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
 
-
     private void showDocumentSelectionPopup() {
-        // Initialize MaterialAlertDialogBuilder
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        // Inflate the custom layout for the dialog
-        View dialogView = getLayoutInflater().inflate(R.layout.document_selection_popup, null);
-        builder.setView(dialogView);
-        builder.setBackground(getResources().getDrawable(R.drawable.lead_dialogue_background));
+        // Initialize the dialog
+        documentSelectionDialog = new Dialog(this);
+        documentSelectionDialog.setContentView(R.layout.document_selection_popup);
+        // Set background color to white
+        documentSelectionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
-        // Get references to containers
-        LinearLayout notSelectedContainer = dialogView.findViewById(R.id.not_selected_container);
-        LinearLayout selectedContainer = dialogView.findViewById(R.id.selected_container);
+        final LinearLayout notSelectedContainer = documentSelectionDialog.findViewById(R.id.not_selected_container);
+        final LinearLayout selectedContainer = documentSelectionDialog.findViewById(R.id.selected_container);
 
-        // Render documents
+        // Show the popup
+        documentSelectionDialog.show();
+
         renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
 
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        Button saveChanges = documentSelectionDialog.findViewById(R.id.save_changes);
 
         // Set click listener for Save Changes button
-        Button saveChanges = dialogView.findViewById(R.id.save_changes);
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,11 +189,10 @@ public class KycActivity2 extends AppCompatActivity {
                 renderDocuments(selectedContainer, notSelectedContainer, selectedDocuments, notSelectedDocuments);
 
                 // Close the dialog
-                dialog.dismiss();
+                documentSelectionDialog.dismiss();
             }
         });
     }
-
 
     private void clearDocumentViews() {
         LinearLayout container = findViewById(R.id.container);
@@ -246,6 +250,7 @@ public class KycActivity2 extends AppCompatActivity {
             View documentView = LayoutInflater.from(this).inflate(documentId, notSelectedContainer, false);
             notSelectedContainer.addView(documentView);
             setAddButtonClickListener( selectedContainer, notSelectedContainer, documentView, documentType, documentId);
+
         }
     }
 
@@ -299,6 +304,21 @@ public class KycActivity2 extends AppCompatActivity {
             public void onClick(View v) {
                 // Remove document from selected
                 selectedDocuments.remove(documentId);
+
+                if (documentType.equals("Pan")) {
+                    documentNames.remove(REQUEST_PAN_DOCS);
+                } else if (documentType.equals("Driving")) {
+                    documentNames.remove(REQUEST_DRIVING_DOCS);
+                } else if (documentType.equals("Passport")) {
+                    documentNames.remove(REQUEST_PASSPORT_DOCS);
+                } else if (documentType.equals("Adhar")) {
+                    documentNames.remove(REQUEST_ADHAR_DOCUMENT);
+                } else if (documentType.equals("Voter")) {
+                    documentNames.remove(REQUEST_VOTER_ID_DOCS);
+                } else if (documentType.equals("Form60")) {
+                    documentNames.remove(REQUEST_FORM_60_DOCS);
+                }
+
                 // Generate not selected document ID
                 int notSelectedDocumentId = generateNotSelectedDocumentId(documentType);
                 // Add document to not selected
@@ -320,6 +340,9 @@ public class KycActivity2 extends AppCompatActivity {
 
 // /////////////////////
 
+    private HashMap<Integer, String> documentNames = new HashMap<>();
+
+
 
 
     private void addDocumentLayout(int documentId, String documentType) {
@@ -336,19 +359,30 @@ public class KycActivity2 extends AppCompatActivity {
                 panNumber = documentLayout.findViewById(R.id.panNumber);
                 panDocs = documentLayout.findViewById(R.id.panDocs);
                 setUpTextWatcher(panNumber);
+                if (documentNames.containsKey(REQUEST_PAN_DOCS)) {
+                    panDocs.setText(documentNames.get(REQUEST_PAN_DOCS));
+                }
             } else if (layoutId == R.layout.fragment_driving_license) {
                 drivingId = documentLayout.findViewById(R.id.drivingId);
                 drivingDocs = documentLayout.findViewById(R.id.drivingDocs);
                 setUpTextWatcher(drivingId);
+                if (documentNames.containsKey(REQUEST_DRIVING_DOCS)) {
+                    drivingDocs.setText(documentNames.get(REQUEST_DRIVING_DOCS));
+                }
             } else if (layoutId == R.layout.fragment_passport) {
                 passportNo = documentLayout.findViewById(R.id.passportNo);
                 passportDocs = documentLayout.findViewById(R.id.passportDocs);
                 setUpTextWatcher(passportNo);
+                if (documentNames.containsKey(REQUEST_PASSPORT_DOCS)) {
+                    passportDocs.setText(documentNames.get(REQUEST_PASSPORT_DOCS));
+                }
             }
+            // Add similar blocks for other document types if needed
         } else {
             Log.e("LayoutInflation", "Invalid layout ID for document type: " + documentType);
         }
     }
+
 
     // Helper method to generate layout ID based on document type
     private int generateLayoutId(String documentType) {
@@ -363,7 +397,6 @@ public class KycActivity2 extends AppCompatActivity {
             return -1; // Return an invalid layout ID
         }
     }
-
 
 
     // Method to set up TextWatcher for EditText
@@ -421,21 +454,28 @@ public class KycActivity2 extends AppCompatActivity {
                 switch (requestCode) {
                     case REQUEST_ADHAR_DOCUMENT:
                         adharDocsEditText.setText(fileName);
-                        break;
+                        documentNames.put(REQUEST_ADHAR_DOCUMENT, fileName); // Store document name
+
+                    break;
                     case REQUEST_PAN_DOCS:
                         panDocs.setText(fileName);
+                        documentNames.put(REQUEST_PAN_DOCS, fileName); // Store document name
                         break;
                     case REQUEST_DRIVING_DOCS:
                         drivingDocs.setText(fileName);
+                        documentNames.put(REQUEST_DRIVING_DOCS, fileName); // Store document name
                         break;
                     case REQUEST_VOTER_ID_DOCS:
                         voterDocs.setText(fileName);
+                        documentNames.put(REQUEST_VOTER_ID_DOCS, fileName); // Store document name
                         break;
                     case REQUEST_FORM_60_DOCS:
                         formDocs.setText(fileName);
+                        documentNames.put(REQUEST_FORM_60_DOCS, fileName); // Store document name
                         break;
                     case REQUEST_PASSPORT_DOCS:
                         passportDocs.setText(fileName);
+                        documentNames.put(REQUEST_PASSPORT_DOCS, fileName); // Store document name
                         break;
                 }
             } else {
@@ -443,6 +483,7 @@ public class KycActivity2 extends AppCompatActivity {
             }
         }
     }
+
 
     private String getFileName(Uri uri) {
         String fileName = null;
@@ -606,6 +647,4 @@ public class KycActivity2 extends AppCompatActivity {
     public void onPassportDocsUploadClick(View view) {
         onUploadDocumentClick(REQUEST_PASSPORT_DOCS);
     }
-
-
 }

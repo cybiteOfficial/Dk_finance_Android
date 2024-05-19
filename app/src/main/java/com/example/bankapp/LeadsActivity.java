@@ -72,7 +72,7 @@ public class LeadsActivity extends AppCompatActivity {
     private void getLeads() {
         showProgressBar(); // Show progress bar when fetching leads
         String accessToken = sharedPreferences.getString("accessToken", "");
-        String url = BASE_URL + "api/v1/leads";
+        String url = BASE_URL + "api/v1/leads?limit=50&sort=-created_at"; // Assuming server supports sorting by creation date
 
         OkHttpClient client = new OkHttpClient();
 
@@ -155,19 +155,31 @@ public class LeadsActivity extends AppCompatActivity {
         });
     }
 
+
     private String formatAmount(String amount) {
-        // Parse the string to integer
-        String amt = amount.replace(",","");
-        long loanAmount = Long.parseLong(amt);
+        if (amount == null) {
+            return ""; // or any default value you prefer
+        }
+
+        // Remove commas from the amount string
+        String amt = amount.replace(",", "");
+
+        // Parse the string to a long value
+        long loanAmount = 0;
+        try {
+            loanAmount = Long.parseLong(amt);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            // Handle parsing error if needed
+        }
 
         // Create a DecimalFormat object to format the number
         DecimalFormat formatter = new DecimalFormat("#,##,##,##,###");
 
         // Format the number with commas
-        String formattedAmount = formatter.format(loanAmount);
-
-        return formattedAmount;
+        return formatter.format(loanAmount);
     }
+
 
     // Method to dynamically display fetched leads
     private void displayLeads(LeadData[] leads, String accessToken) { // Add accessToken parameter
@@ -335,7 +347,7 @@ public class LeadsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // Notify listener with KYC not done
-                         listener.onKYCStatusChecked(true, false, false, null);
+                        listener.onKYCStatusChecked(true, false, false, null);
                     }
                 });
             }

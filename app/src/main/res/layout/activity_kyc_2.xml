@@ -159,20 +159,10 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
-<!--                <Spinner-->
-<!--                    android:id="@+id/add_spinner"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="40dp"-->
-<!--                    android:layout_marginBottom="80dp"-->
-<!--                    android:background="@drawable/addspinnerbg"-->
-<!--                    android:padding="16dp"-->
-<!--                    android:spinnerMode="dropdown"-->
-<!--                    android:gravity="start"-->
-<!--                    android:popupBackground="@color/white"-->
-<!--                    android:overlapAnchor="false"/>-->
             </LinearLayout>
+
+
+
         </ScrollView>
     </androidx.cardview.widget.CardView>
 

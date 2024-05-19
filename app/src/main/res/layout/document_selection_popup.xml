@@ -24,6 +24,8 @@
         android:orientation="vertical"
         android:padding="8dp">
         <!-- Selected items will be dynamically added here -->
+
+
     </LinearLayout>
 
     <!-- Not Selected section -->
