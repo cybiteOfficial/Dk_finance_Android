@@ -31,7 +31,7 @@ public class AllActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     ProgressBar progressBar;
-
+    TextView noApplicantsText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +40,7 @@ public class AllActivity extends AppCompatActivity {
         ImageView backButton = findViewById(R.id.back_btn);
         LinearLayout cardContainer = findViewById(R.id.card_container);
         progressBar = findViewById(R.id.progressBar);
+        noApplicantsText = findViewById(R.id.no_applications_text);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +98,14 @@ public class AllActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            displayApplicants(applicants, cardContainer);
+                            if (applicantResponse.getCount() == 0) {
+                                noApplicantsText.setVisibility(View.VISIBLE);
+                                cardContainer.setVisibility(View.GONE);
+                            } else {
+                                noApplicantsText.setVisibility(View.GONE);
+                                cardContainer.setVisibility(View.VISIBLE);
+                                displayApplicants(applicants, cardContainer);
+                            }
                         }
                     });
                 } else {
@@ -116,7 +124,7 @@ public class AllActivity extends AppCompatActivity {
     private void displayApplicants(List<ApplicantData> applicants, LinearLayout cardContainer) {
         cardContainer.removeAllViews();
 
-        for (int i = applicants.size() - 1; i >= 0; i--) {
+        for (int i = 0; i <= applicants.size() - 1; i++) {
             ApplicantData applicant = applicants.get(i);
             View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 

@@ -114,6 +114,18 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/no_applications_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:textColor="@color/primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="No applications available"
+        android:visibility="gone" />
+
     <!-- Scroll View for Cards -->
     <ScrollView
         android:id="@+id/scroll_view"

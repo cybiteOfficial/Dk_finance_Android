@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -148,7 +149,13 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         hideProgressBar(); // Hide progress bar after fetching applicants
-                        displayApplicants(applicants, cardContainer);
+                        if(applicantResponse.getCount() == 0){
+                            TextView noApplicantsText = findViewById(R.id.no_applications_text);
+                            noApplicantsText.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            displayApplicants(applicants, cardContainer);
+                        }
                     }
                 });
             }
@@ -158,24 +165,27 @@ public class ApprovedLoansActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void displayApplicants(List<ApplicantDataApproved> applicants, LinearLayout cardContainer) {
         cardContainer.removeAllViews();
-        for (int i = applicants.size() - 1; i >= 0; i--) {
+        for (int i = 0; i <= applicants.size() - 1; i++) {
             ApplicantDataApproved applicant = applicants.get(i);
-            View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
-            // Find views in the card layout
-            TextView applicationIdTextView = cardView.findViewById(R.id.application_id_text);
-            TextView loanStatusTextView = cardView.findViewById(R.id.loan_status_text);
+            if(!Objects.equals(applicant.getStatus(), "md")){
+                View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
-            // Set applicant data to views
-            if (applicationIdTextView != null) {
-                applicationIdTextView.setText("Application ID: " + applicant.getApplication_id());
+                // Find views in the card layout
+                TextView applicationIdTextView = cardView.findViewById(R.id.application_id_text);
+                TextView loanStatusTextView = cardView.findViewById(R.id.loan_status_text);
+
+                // Set applicant data to views
+                if (applicationIdTextView != null) {
+                    applicationIdTextView.setText("Application ID: " + applicant.getApplication_id());
+                }
+                if (loanStatusTextView != null) {
+                    loanStatusTextView.setText("Status: " + applicant.getStatus());
+                    loanStatusTextView.setBackgroundResource(R.drawable.status_completed_background);
+                }
+
+                cardContainer.addView(cardView);
             }
-            if (loanStatusTextView != null) {
-                loanStatusTextView.setText("Status: " + applicant.getStatus());
-                loanStatusTextView.setBackgroundResource(R.drawable.status_completed_background);
-            }
-
-            cardContainer.addView(cardView);
         }
     }
 
