@@ -11,7 +11,7 @@ import retrofit2.http.Part;
 public interface ApiService {
 
     @Multipart
-    @POST("upload")
+    @POST("api/v1/upload_document")
     Call<Void> uploadDocuments(
             @Part("document_type") RequestBody documentType,
             @Part("documents") RequestBody documents,

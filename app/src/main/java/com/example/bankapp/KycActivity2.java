@@ -1,8 +1,11 @@
 package com.example.bankapp;
 
+import static com.example.bankapp.RetrofitClient.getClient;
+
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -33,20 +36,28 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.bankapp.environment.BaseUrl;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class KycActivity2 extends AppCompatActivity {
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 101;
@@ -124,7 +135,7 @@ public class KycActivity2 extends AppCompatActivity {
                 if (!validateAdharNumber()) {
                     Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhaar number", Toast.LENGTH_SHORT).show();
                 } else {
-                    makeHttpRequest1(accessToken, mobNo, kyc_id);
+                    uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id);
                 }
             }
         });
@@ -342,6 +353,10 @@ public class KycActivity2 extends AppCompatActivity {
 
     private HashMap<Integer, String> documentNames = new HashMap<>();
 
+    // create a hashmap to store the URIs of the selected documents named as documetURIs
+    private HashMap<Integer, Uri> documentURIs = new HashMap<>();
+
+    private Uri adharDocsUri, panDocsUri, drivingDocsUri, voterDocsUri, formDocsUri, passportDocsUri;
 
 
 
@@ -455,27 +470,38 @@ public class KycActivity2 extends AppCompatActivity {
                     case REQUEST_ADHAR_DOCUMENT:
                         adharDocsEditText.setText(fileName);
                         documentNames.put(REQUEST_ADHAR_DOCUMENT, fileName); // Store document name
-
+                        adharDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_ADHAR_DOCUMENT, selectedFileUri);
                     break;
                     case REQUEST_PAN_DOCS:
                         panDocs.setText(fileName);
                         documentNames.put(REQUEST_PAN_DOCS, fileName); // Store document name
+                        panDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_PAN_DOCS, selectedFileUri);
                         break;
                     case REQUEST_DRIVING_DOCS:
                         drivingDocs.setText(fileName);
                         documentNames.put(REQUEST_DRIVING_DOCS, fileName); // Store document name
+                        drivingDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_DRIVING_DOCS, selectedFileUri);
                         break;
                     case REQUEST_VOTER_ID_DOCS:
                         voterDocs.setText(fileName);
                         documentNames.put(REQUEST_VOTER_ID_DOCS, fileName); // Store document name
+                        voterDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_VOTER_ID_DOCS, selectedFileUri);
                         break;
                     case REQUEST_FORM_60_DOCS:
                         formDocs.setText(fileName);
                         documentNames.put(REQUEST_FORM_60_DOCS, fileName); // Store document name
+                        formDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_FORM_60_DOCS, selectedFileUri);
                         break;
                     case REQUEST_PASSPORT_DOCS:
                         passportDocs.setText(fileName);
                         documentNames.put(REQUEST_PASSPORT_DOCS, fileName); // Store document name
+                        passportDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_PASSPORT_DOCS, selectedFileUri);
                         break;
                 }
             } else {
@@ -516,9 +542,144 @@ public class KycActivity2 extends AppCompatActivity {
         }
     }
 
+
+    //////////////////////////////
+    private void uploadDocumentsUsingRetrofit(String accessToken, String phoneNumber, String kyc_id) {
+        Retrofit retrofit = getClient(BaseUrl.BASE_URL, accessToken);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        // Create MultipartBody.Part list for the documents
+        List<MultipartBody.Part> documentParts = new ArrayList<>();
+
+        for (Map.Entry<Integer, String> entry : documentNames.entrySet()) {
+
+            int requestCode = entry.getKey();
+            String fileName = entry.getValue();
+            Uri fileUri = null;
+            switch (requestCode) {
+                case REQUEST_ADHAR_DOCUMENT:
+                    fileUri = adharDocsUri;
+                    break;
+                case REQUEST_PAN_DOCS:
+                    fileUri = panDocsUri;
+                    break;
+                case REQUEST_DRIVING_DOCS:
+                    fileUri = drivingDocsUri;
+                    break;
+                case REQUEST_VOTER_ID_DOCS:
+                    fileUri = voterDocsUri;
+                    break;
+                case REQUEST_FORM_60_DOCS:
+                    fileUri = formDocsUri;
+                    break;
+                case REQUEST_PASSPORT_DOCS:
+                    fileUri = passportDocsUri;
+                    break;
+            }
+
+            String realPath = getRealPathFromURI(fileUri);
+            File file = new File(realPath);
+            RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
+            MultipartBody.Part documentPart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+            documentParts.add(documentPart);
+
+            // log the file name and the request code
+            Log.d("FileName", fileName);
+            Log.d("RequestCode", String.valueOf(requestCode));
+            Log.d("RealPath", realPath);
+        }
+
+        // create document objects
+        List<Document> documents = new ArrayList<>();
+        String documentsJson = null;
+        for (Map.Entry<Integer, String> entry : documentNames.entrySet()) {
+            String fileName = entry.getValue();
+            String doc_id;
+            switch (entry.getKey()) {
+                case REQUEST_ADHAR_DOCUMENT:
+                    doc_id = adhar_number.getText().toString().trim();
+                    break;
+                case REQUEST_PAN_DOCS:
+                    doc_id = panNumber.getText().toString().trim();
+                    break;
+                case REQUEST_DRIVING_DOCS:
+                    doc_id = drivingId.getText().toString().trim();
+                    break;
+                case REQUEST_VOTER_ID_DOCS:
+                    doc_id = voterIdNumber.getText().toString().trim();
+                    break;
+                case REQUEST_FORM_60_DOCS:
+                    doc_id = "Form 60";
+                    break;
+                case REQUEST_PASSPORT_DOCS:
+                    doc_id = passportNo.getText().toString().trim();
+                    break;
+                default:
+                    doc_id = "";
+            }
+            Document document = new Document(fileName, doc_id);
+            documents.add(document);
+
+            // create an array to store strings of the document objects
+            List<Document> documentInfo = new ArrayList<>();
+            for (Document doc : documents) {
+                documentInfo.add(doc);
+            }
+            // convert the array to a JSON string
+            documentsJson = new Gson().toJson(documentInfo);
+
+        }
+
+        // log the JSON string
+        Log.d("DocumentsJson", documentsJson);
+
+        // log documentParts
+        Log.d("DocumentParts", documentParts.toString());
+
+
+        apiService.uploadDocuments(
+                RequestBody.create(MultipartBody.FORM, "kyc"),
+                RequestBody.create(MultipartBody.FORM, documentsJson),
+                documentParts,
+                RequestBody.create(MultipartBody.FORM, kyc_id)
+        ).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    makeHttpRequest2(accessToken, phoneNumber, kyc_id);
+                    Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "null";
+                        Log.e("UploadError", "Response code: " + response.code() + ", Error body: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(KycActivity2.this, "Upload Failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                Log.e("UploadFailure", "Error: " + t.getMessage(), t);
+                Toast.makeText(KycActivity2.this, "Upload Failed onFailure", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // implement getRealPathFromURI() method
+    private String getRealPathFromURI(Uri uri) {
+        Context context = KycActivity2.this;
+        String path = RealPathUtil.getRealPath(context, uri);
+        return path;
+    }
+
+    //////////////////////////////
     private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id) {
         String url1 = BaseUrl.BASE_URL + "api/v1/upload_document";
         String uuid = sharedPreferences.getString("uuid", "");
+
+
 
         new Thread(new Runnable() {
             @Override

@@ -27,11 +27,10 @@ public class Document {
         this.document_id = document_id;
     }
 
-    @Override
-    public String toString() {
-        return "Document{" +
-                "document_name='" + document_name + '\'' +
-                ", document_id='" + document_id + '\'' +
+    public String covertToString() {
+        return "{" +
+                "document_name:" + document_name +
+                ", document_id:" + document_id +
                 '}';
     }
 
