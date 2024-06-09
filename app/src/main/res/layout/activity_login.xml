@@ -51,8 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:gravity="left"
-                android:text="User ID"
+                android:gravity="start"
+                android:text="Username"
                 android:textColor="@color/primary"
                 android:textSize="18sp" />
 
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="Password"
                 android:textColor="@color/primary"
                 android:textSize="18sp" />
@@ -97,7 +97,7 @@
                 android:id="@+id/login_button"
                 android:layout_width="156sp"
                 android:layout_height="48sp"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/primary"
                 android:text="Login"
@@ -109,8 +109,6 @@
                 android:id="@+id/versionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:text="Version 1.4"
@@ -123,7 +121,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/primary"
-                android:textSize="8dp"
+                android:textSize="10sp"
                 android:visibility="gone" />
 
 

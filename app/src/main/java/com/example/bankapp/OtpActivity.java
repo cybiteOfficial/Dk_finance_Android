@@ -77,7 +77,7 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (verifyOTP()) {
-                    Intent intent = new Intent(OtpActivity.this, payment.class);
+                    Intent intent = new Intent(OtpActivity.this, NewRegistrationActivity2.class);
                     intent.putExtra("leadId", leadID);
                     startActivity(intent);
                     finish();

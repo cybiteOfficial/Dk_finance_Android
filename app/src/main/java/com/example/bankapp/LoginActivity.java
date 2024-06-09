@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = loginPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(username)) {
-            loginUsername.setError("User ID is required");
+            loginUsername.setError("Username is required");
             // Enable the button again since there's an error
             loginButton.setEnabled(true);
             return;
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         // Validation passed, proceed with login
         onClickPost(username, password);
     }
-    public void onClickPost(String email, String password) {
+    public void onClickPost(String username, String password) {
         progressBar.setVisibility(View.VISIBLE);
         String url = BASE_URL + "auth/signin";
 
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
 
                 RequestBody postBody = new FormBody.Builder()
-                        .add("email", email)
+                        .add("username", username)
                         .add("password", password)
                         .build();
 
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                     // Proceed with the login process (e.g., start DashboardActivity)
                                     Intent mainIntent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                    mainIntent.putExtra("userId", email);
+                                    mainIntent.putExtra("userId", username);
                                     startActivity(mainIntent);
                                     finish();
                                 }

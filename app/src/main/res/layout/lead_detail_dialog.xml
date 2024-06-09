@@ -83,6 +83,7 @@
         android:textSize="18sp"
         android:textColor="@android:color/black"/>
 
+
     <Button
         android:id="@+id/kycButton"
         android:layout_width="wrap_content"
@@ -95,5 +96,19 @@
         android:visibility="gone"
 
         />
+
+    <Button
+        android:id="@+id/otpSendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete OTP Verification"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+        android:visibility="gone"
+
+        />
+
 
 </LinearLayout>

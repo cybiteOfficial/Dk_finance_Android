@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/label_applicable_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Applicable Rate %"
+        android:textSize="16sp"
+        android:textColor="@color/primary" />
+
+    <EditText
+        android:id="@+id/edit_applicable_rate"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:inputType="numberDecimal"
+        android:background="@drawable/edit_text_border"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"/>
+
+    <TextView
+        android:id="@+id/label_change_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Amount"
+        android:textSize="16sp"
+        android:textColor="@color/primary"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/edit_change_amount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:inputType="numberDecimal"
+        android:background="@drawable/edit_text_border"
+        android:textColor="@color/black"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/label_tax_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tax Amount"
+        android:textSize="16sp"
+        android:textColor="@color/primary"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/edit_tax_amount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:inputType="numberDecimal"
+        android:background="@drawable/edit_text_border"
+        android:textColor="@color/black"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/label_total_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Amount"
+        android:textSize="16sp"
+        android:textColor="@color/primary"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/edit_total_amount"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:inputType="numberDecimal"
+        android:background="@drawable/edit_text_border"
+        android:textColor="@color/black"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:padding="10dp"/>
+
+</LinearLayout>

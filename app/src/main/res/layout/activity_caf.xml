@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/customerNameLayout"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/topBox"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="#1A7A306c"
+        android:padding="20dp"
+        android:paddingTop="20dp">
+
+        <!-- Home button on the left -->
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/baseline_add_home_24"
+            android:background="@drawable/home_button_background"/>
+
+        <!-- Text and ID in the center -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/applicationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="Application ID"
+                android:textColor="@color/primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/applicationID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <!-- ScrollView to make the layout scrollable -->
+    <ScrollView
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <!-- LinearLayout to contain the scrollable content -->
+        <LinearLayout
+            android:id="@+id/scrollLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/dasboardItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:elevation="0dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="CAF"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="18dp"
+                    android:gravity="start"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Tentative Amount"
+                    android:textSize="16sp"
+                    android:gravity="start"
+                    android:layout_marginTop="10dp"/>
+
+                <EditText
+                    android:id="@+id/tentativeAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="phone|number"
+                    android:digits="0123456789"
+                    android:singleLine="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="PD (with applicant name with ID)"
+                    android:textSize="16sp"
+                    android:gravity="start"
+                    android:layout_marginTop="10dp"/>
+
+                <EditText
+                    android:id="@+id/pdID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:singleLine="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Place of PD Address"
+                    android:textSize="16sp"
+                    android:gravity="start"
+                    android:layout_marginTop="10dp"/>
+
+                <EditText
+                    android:id="@+id/pdAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:singleLine="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Location"
+                    android:textSize="16sp"
+                    android:gravity="left"
+                    android:layout_marginTop="10dp"/>
+
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:singleLine="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Description"
+                    android:textSize="16sp"
+                    android:gravity="start"
+                    android:layout_marginTop="10dp"/>
+
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:padding="8dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:elevation="4dp"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:singleLine="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

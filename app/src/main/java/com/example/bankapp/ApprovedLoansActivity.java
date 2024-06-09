@@ -165,10 +165,10 @@ public class ApprovedLoansActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void displayApplicants(List<ApplicantDataApproved> applicants, LinearLayout cardContainer) {
         cardContainer.removeAllViews();
-        for (int i = 0; i <= applicants.size() - 1; i++) {
+        for (int i = 0; i < applicants.size(); i++) {  // Changed to i < applicants.size() for better readability
             ApplicantDataApproved applicant = applicants.get(i);
 
-            if(!Objects.equals(applicant.getStatus(), "md")){
+            if (!Objects.equals(applicant.getStatus(), "md")) {
                 View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
                 // Find views in the card layout
@@ -184,10 +184,21 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                     loanStatusTextView.setBackgroundResource(R.drawable.status_completed_background);
                 }
 
+                // Add click listener to the card view
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ApprovedLoansActivity.this, DashboardInsideActivity.class);
+                        intent.putExtra("application_id", applicant.getApplication_id());
+                        startActivity(intent);
+                    }
+                });
+
                 cardContainer.addView(cardView);
             }
         }
     }
+
 
     // Show toast message
     private void showToast(String message) {

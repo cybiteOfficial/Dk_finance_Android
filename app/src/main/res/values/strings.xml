@@ -142,5 +142,12 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="charges_type_processing_fees">Charges Type (Processing Fees)</string>
+    <string name="charges_type_valuation_charges">Charges Type (Valuation Charges)</string>
+    <string name="charges_type_legal_and_incidental_fee">Charges Type (Legal and incidental fee)</string>
+    <string name="charges_type_stamp_duty">Charges Type (Stamp Duty)</string>
+    <string name="charges_type_rcu_charges">Charges Type (Rcu Charges)</string>
+    <string name="charges_type_stamping_expenses">Charges Type (Stamping expenses)</string>
+    <string name="loan_details">Loan Details</string>
 
 </resources>

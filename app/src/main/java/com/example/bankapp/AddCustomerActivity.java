@@ -103,7 +103,6 @@ public class AddCustomerActivity extends AppCompatActivity {
             applicantName.setTextSize(20);
             applicantName.setGravity(Gravity.CENTER_VERTICAL);
 
-
             coApplicantsLayout.addView(titleName);
             coApplicantsLayout.addView(applicantName);
 

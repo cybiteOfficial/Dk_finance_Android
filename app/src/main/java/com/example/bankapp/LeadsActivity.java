@@ -72,7 +72,7 @@ public class LeadsActivity extends AppCompatActivity {
     private void getLeads() {
         showProgressBar(); // Show progress bar when fetching leads
         String accessToken = sharedPreferences.getString("accessToken", "");
-        String url = BASE_URL + "api/v1/leads?limit=50&sort=-created_at"; // Assuming server supports sorting by creation date
+        String url = BASE_URL + "api/v1/leads?sort=-created_at"; // Assuming server supports sorting by creation date
 
         OkHttpClient client = new OkHttpClient();
 
@@ -239,6 +239,7 @@ public class LeadsActivity extends AppCompatActivity {
         TextView createdAtTextView = dialogView.findViewById(R.id.created_at);
         TextView customerTypeTextView = dialogView.findViewById(R.id.customer_type);
         Button kycBtn = dialogView.findViewById(R.id.kycButton);
+        Button otpBtn = dialogView.findViewById(R.id.otpSendBtn);
 
         leadIdTextView.setText("Lead ID: " + lead.getLead_id());
         String fullName = lead.getFirst_name() + " " + lead.getLast_name();
@@ -304,7 +305,21 @@ public class LeadsActivity extends AppCompatActivity {
                                 finish();
 
                             }
+                        }
+                    });
+                }
 
+                else{
+                    otpBtn.setVisibility(View.VISIBLE);
+                    otpBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // move to otp activity
+                            Intent intent = new Intent(LeadsActivity.this, OtpActivity.class);
+                            intent.putExtra("leadId", lead.getLead_id());
+                            intent.putExtra("phoneNumber", lead.getMobile_number());
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 }
