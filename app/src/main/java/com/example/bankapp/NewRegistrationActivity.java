@@ -1,5 +1,6 @@
 package com.example.bankapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -131,8 +133,9 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
         Spinner caseTagSpinner = findViewById(R.id.caseTag);
         ArrayAdapter<String> caseTagAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.case_tag)) {
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
@@ -140,7 +143,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
@@ -153,8 +156,9 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
         Spinner productSpinner = findViewById(R.id.productType);
         ArrayAdapter<String> productAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.product_types_array)) {
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
@@ -162,7 +166,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black)); // Change the color here
@@ -174,8 +178,9 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
         Spinner customerTypeSpinner = findViewById(R.id.customerType);
         ArrayAdapter<String> customerTypeAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.customer_type)) {
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black));
@@ -183,7 +188,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(getResources().getColor(R.color.black));
@@ -213,11 +218,10 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void autofetchDate() {
         // Get current date
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String currentDate = dateFormat.format(calendar.getTime());
 
         // Set the current date in the TextView
@@ -225,7 +229,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
     }
     private void autoTime(){
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         String currentTime = timeFormat.format(calendar.getTime());
         timeTextView.setText(currentTime);
     }
@@ -264,17 +268,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
                 String phoneNumberText = phoneNumber.getText().toString().trim();
                 phoneNumberText = phoneNumberText.substring(4);
 
-                // Get the loan amount as a string without commas
                 String loanAmountText = loanAmount.getText().toString().replaceAll(",", "");
-
-                // Parse the loan amount string to an integer
-//                int loanAmountInt = 0;
-//                try {
-//                    loanAmountInt = Integer.parseInt(loanAmountText);
-//                } catch (NumberFormatException e) {
-//                    // Handle the case where the loan amount is not a valid integer
-//                    e.printStackTrace(); // Or show an error message
-//                }
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
@@ -288,12 +282,6 @@ public class NewRegistrationActivity extends AppCompatActivity {
                         .add("case_tag", "normal")
                         .add("customer_type", "home_loan")
                         .add("comment", "testing");
-
-                // Check if loan amount is provided
-//                String loanAmountText = loanAmount.getText().toString().trim();
-//                if (!TextUtils.isEmpty(loanAmountText)) {
-//                    formBodyBuilder.add("loan_amount", loanAmountText);
-//                }
 
                 RequestBody formBody = formBodyBuilder.build();
 

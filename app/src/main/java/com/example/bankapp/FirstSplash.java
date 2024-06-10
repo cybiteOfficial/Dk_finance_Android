@@ -18,7 +18,7 @@ public class FirstSplash extends AppCompatActivity {
             @Override
             public void run() {
                 // Start the main activity after the splash screen duration
-                Intent mainIntent = new Intent(FirstSplash.this, LoginActivity.class);
+                Intent mainIntent = new Intent(FirstSplash.this, DocumentUploadActivity.class);
                 startActivity(mainIntent);
                 finish();
             }

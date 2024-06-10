@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="2dp"
+    android:background="@color/white"
+    android:elevation="0dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary"
+        android:text="Document Name"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:gravity="start" />
+
+    <EditText
+        android:id="@+id/docNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edit_text_border"
+        android:digits="0123456789"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:inputType="number"
+        android:maxLength="12"
+        android:padding="8dp"
+        android:textColor="@android:color/black" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary"
+        android:text="Document ID"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:gravity="start" />
+
+    <EditText
+        android:id="@+id/docIdEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edit_text_border"
+        android:digits="0123456789"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:inputType="number"
+        android:maxLength="12"
+        android:padding="8dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary"
+        android:text="Upload Document"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:gravity="start" />
+
+    <EditText
+        android:id="@+id/docFileEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edit_text_border"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:padding="8dp"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:drawableEnd="@drawable/attach_file"
+        android:inputType="none"
+        android:focusable="false"
+        android:onClick="onUploadDocumentClick" />
+
+</LinearLayout>
