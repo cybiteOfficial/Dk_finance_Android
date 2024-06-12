@@ -45,7 +45,7 @@ public class NewRegistrationActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Send data to AddCustomerActivity using Intent
-                Intent intent = new Intent(NewRegistrationActivity2.this, AddCustomerActivity.class);
+                Intent intent = new Intent(NewRegistrationActivity2.this, DashboardActivity.class);
                 intent.putExtra("applicationID", application_ID);
                 startActivity(intent);
                 finish();

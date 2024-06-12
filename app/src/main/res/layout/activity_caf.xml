@@ -58,12 +58,15 @@
 
     </RelativeLayout>
     <!-- ScrollView to make the layout scrollable -->
+
     <ScrollView
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:scrollbars="none"
+        android:overScrollMode="never">
 
         <!-- LinearLayout to contain the scrollable content -->
         <LinearLayout
@@ -203,5 +206,40 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/white"
+            android:text="SAVE"
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/submitbutton"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/primary"
+            android:text="SUBMIT"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -272,16 +272,18 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
-                        .add("mobile_number", phoneNumber.getText().toString())
                         .add("last_name", lastName.getText().toString().trim())
+                        .add("mobile_number", phoneNumber.getText().toString())
                         .add("email", "")
-//                        .add("agent_code", agentCode.getText().toString().trim())
                         .add("loan_amount", loanAmountText)
                         .add("agent_code", "DKFE001")
+                        .add("branch_code", "BRANCH01")
+                        .add("branch_name", "BRANCHNAME01")
                         .add("product_type", "normal")
                         .add("case_tag", "normal")
                         .add("customer_type", "home_loan")
-                        .add("comment", "testing");
+                        .add("comment", "testing")
+                        .add("description", "test description");
 
                 RequestBody formBody = formBodyBuilder.build();
 
