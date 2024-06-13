@@ -23,6 +23,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -268,9 +269,6 @@ public class KycActivity2 extends AppCompatActivity {
             }
         }
     }
-
-
-
 
     // Method to check if a layout already exists
     private boolean layoutExists(int layoutId) {
@@ -636,19 +634,34 @@ public class KycActivity2 extends AppCompatActivity {
 
             // Proceed only if there are no validation errors
             if (fileUri != null && !doc_id.isEmpty()) {
-                String realPath = getRealPathFromURI(fileUri);
-                File file = new File(realPath);
-                RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
-                MultipartBody.Part documentPart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-                documentParts.add(documentPart);
+                try {
+                    // Get the file extension from the URI or file path
+                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileUri.toString());
+                    String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
 
-                Document document = new Document(fileName, doc_id);
-                documents.add(document);
+                    if (mimeType == null) {
+                        // Handle the case where MIME type is null
+                        mimeType = "*/*"; // Default to all MIME types
+                    }
 
-                // Log the file name and the request code
-                Log.d("FileName", fileName);
-                Log.d("RequestCode", String.valueOf(requestCode));
-                Log.d("RealPath", realPath);
+                    // Create a request body with the determined MIME type
+                    File file = new File(getRealPathFromURI(fileUri));
+                    RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
+                    MultipartBody.Part documentPart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                    documentParts.add(documentPart);
+
+                    Document document = new Document(fileName, doc_id);
+                    documents.add(document);
+
+                    // Log the file name and the request code
+                    Log.d("FileName", fileName);
+                    Log.d("RequestCode", String.valueOf(requestCode));
+                    Log.d("RealPath", file.getAbsolutePath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Handle error: Log or show an error message
+                }
+
             }
         }
 

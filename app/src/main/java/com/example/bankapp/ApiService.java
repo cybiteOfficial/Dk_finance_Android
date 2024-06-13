@@ -18,4 +18,11 @@ public interface ApiService {
             @Part List<MultipartBody.Part> file,
             @Part("kyc_id") RequestBody kycId
     );
+    @Multipart
+    @POST("api/v1/upload_document")
+    Call<Void> uploadDocuments_collateral(
+            @Part("document_type") RequestBody documentType,
+            @Part("documents") RequestBody documents
+    );
+
 }

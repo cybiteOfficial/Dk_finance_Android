@@ -309,20 +309,20 @@ public class LeadsActivity extends AppCompatActivity {
                     });
                 }
 
-                else{
-                    otpBtn.setVisibility(View.VISIBLE);
-                    otpBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // move to otp activity
-                            Intent intent = new Intent(LeadsActivity.this, OtpActivity.class);
-                            intent.putExtra("leadId", lead.getLead_id());
-                            intent.putExtra("phoneNumber", lead.getMobile_number());
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                }
+//                else{
+//                    otpBtn.setVisibility(View.VISIBLE);
+//                    otpBtn.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            // move to otp activity
+//                            Intent intent = new Intent(LeadsActivity.this, OtpActivity.class);
+//                            intent.putExtra("leadId", lead.getLead_id());
+//                            intent.putExtra("phoneNumber", lead.getMobile_number());
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    });
+//                }
             }
         }, accessToken);
 
