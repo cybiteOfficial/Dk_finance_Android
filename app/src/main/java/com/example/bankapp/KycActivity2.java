@@ -134,9 +134,20 @@ public class KycActivity2 extends AppCompatActivity {
 
                 if (!validateAdharNumber()) {
                     Toast.makeText(KycActivity2.this, "Enter a valid 12-digit Aadhaar number", Toast.LENGTH_SHORT).show();
-                } else {
-                    uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id);
                 }
+                // if adhaar is selected, check whether file is present or not
+                if(adharDocsEditText.getText().toString().isEmpty()){
+                   Toast.makeText(KycActivity2.this, "Please upload Adhaar document", Toast.LENGTH_SHORT).show();
+                }
+                if(validateAdharNumber() && !adharDocsEditText.getText().toString().isEmpty()){
+                    if(validateAllDocsUploaded()){
+                        uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id);
+                    }
+                    else {
+                        Toast.makeText(KycActivity2.this, "Please upload all documents", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
 
@@ -158,6 +169,36 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
 /////////////////
+
+    private boolean validateAllDocsUploaded() {
+        // Initialize a list to track the upload status of each required document
+        ArrayList<Boolean> docStatus = new ArrayList<>();
+
+        // Check if PAN document is uploaded (if present in selected documents and UI)
+        if (selectedDocuments.containsValue("Pan") && panDocs != null && !panDocs.getText().toString().isEmpty()) {
+            docStatus.add(true);
+        } else if (selectedDocuments.containsValue("Pan")) {
+            docStatus.add(false); // PAN is selected but not present in UI
+        }
+
+        // Check if Driving License document is uploaded (if present in selected documents and UI)
+        if (selectedDocuments.containsValue("Driving") && drivingDocs != null && !drivingDocs.getText().toString().isEmpty()) {
+            docStatus.add(true);
+        } else if (selectedDocuments.containsValue("Driving")) {
+            docStatus.add(false); // Driving License is selected but not present in UI
+        }
+
+        // Check if Passport document is uploaded (if present in selected documents and UI)
+        if (selectedDocuments.containsValue("Passport") && passportDocs != null && !passportDocs.getText().toString().isEmpty()) {
+            docStatus.add(true);
+        } else if (selectedDocuments.containsValue("Passport")) {
+            docStatus.add(false); // Passport is selected but not present in UI
+        }
+
+        // Check if all required documents are uploaded
+        return !docStatus.contains(false);
+    }
+
 
     // HashMap to store selected document IDs and their types
     private Map<Integer, String> selectedDocuments = new HashMap<>();
@@ -472,7 +513,7 @@ public class KycActivity2 extends AppCompatActivity {
                         documentNames.put(REQUEST_ADHAR_DOCUMENT, fileName); // Store document name
                         adharDocsUri = selectedFileUri;
                         documentURIs.put(REQUEST_ADHAR_DOCUMENT, selectedFileUri);
-                    break;
+                        break;
                     case REQUEST_PAN_DOCS:
                         panDocs.setText(fileName);
                         documentNames.put(REQUEST_PAN_DOCS, fileName); // Store document name
@@ -548,94 +589,87 @@ public class KycActivity2 extends AppCompatActivity {
         Retrofit retrofit = getClient(BaseUrl.BASE_URL, accessToken);
         ApiService apiService = retrofit.create(ApiService.class);
 
-        // Create MultipartBody.Part list for the documents
         List<MultipartBody.Part> documentParts = new ArrayList<>();
+        List<Document> documents = new ArrayList<>();
+        List<String> validationErrors = new ArrayList<>();
 
         for (Map.Entry<Integer, String> entry : documentNames.entrySet()) {
-
             int requestCode = entry.getKey();
             String fileName = entry.getValue();
             Uri fileUri = null;
+            String doc_id = "";
+
             switch (requestCode) {
                 case REQUEST_ADHAR_DOCUMENT:
                     fileUri = adharDocsUri;
-                    break;
-                case REQUEST_PAN_DOCS:
-                    fileUri = panDocsUri;
-                    break;
-                case REQUEST_DRIVING_DOCS:
-                    fileUri = drivingDocsUri;
-                    break;
-                case REQUEST_VOTER_ID_DOCS:
-                    fileUri = voterDocsUri;
-                    break;
-                case REQUEST_FORM_60_DOCS:
-                    fileUri = formDocsUri;
-                    break;
-                case REQUEST_PASSPORT_DOCS:
-                    fileUri = passportDocsUri;
-                    break;
-            }
-
-            String realPath = getRealPathFromURI(fileUri);
-            File file = new File(realPath);
-            RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
-            MultipartBody.Part documentPart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-            documentParts.add(documentPart);
-
-            // log the file name and the request code
-            Log.d("FileName", fileName);
-            Log.d("RequestCode", String.valueOf(requestCode));
-            Log.d("RealPath", realPath);
-        }
-
-        // create document objects
-        List<Document> documents = new ArrayList<>();
-        String documentsJson = null;
-        for (Map.Entry<Integer, String> entry : documentNames.entrySet()) {
-            String fileName = entry.getValue();
-            String doc_id;
-            switch (entry.getKey()) {
-                case REQUEST_ADHAR_DOCUMENT:
                     doc_id = adhar_number.getText().toString().trim();
                     break;
                 case REQUEST_PAN_DOCS:
+                    fileUri = panDocsUri;
                     doc_id = panNumber.getText().toString().trim();
                     break;
                 case REQUEST_DRIVING_DOCS:
+                    fileUri = drivingDocsUri;
                     doc_id = drivingId.getText().toString().trim();
                     break;
                 case REQUEST_VOTER_ID_DOCS:
+                    fileUri = voterDocsUri;
                     doc_id = voterIdNumber.getText().toString().trim();
                     break;
                 case REQUEST_FORM_60_DOCS:
+                    fileUri = formDocsUri;
                     doc_id = "Form 60";
                     break;
                 case REQUEST_PASSPORT_DOCS:
+                    fileUri = passportDocsUri;
                     doc_id = passportNo.getText().toString().trim();
                     break;
-                default:
-                    doc_id = "";
             }
-            Document document = new Document(fileName, doc_id);
-            documents.add(document);
 
-            // create an array to store strings of the document objects
-            List<Document> documentInfo = new ArrayList<>();
-            for (Document doc : documents) {
-                documentInfo.add(doc);
+            // Check if the fileUri or the ID is missing and add to validation errors
+            if (fileUri == null) {
+                validationErrors.add("Please upload the document file for " + fileName);
             }
-            // convert the array to a JSON string
-            documentsJson = new Gson().toJson(documentInfo);
+            if (doc_id.isEmpty()) {
+                validationErrors.add("Please enter the ID number for " + fileName);
+            }
 
+            // Proceed only if there are no validation errors
+            if (fileUri != null && !doc_id.isEmpty()) {
+                String realPath = getRealPathFromURI(fileUri);
+                File file = new File(realPath);
+                RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
+                MultipartBody.Part documentPart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                documentParts.add(documentPart);
+
+                Document document = new Document(fileName, doc_id);
+                documents.add(document);
+
+                // Log the file name and the request code
+                Log.d("FileName", fileName);
+                Log.d("RequestCode", String.valueOf(requestCode));
+                Log.d("RealPath", realPath);
+            }
         }
 
-        // log the JSON string
+        // If there are validation errors, show them and return early
+        if (!validationErrors.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (String error : validationErrors) {
+                errorMessage.append(error).append("\n");
+            }
+            Toast.makeText(KycActivity2.this, errorMessage.toString().trim(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Convert the documents list to JSON string
+        String documentsJson = new Gson().toJson(documents);
+
+        // Log the JSON string
         Log.d("DocumentsJson", documentsJson);
 
-        // log documentParts
+        // Log documentParts
         Log.d("DocumentParts", documentParts.toString());
-
 
         apiService.uploadDocuments(
                 RequestBody.create(MultipartBody.FORM, "kyc"),
