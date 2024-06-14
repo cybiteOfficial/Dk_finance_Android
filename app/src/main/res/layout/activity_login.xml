@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="Version 1.5"
+                android:text="Version 2.1"
                 android:textColor="@color/primary" />
 
             <ProgressBar

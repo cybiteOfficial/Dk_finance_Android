@@ -80,4 +80,18 @@
         android:focusable="false"
         android:onClick="onUploadDocumentClick" />
 
+    <Button
+        android:id="@+id/deleteDocumentBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textColor="@color/white"
+        android:text="Remove"
+        android:backgroundTint="@color/primary"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:onClick="onDeleteDocumentSection" />
+
+
+
 </LinearLayout>

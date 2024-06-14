@@ -25,4 +25,21 @@ public interface ApiService {
             @Part("documents") RequestBody documents
     );
 
+    @Multipart
+    @POST("api/v1/upload_document")
+    Call<Void> uploadDocuments_other(
+            @Part("document_type") RequestBody documentType,
+            @Part("documents") RequestBody documents,
+            @Part List<MultipartBody.Part> file,
+            @Part("application_id") RequestBody applicationId
+    );
+
+    @Multipart
+    @POST("api/v1/upload_document")
+    Call<Void> uploadDocuments_photo(
+            @Part("document_type") RequestBody documentType,
+            @Part MultipartBody.Part file,
+            @Part("application_id") RequestBody applicationId
+    );
+
 }

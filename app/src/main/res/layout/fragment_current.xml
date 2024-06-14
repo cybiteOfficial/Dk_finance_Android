@@ -15,7 +15,6 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/topBox"
             android:layout_marginTop="0dp"
             android:scrollbars="none"
             android:overScrollMode="never">
@@ -24,7 +23,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center_horizontal"
-                android:padding="2dp"
                 android:background="@color/white"
                 android:elevation="0dp">
 
@@ -33,12 +31,12 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
                     android:text="Property Owner"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyOwner"
+                    android:id="@+id/currentPropertyOwner"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -47,6 +45,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +56,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyCategory"
+                    android:id="@+id/currentPropertyCategory"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -77,67 +76,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/typesOfCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Occupation Status"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/occupationStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Property Title"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/propertyTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black"
-                    android:elevation="4dp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Flat number/ House number"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/flatNumber"
-                    android:inputType="number"
+                    android:id="@+id/currentTypesOfCategory"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -157,7 +96,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/plotNumber"
+                    android:id="@+id/currentPlotNumber"
                     android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -178,7 +117,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/locality"
+                    android:id="@+id/currentLocality"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -198,7 +137,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/village"
+                    android:id="@+id/currentVillage"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -207,6 +146,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -217,7 +157,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/state"
+                    android:id="@+id/currentState"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -237,7 +177,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/district"
+                    android:id="@+id/currentDistrict"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -257,7 +197,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/city"
+                    android:id="@+id/currentCity"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -277,7 +217,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/taluka"
+                    android:id="@+id/currentTaluka"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -286,6 +226,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,7 +237,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/pinCode"
+                    android:id="@+id/currentPinCode"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -317,7 +258,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/landmark"
+                    android:id="@+id/currentLandmark"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -337,7 +278,7 @@
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyValue"
+                    android:id="@+id/currentPropertyValue"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
@@ -347,9 +288,8 @@
                     android:inputType="number"
                     android:padding="8dp"
                     android:textColor="@android:color/black" />
-
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
-
 </FrameLayout>
+

@@ -2,7 +2,6 @@ package com.example.bankapp;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,30 +13,36 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressActivity extends AppCompatActivity {
+public class AddressActivity extends AppCompatActivity implements DataTransferListener {
 
     private Button submitBtn;
     private ImageView homeButton;
     private static final String TAG = "AddressActivity";
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private ViewPagerAdapter adapter;
+    private CurrentFragment currentFragment;
+    private PermanentFragment permanentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
-        Button btnSave = findViewById(R.id.save_button);
-        btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        // Find views
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        submitBtn = findViewById(R.id.submit_button);
+        homeButton = findViewById(R.id.homeButton);
 
         // Set up ViewPager with adapter
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
         // Attach TabLayout with ViewPager
@@ -47,34 +52,11 @@ public class AddressActivity extends AppCompatActivity {
         tabLayout.setTabTextColors(getResources().getColor(R.color.black), getResources().getColor(R.color.black));
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#7A306D"));
 
+        // Setup home button
+        setupHomeButton();
 
-        homeButton = findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Move to DashboardActivity
-                Intent mainIntent = new Intent(AddressActivity.this, DashboardActivity.class);
-                startActivity(mainIntent);
-                finish();
-            }
-        });
-        submitBtn = findViewById(R.id.submit_button);
-
-        submitBtn.setOnClickListener(v -> {
-            // Get the customer name from the intent
-            String customerName = getIntent().getStringExtra("customerName");
-            // Get the list of co-applicant names passed from CreateCustomer
-            ArrayList<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
-
-            // Create an Intent to pass back the customer name and the list of co-applicant names
-            Intent intent = new Intent(AddressActivity.this, AddCustomerActivity.class);
-            intent.putExtra("customerName", customerName);
-            intent.putStringArrayListExtra("coApplicantNames", coApplicantNames);
-            startActivity(intent);
-            finish();
-        });
-
-
+        // Setup submit button
+        setupSubmitButton();
 
         // Get the co-applicant names passed from CreateCustomer
         List<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
@@ -88,6 +70,47 @@ public class AddressActivity extends AppCompatActivity {
         }
     }
 
+    private void setupHomeButton() {
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Move to DashboardActivity
+                Intent mainIntent = new Intent(AddressActivity.this, DashboardActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        });
+    }
+
+    private void setupSubmitButton() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do something when submit button is clicked
+                // For example, save data or proceed to the next activity
+                // Here, we are passing data back to AddCustomerActivity
+                String customerName = getIntent().getStringExtra("customerName");
+                if (customerName == null) customerName = "Default Name";  // handle null
+
+                ArrayList<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
+                if (coApplicantNames == null) coApplicantNames = new ArrayList<>();  // handle null
+
+                Intent intent = new Intent(AddressActivity.this, AddCustomerActivity.class);
+                intent.putExtra("customerName", customerName);
+                intent.putStringArrayListExtra("coApplicantNames", coApplicantNames);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    // Implementing DataTransferListener interface method
+    @Override
+    public void onDataTransfer(CurrentAddressData data) {
+        if (permanentFragment != null) {
+            permanentFragment.updateData(data);
+        }
+    }
 
     // Adapter for ViewPager
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -102,9 +125,13 @@ public class AddressActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new CurrentFragment();
+                    currentFragment = new CurrentFragment();
+                    // Set the listener for data transfer
+                    currentFragment.setDataTransferListener(AddressActivity.this);
+                    return currentFragment;
                 case 1:
-                    return new PermanentFragment();
+                    permanentFragment = new PermanentFragment();
+                    return permanentFragment;
                 default:
                     return null;
             }
@@ -121,4 +148,3 @@ public class AddressActivity extends AppCompatActivity {
         }
     }
 }
-

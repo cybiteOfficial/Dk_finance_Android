@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CurrentFragment">
+    tools:context=".PermanentFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:background="@color/white"
                 android:elevation="0dp">
 
-                <!-- Layout for "Same as Current Address" -->
+                <!-- Button for "Same as Current Address" -->
                 <LinearLayout
                     android:id="@+id/sameAsCurrentLayout"
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical"
-                        android:text="Permanent Address same as Current Address"
+                        android:text="Same as Current Address"
                         android:textColor="@color/primary"
                         android:textSize="16sp"
                         android:gravity="center_vertical" />
@@ -78,6 +78,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -157,6 +158,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -238,6 +240,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -317,6 +320,7 @@
                     android:padding="8dp"
                     android:textColor="@android:color/black"
                     android:elevation="4dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -381,5 +385,5 @@
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
-
 </FrameLayout>
+

@@ -1,64 +1,73 @@
 package com.example.bankapp;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PermanentFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class PermanentFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText propertyOwnerEditText;
+    private EditText propertyCategoryEditText;
+    private EditText typesOfCategoryEditText;
+    private EditText plotNumberEditText;
+    private EditText localityEditText;
+    private EditText villageEditText;
+    private EditText stateEditText;
+    private EditText districtEditText;
+    private EditText cityEditText;
+    private EditText talukaEditText;
+    private EditText pinCodeEditText;
+    private EditText landmarkEditText;
+    private EditText propertyValueEditText;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PermanentFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PermanentFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PermanentFragment newInstance(String param1, String param2) {
-        PermanentFragment fragment = new PermanentFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_permanent, container, false);
+
+        // Initialize EditText fields
+        propertyOwnerEditText = rootView.findViewById(R.id.propertyOwner);
+        propertyCategoryEditText = rootView.findViewById(R.id.propertyCategory);
+        typesOfCategoryEditText = rootView.findViewById(R.id.typesOfCategory);
+        plotNumberEditText = rootView.findViewById(R.id.plotNumber);
+        localityEditText = rootView.findViewById(R.id.locality);
+        villageEditText = rootView.findViewById(R.id.village);
+        stateEditText = rootView.findViewById(R.id.state);
+        districtEditText = rootView.findViewById(R.id.district);
+        cityEditText = rootView.findViewById(R.id.city);
+        talukaEditText = rootView.findViewById(R.id.taluka);
+        pinCodeEditText = rootView.findViewById(R.id.pinCode);
+        landmarkEditText = rootView.findViewById(R.id.landmark);
+        propertyValueEditText = rootView.findViewById(R.id.propertyValue);
+
+        return rootView;
+    }
+
+    // Method to update UI with CurrentAddressData
+    public void updateData(CurrentAddressData currentAddressData) {
+        if (currentAddressData != null) {
+            propertyOwnerEditText.setText(currentAddressData.getPropertyOwner());
+            propertyCategoryEditText.setText(currentAddressData.getPropertyCategory());
+            typesOfCategoryEditText.setText(currentAddressData.getTypesOfCategory());
+            plotNumberEditText.setText(currentAddressData.getPlotNumber());
+            localityEditText.setText(currentAddressData.getLocality());
+            villageEditText.setText(currentAddressData.getVillage());
+            stateEditText.setText(currentAddressData.getState());
+            districtEditText.setText(currentAddressData.getDistrict());
+            cityEditText.setText(currentAddressData.getCity());
+            talukaEditText.setText(currentAddressData.getTaluka());
+            pinCodeEditText.setText(currentAddressData.getPinCode());
+            landmarkEditText.setText(currentAddressData.getLandmark());
+            propertyValueEditText.setText(currentAddressData.getPropertyValue());
+        } else {
+            Log.e("PermanentFragment", "CurrentAddressData object is null.");
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_permanent, container, false);
     }
 }

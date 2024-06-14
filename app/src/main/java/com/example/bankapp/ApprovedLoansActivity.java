@@ -185,14 +185,14 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                 }
 
                 // Add click listener to the card view
-//                cardView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(ApprovedLoansActivity.this, DashboardInsideActivity.class);
-//                        intent.putExtra("application_id", applicant.getApplication_id());
-//                        startActivity(intent);
-//                    }
-//                });
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ApprovedLoansActivity.this, DashboardInsideActivity.class);
+                        intent.putExtra("application_id", applicant.getApplication_id());
+                        startActivity(intent);
+                    }
+                });
 
                 cardContainer.addView(cardView);
             }

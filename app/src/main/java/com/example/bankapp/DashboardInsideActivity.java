@@ -47,18 +47,20 @@ public class DashboardInsideActivity extends AppCompatActivity {
             }
         });
 
-//        documentsPageBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(DashboardInsideActivity.this, DocumentsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        documentsPageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardInsideActivity.this, DocumentUploadActivity.class);
+                intent.putExtra("application_id", application_id);
+                startActivity(intent);
+            }
+        });
 
         photographsPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardInsideActivity.this, PhotographUploadActivity.class);
+                intent.putExtra("application_id", application_id);
                 startActivity(intent);
             }
         });
