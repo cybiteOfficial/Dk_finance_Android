@@ -69,6 +69,7 @@ public class DashboardInsideActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardInsideActivity.this, CollateralDetailsActivity.class);
+                intent.putExtra("application_id", application_id);
                 startActivity(intent);
             }
         });
