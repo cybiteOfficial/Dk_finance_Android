@@ -17,13 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bankapp.environment.BaseUrl;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,29 +37,55 @@ public class CollateralDetailsActivity extends AppCompatActivity {
     private static final int PICK_FILE_REQUEST_CODE = 1;
     private static final String TAG = "CollateralActivity";
 
+    // EditText fields
     private EditText collateralType, collateralName, primarySecondary, valuationRequired, relationshipWithLoan;
     private EditText propertyOwner, propertyCategory, propertyType, occupationStatus, propertyStatus;
     private EditText propertyTitle, houseFlatShopNo, khasraPlotNo, locality, village, state;
     private EditText district, city, taluka, pincode, landmark, estimatedPropertyValue, documentName, isExisting, docs;
     private EditText docFileEditText;
+
     private Button submitButton;
+
     private Uri selectedDocumentUri;
     private String applicationId;
     private String accessToken;
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collateral_details);
 
+        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accessToken = sharedPreferences.getString("accessToken", "");
 
+        // Get applicationId from Intent
         Intent intent = getIntent();
         applicationId = intent.getStringExtra("application_id");
 
         // Initialize EditText fields
+        initEditTextFields();
+
+        // Set onClickListener for choosing document
+        docs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilePicker();
+            }
+        });
+
+        // Set onClickListener for submit button
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitCollateralDetails();
+            }
+        });
+    }
+
+    // Initialize EditText fields
+    private void initEditTextFields() {
         collateralType = findViewById(R.id.collateralType);
         collateralName = findViewById(R.id.collateralName);
         primarySecondary = findViewById(R.id.primarySecondaryCollateral);
@@ -85,24 +111,10 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         documentName = findViewById(R.id.documentName);
         isExisting = findViewById(R.id.isExistingCollateral);
         docs = findViewById(R.id.docs);
-
         submitButton = findViewById(R.id.submit_button);
-
-        docs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFilePicker();
-            }
-        });
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitCollateralDetails();
-            }
-        });
     }
 
+    // Open file picker to select document
     private void openFilePicker() {
         try {
             Log.d(TAG, "openFilePicker: Opening file picker");
@@ -118,6 +130,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Handle result from file picker
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,6 +155,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Get file name from Uri
     private String getFileNameFromUri(Uri uri) {
         Cursor cursor = null;
         try {
@@ -166,6 +180,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Submit collateral details
     private void submitCollateralDetails() {
         try {
             Log.d(TAG, "submitCollateralDetails: Submitting collateral details");
@@ -176,88 +191,61 @@ public class CollateralDetailsActivity extends AppCompatActivity {
                 return;
             }
 
-            // Create the request body parts for the API call
-            RequestBody collateralTypePart = createPartFromString(collateralType.getText().toString().trim());
-            RequestBody collateralNamePart = createPartFromString(collateralName.getText().toString().trim());
-            RequestBody primarySecondaryPart = createPartFromString(primarySecondary.getText().toString().trim());
-            RequestBody valuationRequiredPart = createPartFromString(valuationRequired.getText().toString().trim());
-            RequestBody relationshipWithLoanPart = createPartFromString(relationshipWithLoan.getText().toString().trim());
-            RequestBody propertyOwnerPart = createPartFromString(propertyOwner.getText().toString().trim());
-            RequestBody propertyCategoryPart = createPartFromString(propertyCategory.getText().toString().trim());
-            RequestBody propertyTypePart = createPartFromString(propertyType.getText().toString().trim());
-            RequestBody occupationStatusPart = createPartFromString(occupationStatus.getText().toString().trim());
-            RequestBody propertyStatusPart = createPartFromString(propertyStatus.getText().toString().trim());
-            RequestBody propertyTitlePart = createPartFromString(propertyTitle.getText().toString().trim());
-            RequestBody houseFlatShopNoPart = createPartFromString(houseFlatShopNo.getText().toString().trim());
-            RequestBody khasraPlotNoPart = createPartFromString(khasraPlotNo.getText().toString().trim());
-            RequestBody localityPart = createPartFromString(locality.getText().toString().trim());
-            RequestBody villagePart = createPartFromString(village.getText().toString().trim());
-            RequestBody statePart = createPartFromString(state.getText().toString().trim());
-            RequestBody districtPart = createPartFromString(district.getText().toString().trim());
-            RequestBody cityPart = createPartFromString(city.getText().toString().trim());
-            RequestBody talukaPart = createPartFromString(taluka.getText().toString().trim());
-            RequestBody pincodePart = createPartFromString(pincode.getText().toString().trim());
-            RequestBody landmarkPart = createPartFromString(landmark.getText().toString().trim());
-            RequestBody estimatedPropertyValuePart = createPartFromString(estimatedPropertyValue.getText().toString().trim());
-            RequestBody documentNamePart = createPartFromString(documentName.getText().toString().trim());
-            RequestBody isExistingPart = createPartFromString(isExisting.getText().toString().trim());
-            RequestBody applicationIdPart = createPartFromString(applicationId);
-
-            // Create documentPart
-            MultipartBody.Part documentPart = null;
-            if (selectedDocumentUri != null) {
-                try {
-                    String fileName = getFileNameFromUri(selectedDocumentUri);
-                    String mimeType = getContentResolver().getType(selectedDocumentUri);
-                    if (mimeType == null) {
-                        mimeType = "*/*"; // Default to all MIME types
-                    }
-
-                    InputStream inputStream = getContentResolver().openInputStream(selectedDocumentUri);
-                    byte[] fileBytes = new byte[inputStream.available()];
-                    inputStream.read(fileBytes);
-                    inputStream.close();
-
-                    RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), fileBytes);
-                    documentPart = MultipartBody.Part.createFormData("uploadDocument", fileName, requestFile);
-
-                } catch (IOException e) {
-                    Log.e(TAG, "submitCollateralDetails: Error reading file", e);
-                    Toast.makeText(this, "Error reading file", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            } else {
-                Toast.makeText(this, "Please select a document to upload", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            // Create parts for API call
+            MultipartBody.Part documentPart = prepareDocumentPart();
 
             // Make Retrofit API call
             ApiService apiService = RetrofitClient.getClient(BaseUrl.BASE_URL, accessToken).create(ApiService.class);
 
             Call<Void> call = apiService.uploadCollateralDetails(
-                    collateralTypePart, collateralNamePart, primarySecondaryPart, valuationRequiredPart,
-                    relationshipWithLoanPart, propertyOwnerPart, propertyCategoryPart, propertyTypePart,
-                    occupationStatusPart, propertyStatusPart, propertyTitlePart, houseFlatShopNoPart,
-                    khasraPlotNoPart, localityPart, villagePart, statePart, districtPart, cityPart,
-                    talukaPart, pincodePart, landmarkPart, estimatedPropertyValuePart, documentNamePart,
-                    isExistingPart, applicationIdPart, documentPart
+                    createPartFromString(collateralType.getText().toString().trim()),
+                    createPartFromString(collateralName.getText().toString().trim()),
+                    createPartFromString(primarySecondary.getText().toString().trim()),
+                    createPartFromString(valuationRequired.getText().toString().trim()),
+                    createPartFromString(relationshipWithLoan.getText().toString().trim()),
+                    createPartFromString(propertyOwner.getText().toString().trim()),
+                    createPartFromString(propertyCategory.getText().toString().trim()),
+                    createPartFromString(propertyType.getText().toString().trim()),
+                    createPartFromString(occupationStatus.getText().toString().trim()),
+                    createPartFromString(propertyStatus.getText().toString().trim()),
+                    createPartFromString(propertyTitle.getText().toString().trim()),
+                    createPartFromString(houseFlatShopNo.getText().toString().trim()),
+                    createPartFromString(khasraPlotNo.getText().toString().trim()),
+                    createPartFromString(locality.getText().toString().trim()),
+                    createPartFromString(village.getText().toString().trim()),
+                    createPartFromString(state.getText().toString().trim()),
+                    createPartFromString(district.getText().toString().trim()),
+                    createPartFromString(city.getText().toString().trim()),
+                    createPartFromString(taluka.getText().toString().trim()),
+                    createPartFromString(pincode.getText().toString().trim()),
+                    createPartFromString(landmark.getText().toString().trim()),
+                    createPartFromString(estimatedPropertyValue.getText().toString().trim()),
+                    createPartFromString(documentName.getText().toString().trim()),
+                    createPartFromString(isExisting.getText().toString().trim()),
+                    createPartFromString(applicationId),
+                    documentPart
             );
 
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
+                        // Log successful response
                         Log.d(TAG, "submitCollateralDetails: Successful");
+                        try {
+                            // Log response details
+                            Log.d(TAG, "Response code: " + response.code());
+                            Log.d(TAG, "Response message: " + response.message());
+                            Log.d(TAG, "Response body: " + response.body());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Exception while logging response", e);
+                        }
+
+                        // Show success message to user
                         Toast.makeText(CollateralDetailsActivity.this, "Collateral details submitted successfully", Toast.LENGTH_SHORT).show();
                     } else {
-                        try {
-                            String errorMessage = response.errorBody().string();
-                            Log.e(TAG, "submitCollateralDetails: Error - " + errorMessage);
-                            Toast.makeText(CollateralDetailsActivity.this, "Failed to submit collateral details: " + errorMessage, Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            Log.e(TAG, "submitCollateralDetails: Error reading error response", e);
-                            Toast.makeText(CollateralDetailsActivity.this, "Failed to submit collateral details", Toast.LENGTH_SHORT).show();
-                        }
+                        // Handle unsuccessful response
+                        handleUnsuccessfulResponse(response);
                     }
                 }
 
@@ -274,8 +262,49 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Create part from string
     private RequestBody createPartFromString(String value) {
         return RequestBody.create(MultipartBody.FORM, value.isEmpty() ? "" : value);
     }
 
+    // Prepare MultipartBody.Part for document upload
+    private MultipartBody.Part prepareDocumentPart() {
+        if (selectedDocumentUri != null) {
+            try {
+                String fileName = getFileNameFromUri(selectedDocumentUri);
+                String mimeType = getContentResolver().getType(selectedDocumentUri);
+                if (mimeType == null) {
+                    mimeType = "/"; // Default to all MIME types
+                }
+
+                InputStream inputStream = getContentResolver().openInputStream(selectedDocumentUri);
+                byte[] fileBytes = new byte[inputStream.available()];
+                inputStream.read(fileBytes);
+                inputStream.close();
+
+                RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), fileBytes);
+                return MultipartBody.Part.createFormData("uploadDocument", fileName, requestFile);
+
+            } catch (IOException e) {
+                Log.e(TAG, "prepareDocumentPart: Error reading file", e);
+                Toast.makeText(this, "Error reading file", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        } else {
+            Toast.makeText(this, "Please select a document to upload", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    // Handle unsuccessful API response
+    private void handleUnsuccessfulResponse(Response<Void> response) {
+        try {
+            String errorMessage = response.errorBody().string();
+            Log.e(TAG, "submitCollateralDetails: Error - " + errorMessage);
+            Toast.makeText(CollateralDetailsActivity.this, "Failed to submit collateral details: " + errorMessage, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Log.e(TAG, "submitCollateralDetails: Error reading error response", e);
+            Toast.makeText(CollateralDetailsActivity.this, "Failed to submit collateral details", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
