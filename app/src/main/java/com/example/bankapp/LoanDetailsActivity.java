@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +30,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 public class LoanDetailsActivity extends AppCompatActivity {
+    ImageView homeButton;
     SharedPreferences sharedPreferences;
     Spinner productType, customerType;
-    EditText loanAmount, appliedTenure, appliedRoi;
+    EditText loanAmount, appliedTenure, appliedRoi,transaction_type;
     EditText app_rate_processing_fee, edit_change_amount_processing_fee, edit_tax_amount_processing_fee, edit_total_amount_processing_fee;
     EditText app_rate_valuation_charges, edit_change_valuation_charges, edit_tax_valuation_charges, edit_total_valuation_charges;
     EditText app_rate_legal_incidental_charges, edit_change_legal_incidental_charges, edit_tax_legal_incidental_charges, edit_total_legal_incidental_charges;
@@ -54,7 +58,8 @@ public class LoanDetailsActivity extends AppCompatActivity {
         productType = findViewById(R.id.productType);
         customerType = findViewById(R.id.customerType);
         submitButton = findViewById(R.id.submit_button);
-
+        homeButton = findViewById(R.id.homeButton);
+        transaction_type = findViewById(R.id.transaction_type);
         // Inflate the Charges processing Layout
         app_rate_processing_fee = findViewById(R.id.section_processing_fees).findViewById(R.id.edit_applicable_rate);
         edit_change_amount_processing_fee = findViewById(R.id.section_processing_fees).findViewById(R.id.edit_change_amount);
@@ -93,6 +98,15 @@ public class LoanDetailsActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("accessToken", "");
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Redirect to dashboard activity
+                Intent intent = new Intent(v.getContext(), DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
 
         loanAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -196,7 +210,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
             return false;
         }
 
-        if(TextUtils.isEmpty(loanAmount.getText().toString().trim())){
+        if (TextUtils.isEmpty(loanAmount.getText().toString().trim())) {
             loanAmount.setError("Please enter loan amount");
             return false;
         }
@@ -290,11 +304,52 @@ public class LoanDetailsActivity extends AppCompatActivity {
     }
 
 
-
-
     private void makeHttpRequest(String accessToken, final Button submitButton) {
-        String url = BASE_URL + "api/v1/leads";
+        String url = BASE_URL + "api/v1/loan_details";
 
+        // Collect all the charges data into JSON objects
+        JSONObject processingFees = new JSONObject();
+        JSONObject valuationCharges = new JSONObject();
+        JSONObject legalIncidentalCharges = new JSONObject();
+        JSONObject stampDutyCharges = new JSONObject();
+        JSONObject rcuCharges = new JSONObject();
+        JSONObject stampingCharges = new JSONObject();
+
+        try {
+            processingFees.put("applicable_rate", app_rate_processing_fee.getText().toString().trim());
+            processingFees.put("change_amount", edit_change_amount_processing_fee.getText().toString());
+            processingFees.put("tax_amount", edit_tax_amount_processing_fee.getText().toString());
+            processingFees.put("total_amount", edit_total_amount_processing_fee.getText().toString());
+
+            valuationCharges.put("applicable_rate", app_rate_valuation_charges.getText().toString().trim());
+            valuationCharges.put("change_amount", edit_change_valuation_charges.getText().toString());
+            valuationCharges.put("tax_amount", edit_tax_valuation_charges.getText().toString());
+            valuationCharges.put("total_amount", edit_total_valuation_charges.getText().toString());
+
+            legalIncidentalCharges.put("applicable_rate", app_rate_legal_incidental_charges.getText().toString().trim());
+            legalIncidentalCharges.put("change_amount", edit_change_legal_incidental_charges.getText().toString());
+            legalIncidentalCharges.put("tax_amount", edit_tax_legal_incidental_charges.getText().toString());
+            legalIncidentalCharges.put("total_amount", edit_total_legal_incidental_charges.getText().toString());
+
+            stampDutyCharges.put("applicable_rate", app_rate_stamp_duty_charges.getText().toString().trim());
+            stampDutyCharges.put("change_amount", edit_change_stamp_duty_charges.getText().toString());
+            stampDutyCharges.put("tax_amount", edit_tax_stamp_duty_charges.getText().toString());
+            stampDutyCharges.put("total_amount", edit_total_stamp_duty_charges.getText().toString());
+
+            rcuCharges.put("applicable_rate", app_rate_rcu_charges.getText().toString().trim());
+            rcuCharges.put("change_amount", edit_change_rcu_charges.getText().toString());
+            rcuCharges.put("tax_amount", edit_tax_rcu_charges.getText().toString());
+            rcuCharges.put("total_amount", edit_total_rcu_charges.getText().toString());
+
+            stampingCharges.put("applicable_rate", app_rate_stamping_charges.getText().toString().trim());
+            stampingCharges.put("change_amount", edit_change_stamping_charges.getText().toString());
+            stampingCharges.put("tax_amount", edit_tax_stamping_charges.getText().toString());
+            stampingCharges.put("total_amount", edit_total_stamping_charges.getText().toString());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Run the network operation in a separate thread
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -307,45 +362,33 @@ public class LoanDetailsActivity extends AppCompatActivity {
                 // Get the selected customer type from the spinner
                 String selectedCustomerType = customerType.getSelectedItem().toString();
 
+                // Build the form body
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
-                        .add("appliedRoi", appliedRoi.getText().toString().trim())
-                        .add("appliedTenure", appliedTenure.getText().toString())
-                        .add("loan_amount", loanAmountText)
+                        .add("applied_roi", appliedRoi.getText().toString().trim())
+                        .add("applied_tenure", appliedTenure.getText().toString())
+                        .add("transacton_type", transaction_type.getText().toString())
+                        .add("description", "")
+                        .add("comment", "")
+                        .add("applied_loan_amount", loanAmountText)
                         .add("productType", selectedProductType)
                         .add("customerType", selectedCustomerType)
-                        .add("app_rate_processing_fee", app_rate_processing_fee.getText().toString())
-                        .add("edit_change_amount_processing_fee", edit_change_amount_processing_fee.getText().toString())
-                        .add("edit_tax_amount_processing_fee", edit_tax_amount_processing_fee.getText().toString())
-                        .add("edit_total_amount_processing_fee", edit_total_amount_processing_fee.getText().toString())
-                        .add("app_rate_valuation_charges", app_rate_valuation_charges.getText().toString())
-                        .add("edit_change_valuation_charges", edit_change_valuation_charges.getText().toString())
-                        .add("edit_tax_valuation_charges", edit_tax_valuation_charges.getText().toString())
-                        .add("edit_total_valuation_charges", edit_total_valuation_charges.getText().toString())
-                        .add("app_rate_legal_incidental_charges", app_rate_legal_incidental_charges.getText().toString())
-                        .add("edit_change_legal_incidental_charges", edit_change_legal_incidental_charges.getText().toString())
-                        .add("edit_tax_legal_incidental_charges", edit_tax_legal_incidental_charges.getText().toString())
-                        .add("edit_total_legal_incidental_charges", edit_total_legal_incidental_charges.getText().toString())
-                        .add("app_rate_stamp_duty_charges", app_rate_stamp_duty_charges.getText().toString())
-                        .add("edit_change_stamp_duty_charges", edit_change_stamp_duty_charges.getText().toString())
-                        .add("edit_tax_stamp_duty_charges", edit_tax_stamp_duty_charges.getText().toString())
-                        .add("edit_total_stamp_duty_charges", edit_total_stamp_duty_charges.getText().toString())
-                        .add("app_rate_rcu_charges", app_rate_rcu_charges.getText().toString())
-                        .add("edit_change_rcu_charges", edit_change_rcu_charges.getText().toString())
-                        .add("edit_tax_rcu_charges", edit_tax_rcu_charges.getText().toString())
-                        .add("edit_total_rcu_charges", edit_total_rcu_charges.getText().toString())
-                        .add("app_rate_stamping_charges", app_rate_stamping_charges.getText().toString())
-                        .add("edit_change_stamping_charges", edit_change_stamping_charges.getText().toString())
-                        .add("edit_tax_stamping_charges", edit_tax_stamping_charges.getText().toString())
-                        .add("edit_total_stamping_charges", edit_total_stamping_charges.getText().toString());
+                        .add("processing_fees", processingFees.toString())
+                        .add("valuation_charges", valuationCharges.toString())
+                        .add("legal_and_incidental_fees", legalIncidentalCharges.toString())
+                        .add("stamp_duty_applicable_rate", stampDutyCharges.toString())
+                        .add("rcu_charges_applicable_rate", rcuCharges.toString())
+                        .add("stamping_expenses_applicable_rate", stampingCharges.toString());
 
                 RequestBody formBody = formBodyBuilder.build();
 
+                // Create the request
                 Request request = new Request.Builder()
                         .url(url)
                         .post(formBody)
                         .addHeader("Authorization", "Bearer " + accessToken)
                         .build();
 
+                // Create the OkHttpClient and make the call
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
@@ -353,6 +396,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
                     Response response = call.execute();
                     assert response.body() != null;
                     String serverResponse = response.body().string();
+
                     // Parse the JSON response
                     JSONObject jsonResponse = new JSONObject(serverResponse);
                     boolean isError = jsonResponse.getBoolean("error");
@@ -363,34 +407,32 @@ public class LoanDetailsActivity extends AppCompatActivity {
 
                         // Pass lead ID to KycActivity1
                         Intent mainIntent = new Intent(LoanDetailsActivity.this, Document.class);
-
+                        mainIntent.putExtra("lead_id", leadId);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("Loan Deatils Added successfully"); // Fixed toast message
+                                showToast("Loan Details Added successfully");
+                                startActivity(mainIntent);
+                                finish();
                             }
                         });
-                        startActivity(mainIntent);
-                        finish();
                     } else {
-                        // Enable the button again
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 submitButton.setEnabled(true);
-                                showToast("Failed to create Loan Details"); // Add this line to show error toast
+                                showToast("Failed to create Loan Details");
                             }
                         });
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
-                    // Enable the button again in case of an error
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             submitButton.setEnabled(true);
-                            showToast("An error occurred"); // Add this line to show error toast
+                            showToast("An error occurred");
                         }
                     });
                 }
@@ -401,4 +443,5 @@ public class LoanDetailsActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
 }

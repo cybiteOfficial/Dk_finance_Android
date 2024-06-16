@@ -1,7 +1,6 @@
 package com.example.bankapp;
 
 public class CurrentAddressData {
-
     private String propertyOwner;
     private String propertyCategory;
     private String typesOfCategory;
@@ -16,10 +15,7 @@ public class CurrentAddressData {
     private String landmark;
     private String propertyValue;
 
-    public CurrentAddressData(String propertyOwner, String propertyCategory, String typesOfCategory,
-                              String plotNumber, String locality, String village, String state,
-                              String district, String city, String taluka, String pinCode,
-                              String landmark, String propertyValue) {
+    public CurrentAddressData(String propertyOwner, String propertyCategory, String typesOfCategory, String plotNumber, String locality, String village, String state, String district, String city, String taluka, String pinCode, String landmark, String propertyValue) {
         this.propertyOwner = propertyOwner;
         this.propertyCategory = propertyCategory;
         this.typesOfCategory = typesOfCategory;

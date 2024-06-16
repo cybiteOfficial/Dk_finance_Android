@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -38,7 +37,6 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
         // Find views
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
-        submitBtn = findViewById(R.id.submit_button);
         homeButton = findViewById(R.id.homeButton);
 
         // Set up ViewPager with adapter
@@ -55,9 +53,6 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
         // Setup home button
         setupHomeButton();
 
-        // Setup submit button
-        setupSubmitButton();
-
         // Get the co-applicant names passed from CreateCustomer
         List<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
         if (coApplicantNames != null) {
@@ -71,45 +66,24 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
     }
 
     private void setupHomeButton() {
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Move to DashboardActivity
-                Intent mainIntent = new Intent(AddressActivity.this, DashboardActivity.class);
-                startActivity(mainIntent);
-                finish();
-            }
-        });
-    }
-
-    private void setupSubmitButton() {
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Do something when submit button is clicked
-                // For example, save data or proceed to the next activity
-                // Here, we are passing data back to AddCustomerActivity
-                String customerName = getIntent().getStringExtra("customerName");
-                if (customerName == null) customerName = "Default Name";  // handle null
-
-                ArrayList<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
-                if (coApplicantNames == null) coApplicantNames = new ArrayList<>();  // handle null
-
-                Intent intent = new Intent(AddressActivity.this, AddCustomerActivity.class);
-                intent.putExtra("customerName", customerName);
-                intent.putStringArrayListExtra("coApplicantNames", coApplicantNames);
-                startActivity(intent);
-                finish();
-            }
+        homeButton.setOnClickListener(v -> {
+            // Move to DashboardActivity
+            Intent mainIntent = new Intent(AddressActivity.this, DashboardActivity.class);
+            startActivity(mainIntent);
+            finish();
         });
     }
 
     // Implementing DataTransferListener interface method
     @Override
-    public void onDataTransfer(CurrentAddressData data) {
-        if (permanentFragment != null) {
-            permanentFragment.updateData(data);
-        }
+    public void onDataTransfer(CurrentAddressData currentAddressData) {
+        permanentFragment.updateData(currentAddressData);
+    }
+
+    @Override
+    public void switchFragment() {
+        // move to permanent fragment
+        viewPager.setCurrentItem(1);
     }
 
     // Adapter for ViewPager
@@ -146,5 +120,9 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
         public CharSequence getPageTitle(int position) {
             return titles[position];
         }
+    }
+
+    public void switchToPermanentTab() {
+        viewPager.setCurrentItem(1);
     }
 }

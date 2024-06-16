@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -35,52 +36,56 @@ public class CurrentFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_current, container, false);
+        View view = inflater.inflate(R.layout.fragment_current, container, false);
 
-        // Initialize EditText fields
-        propertyOwnerEditText = rootView.findViewById(R.id.currentPropertyOwner);
-        propertyCategoryEditText = rootView.findViewById(R.id.currentPropertyCategory);
-        typesOfCategoryEditText = rootView.findViewById(R.id.currentTypesOfCategory);
-        plotNumberEditText = rootView.findViewById(R.id.currentPlotNumber);
-        localityEditText = rootView.findViewById(R.id.currentLocality);
-        villageEditText = rootView.findViewById(R.id.currentVillage);
-        stateEditText = rootView.findViewById(R.id.currentState);
-        districtEditText = rootView.findViewById(R.id.currentDistrict);
-        cityEditText = rootView.findViewById(R.id.currentCity);
-        talukaEditText = rootView.findViewById(R.id.currentTaluka);
-        pinCodeEditText = rootView.findViewById(R.id.currentPinCode);
-        landmarkEditText = rootView.findViewById(R.id.currentLandmark);
-        propertyValueEditText = rootView.findViewById(R.id.currentPropertyValue);
+        // Initialize EditText views
+        propertyOwnerEditText = view.findViewById(R.id.currentPropertyOwner);
+        propertyCategoryEditText = view.findViewById(R.id.currentPropertyCategory);
+        typesOfCategoryEditText = view.findViewById(R.id.currentTypesOfCategory);
+        plotNumberEditText = view.findViewById(R.id.currentPlotNumber);
+        localityEditText = view.findViewById(R.id.currentLocality);
+        villageEditText = view.findViewById(R.id.currentVillage);
+        stateEditText = view.findViewById(R.id.currentState);
+        districtEditText = view.findViewById(R.id.currentDistrict);
+        cityEditText = view.findViewById(R.id.currentCity);
+        talukaEditText = view.findViewById(R.id.currentTaluka);
+        pinCodeEditText = view.findViewById(R.id.currentPinCode);
+        landmarkEditText = view.findViewById(R.id.currentLandmark);
+        propertyValueEditText = view.findViewById(R.id.currentPropertyValue);
 
-        // Assuming automatic transfer when PermanentFragment is selected or any other action occurs
-        // Here, you can add listeners or any logic to trigger data transfer automatically
-        // For demonstration, let's assume data transfer happens on some event like fragment selection or button click in PermanentFragment
+        // Set click listener for the button
+        Button nextButton = view.findViewById(R.id.next_button);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDataToPermanentFragment();
+                if (dataTransferListener != null) {
+                    dataTransferListener.switchFragment();
+                }
+            }
+        });
 
-        return rootView;
+        return view;
     }
 
-    // Method to retrieve current address data and transfer it
-    public void transferCurrentAddressData() {
-        String propertyOwner = propertyOwnerEditText.getText().toString();
-        String propertyCategory = propertyCategoryEditText.getText().toString();
-        String typesOfCategory = typesOfCategoryEditText.getText().toString();
-        String plotNumber = plotNumberEditText.getText().toString();
-        String locality = localityEditText.getText().toString();
-        String village = villageEditText.getText().toString();
-        String state = stateEditText.getText().toString();
-        String district = districtEditText.getText().toString();
-        String city = cityEditText.getText().toString();
-        String taluka = talukaEditText.getText().toString();
-        String pinCode = pinCodeEditText.getText().toString();
-        String landmark = landmarkEditText.getText().toString();
-        String propertyValue = propertyValueEditText.getText().toString();
-
-        // Create CurrentAddressData object
-        CurrentAddressData addressData = new CurrentAddressData(propertyOwner, propertyCategory, typesOfCategory, plotNumber, locality, village, state, district, city, taluka, pinCode, landmark, propertyValue);
-
-        // Pass data to listener if listener is set
+    private void sendDataToPermanentFragment() {
         if (dataTransferListener != null) {
-            dataTransferListener.onDataTransfer(addressData);
+            String propertyOwner = propertyOwnerEditText.getText().toString();
+            String propertyCategory = propertyCategoryEditText.getText().toString();
+            String typesOfCategory = typesOfCategoryEditText.getText().toString();
+            String plotNumber = plotNumberEditText.getText().toString();
+            String locality = localityEditText.getText().toString();
+            String village = villageEditText.getText().toString();
+            String state = stateEditText.getText().toString();
+            String district = districtEditText.getText().toString();
+            String city = cityEditText.getText().toString();
+            String taluka = talukaEditText.getText().toString();
+            String pinCode = pinCodeEditText.getText().toString();
+            String landmark = landmarkEditText.getText().toString();
+            String propertyValue = propertyValueEditText.getText().toString();
+
+            CurrentAddressData data = new CurrentAddressData(propertyOwner, propertyCategory, typesOfCategory, plotNumber, locality, village, state, district, city, taluka, pinCode, landmark, propertyValue);
+            dataTransferListener.onDataTransfer(data);
         }
     }
 }

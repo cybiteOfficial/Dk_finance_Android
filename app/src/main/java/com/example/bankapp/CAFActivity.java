@@ -34,6 +34,10 @@ public class CAFActivity extends AppCompatActivity {
     Button submitbutton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
+
+    // fetch application_id from previous activity
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +53,17 @@ public class CAFActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("accessToken", "");
         DecimalFormat formatter = new DecimalFormat("#,##,##0");
+
+        Intent intent = getIntent();
+        String application_id = intent.getStringExtra("application_id");
+
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateFields()) {
                     // Disable the button to prevent multiple submissions
                     submitbutton.setEnabled(false);
-                    makeHttpRequest(accessToken, submitbutton);
+                    makeHttpRequest(accessToken, submitbutton, application_id);
                 }
             }
         });
@@ -127,8 +135,8 @@ public class CAFActivity extends AppCompatActivity {
 
         return true;
     }
-    private void makeHttpRequest(String accessToken, final Button submitButton) {
-        String url = BASE_URL + "api/v1/leads";
+    private void makeHttpRequest(String accessToken, final Button submitButton, String application_id) {
+        String url = BASE_URL + "api/v1/caf_detail";
 
         new Thread(new Runnable() {
             @Override
@@ -139,11 +147,13 @@ public class CAFActivity extends AppCompatActivity {
 
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
-                        .add("first_name", tentativeAmountText)
-                        .add("pdID", pdID.getText().toString())
-                        .add("pdAddress", pdAddress.getText().toString().trim())
+                        .add("tentative_amt", tentativeAmountText)
+                        .add("pdWith", pdID.getText().toString())
+                        .add("placeOfPdAddress", pdAddress.getText().toString().trim())
                         .add("location", location.getText().toString().trim())
-                        .add("description", description.getText().toString().trim());
+                        .add("description", description.getText().toString().trim())
+                        .add("extra_data", "null")
+                        .add("applicant_id", application_id);
 
                 RequestBody formBody = formBodyBuilder.build();
 
@@ -173,7 +183,7 @@ public class CAFActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("Photograph Uploaded Successfully"); // Fixed toast message
+                                showToast("Data Uploaded Successfully"); // Fixed toast message
                             }
                         });
                         startActivity(mainIntent);

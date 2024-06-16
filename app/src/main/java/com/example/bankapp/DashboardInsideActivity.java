@@ -35,6 +35,7 @@ public class DashboardInsideActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardInsideActivity.this, AddCustomerActivity.class);
+                intent.putExtra("application_id", application_id);
                 startActivity(intent);
             }
         });
@@ -43,6 +44,7 @@ public class DashboardInsideActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardInsideActivity.this, LoanDetailsActivity.class);
+                intent.putExtra("application_id", application_id);
                 startActivity(intent);
             }
         });
@@ -78,6 +80,7 @@ public class DashboardInsideActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DashboardInsideActivity.this, CAFActivity.class);
+                intent.putExtra("application_id", application_id);
                 startActivity(intent);
             }
         });
