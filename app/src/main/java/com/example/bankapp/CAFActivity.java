@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import java.text.DecimalFormat;
-import android.text.TextWatcher;
 import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,19 +30,20 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CAFActivity extends AppCompatActivity {
-    EditText tentativeAmount,pdID,pdAddress,location,description;
+    EditText tentativeAmount, pdID, pdAddress, location, description;
     Button submitbutton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
 
-    // fetch application_id from previous activity
-
+    private static final String TAG = "CAFActivity"; // Log tag
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_caf);
+
+        Log.d(TAG, "onCreate: Starting CAFActivity");
+
         submitbutton = findViewById(R.id.submitbutton);
         tentativeAmount = findViewById(R.id.tentativeAmount);
         pdID = findViewById(R.id.pdID);
@@ -56,25 +57,35 @@ public class CAFActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String application_id = intent.getStringExtra("application_id");
+        Log.d(TAG, "onCreate: application_id = " + application_id);
+
+        checkIfDataExists(application_id, accessToken);
 
         submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: Submit button clicked");
                 if (validateFields()) {
+                    Log.d(TAG, "onClick: Fields validated successfully");
                     // Disable the button to prevent multiple submissions
                     submitbutton.setEnabled(false);
                     makeHttpRequest(accessToken, submitbutton, application_id);
+                } else {
+                    Log.d(TAG, "onClick: Field validation failed");
                 }
             }
         });
+
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: Home button clicked");
                 // Redirect to dashboard activity
                 Intent intent = new Intent(v.getContext(), DashboardActivity.class);
                 startActivity(intent);
             }
         });
+
         tentativeAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -91,7 +102,7 @@ public class CAFActivity extends AppCompatActivity {
                 tentativeAmount.removeTextChangedListener(this);
                 try {
                     String str = s.toString().replaceAll(",", "");
-                    if(str.length() > 15) {
+                    if (str.length() > 15) {
                         // If the length exceeds 15, trim it
                         str = str.substring(0, 15);
                     }
@@ -102,12 +113,83 @@ public class CAFActivity extends AppCompatActivity {
                     tentativeAmount.setText(formattedNumber);
                     tentativeAmount.setSelection(formattedNumber.length());
                 } catch (NumberFormatException e) {
-                    // Not a valid number
+                    Log.e(TAG, "afterTextChanged: Invalid number format", e);
                 }
                 tentativeAmount.addTextChangedListener(this);
             }
         });
     }
+
+    private void checkIfDataExists(String application_id, String accessToken) {
+        String url = BASE_URL + "api/v1/caf_detail?application_id=" + application_id;
+        Log.d(TAG, "checkIfDataExists: URL = " + url);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(url)
+                        .addHeader("Authorization", "Bearer " + accessToken)
+                        .build();
+
+                OkHttpClient client = new OkHttpClient();
+                Call call = client.newCall(request);
+
+                try {
+                    Response response = call.execute();
+                    String serverResponse = response.body().string();
+                    Log.d(TAG, "run: Server response = " + serverResponse);
+                    // Parse the JSON response
+                    JSONObject jsonResponse = new JSONObject(serverResponse);
+                    boolean isError = jsonResponse.getBoolean("error");
+                    if (!isError) {
+                        // Get the data
+                        JSONObject data = jsonResponse.getJSONObject("data");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayData(data);
+                            }
+                        });
+                    }
+                } catch (IOException | JSONException e) {
+                    Log.e(TAG, "run: Exception occurred", e);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast("Error occurred while checking data");
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void displayData(JSONObject data) {
+        try {
+            tentativeAmount.setText(String.valueOf(data.getLong("tentative_amt")));
+            pdID.setText(data.getString("pdWith"));
+            pdAddress.setText(data.getString("placeOfPdAddress"));
+            location.setText(data.getString("location"));
+            description.setText(data.getString("description"));
+
+            // Make fields non-editable
+            tentativeAmount.setEnabled(false);
+            pdID.setEnabled(false);
+            pdAddress.setEnabled(false);
+            location.setEnabled(false);
+            description.setEnabled(false);
+
+            // Hide the submit button
+            submitbutton.setVisibility(View.GONE);
+
+            showToast("Data found and displayed");
+        } catch (JSONException e) {
+            Log.e(TAG, "displayData: JSON Exception", e);
+            showToast("Error displaying data");
+        }
+    }
+
     private boolean validateFields() {
         if (TextUtils.isEmpty(tentativeAmount.getText().toString().trim())) {
             tentativeAmount.setError("Please enter Tentative Amount");
@@ -119,32 +201,34 @@ public class CAFActivity extends AppCompatActivity {
             return false;
         }
 
-
-        if(TextUtils.isEmpty(pdAddress.getText().toString().trim())){
+        if (TextUtils.isEmpty(pdAddress.getText().toString().trim())) {
             pdAddress.setError("Please enter Place of PD Address");
             return false;
         }
-        if(TextUtils.isEmpty(location.getText().toString().trim())){
+
+        if (TextUtils.isEmpty(location.getText().toString().trim())) {
             location.setError("Please enter location");
             return false;
         }
-        if(TextUtils.isEmpty(description.getText().toString().trim())){
+
+        if (TextUtils.isEmpty(description.getText().toString().trim())) {
             description.setError("Please enter description");
             return false;
         }
 
         return true;
     }
+
     private void makeHttpRequest(String accessToken, final Button submitButton, String application_id) {
         String url = BASE_URL + "api/v1/caf_detail";
+        Log.d(TAG, "makeHttpRequest: URL = " + url);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 // Get the loan amount as a string without commas
                 String tentativeAmountText = tentativeAmount.getText().toString().replaceAll(",", "");
-
+                Log.d(TAG, "run: tentativeAmountText = " + tentativeAmountText);
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("tentative_amt", tentativeAmountText)
@@ -166,10 +250,10 @@ public class CAFActivity extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response = null;
                 try {
-                    response = call.execute();
+                    Response response = call.execute();
                     String serverResponse = response.body().string();
+                    Log.d(TAG, "run: Server response = " + serverResponse);
                     // Parse the JSON response
                     JSONObject jsonResponse = new JSONObject(serverResponse);
                     boolean isError = jsonResponse.getBoolean("error");
@@ -178,31 +262,33 @@ public class CAFActivity extends AppCompatActivity {
                         JSONObject leadData = jsonResponse.getJSONObject("data");
                         String leadId = leadData.getString("lead_id");
 
+                        Log.d(TAG, "run: Data uploaded successfully, leadId = " + leadId);
+
                         // Pass lead ID to KycActivity1
                         Intent mainIntent = new Intent(CAFActivity.this, DashboardActivity.class);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("Data Uploaded Successfully"); // Fixed toast message
+                                showToast("Data Uploaded Successfully");
+                                startActivity(mainIntent);
+                                finish();
                             }
                         });
-                        startActivity(mainIntent);
-                        finish();
                     } else {
-                        // Enable the button again
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                showToast("Error uploading data");
                                 submitButton.setEnabled(true);
                             }
                         });
                     }
                 } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                    // Enable the button again in case of an error
+                    Log.e(TAG, "run: Exception occurred during HTTP request", e);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            showToast("Error occurred while uploading data");
                             submitButton.setEnabled(true);
                         }
                     });
@@ -211,9 +297,8 @@ public class CAFActivity extends AppCompatActivity {
         }).start();
     }
 
-
-
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
+

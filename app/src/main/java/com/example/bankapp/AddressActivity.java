@@ -53,16 +53,6 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
         // Setup home button
         setupHomeButton();
 
-        // Get the co-applicant names passed from CreateCustomer
-        List<String> coApplicantNames = getIntent().getStringArrayListExtra("coApplicantNames");
-        if (coApplicantNames != null) {
-            // Log the received co-applicant names
-            for (String name : coApplicantNames) {
-                Log.d(TAG, "Received Co-Applicant Name: " + name);
-            }
-        } else {
-            Log.d(TAG, "No co-applicant names received.");
-        }
     }
 
     private void setupHomeButton() {

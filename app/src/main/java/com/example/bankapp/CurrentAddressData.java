@@ -4,6 +4,9 @@ public class CurrentAddressData {
     private String propertyOwner;
     private String propertyCategory;
     private String typesOfCategory;
+    private String occupationStatus;
+    private String propertyTitle;
+    private String houseNumber;
     private String plotNumber;
     private String locality;
     private String village;
@@ -15,10 +18,13 @@ public class CurrentAddressData {
     private String landmark;
     private String propertyValue;
 
-    public CurrentAddressData(String propertyOwner, String propertyCategory, String typesOfCategory, String plotNumber, String locality, String village, String state, String district, String city, String taluka, String pinCode, String landmark, String propertyValue) {
+    public CurrentAddressData(String propertyOwner, String propertyCategory, String typesOfCategory, String occupationStatus, String propertyTitle, String houseNumber, String plotNumber, String locality, String village, String state, String district, String city, String taluka, String pinCode, String landmark, String propertyValue) {
         this.propertyOwner = propertyOwner;
         this.propertyCategory = propertyCategory;
         this.typesOfCategory = typesOfCategory;
+        this.occupationStatus = occupationStatus;
+        this.propertyTitle = propertyTitle;
+        this.houseNumber = houseNumber;
         this.plotNumber = plotNumber;
         this.locality = locality;
         this.village = village;
@@ -41,6 +47,18 @@ public class CurrentAddressData {
 
     public String getTypesOfCategory() {
         return typesOfCategory;
+    }
+
+    public String getOccupationStatus() {
+        return occupationStatus;
+    }
+
+    public String getPropertyTitle() {
+        return propertyTitle;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
     }
 
     public String getPlotNumber() {

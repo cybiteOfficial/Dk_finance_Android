@@ -16,6 +16,9 @@ public class CurrentFragment extends Fragment {
     private EditText propertyOwnerEditText;
     private EditText propertyCategoryEditText;
     private EditText typesOfCategoryEditText;
+    private EditText occupationStatusEditText;
+    private EditText propertyTitleEditText;
+    private EditText houseNumberEditText;
     private EditText plotNumberEditText;
     private EditText localityEditText;
     private EditText villageEditText;
@@ -42,6 +45,9 @@ public class CurrentFragment extends Fragment {
         propertyOwnerEditText = view.findViewById(R.id.currentPropertyOwner);
         propertyCategoryEditText = view.findViewById(R.id.currentPropertyCategory);
         typesOfCategoryEditText = view.findViewById(R.id.currentTypesOfCategory);
+        occupationStatusEditText = view.findViewById(R.id.occupationStatus);
+        propertyTitleEditText = view.findViewById(R.id.propertyTitle);
+        houseNumberEditText = view.findViewById(R.id.flatNumber);
         plotNumberEditText = view.findViewById(R.id.currentPlotNumber);
         localityEditText = view.findViewById(R.id.currentLocality);
         villageEditText = view.findViewById(R.id.currentVillage);
@@ -73,6 +79,9 @@ public class CurrentFragment extends Fragment {
             String propertyOwner = propertyOwnerEditText.getText().toString();
             String propertyCategory = propertyCategoryEditText.getText().toString();
             String typesOfCategory = typesOfCategoryEditText.getText().toString();
+            String occupationStatus = occupationStatusEditText.getText().toString();
+            String propertyTitle = propertyTitleEditText.getText().toString();
+            String houseNumber = houseNumberEditText.getText().toString();
             String plotNumber = plotNumberEditText.getText().toString();
             String locality = localityEditText.getText().toString();
             String village = villageEditText.getText().toString();
@@ -84,7 +93,7 @@ public class CurrentFragment extends Fragment {
             String landmark = landmarkEditText.getText().toString();
             String propertyValue = propertyValueEditText.getText().toString();
 
-            CurrentAddressData data = new CurrentAddressData(propertyOwner, propertyCategory, typesOfCategory, plotNumber, locality, village, state, district, city, taluka, pinCode, landmark, propertyValue);
+            CurrentAddressData data = new CurrentAddressData(propertyOwner, propertyCategory, typesOfCategory, occupationStatus, propertyTitle, houseNumber, plotNumber, locality, village, state, district, city, taluka, pinCode, landmark, propertyValue);
             dataTransferListener.onDataTransfer(data);
         }
     }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -99,6 +100,9 @@ public class LoanDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("accessToken", "");
 
+        // Get the application ID from the intent
+        String application_id = getIntent().getStringExtra("application_id");
+
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +154,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submitButton.setEnabled(false);
-                makeHttpRequest(accessToken, submitButton);
+                makeHttpRequest(accessToken, submitButton, application_id);
             }
         });
     }
@@ -304,7 +308,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
     }
 
 
-    private void makeHttpRequest(String accessToken, final Button submitButton) {
+    private void makeHttpRequest(String accessToken, final Button submitButton, String application_id) {
         String url = BASE_URL + "api/v1/loan_details";
 
         // Collect all the charges data into JSON objects
@@ -357,24 +361,22 @@ public class LoanDetailsActivity extends AppCompatActivity {
                 String loanAmountText = loanAmount.getText().toString().replaceAll(",", "");
 
                 // Get the selected product type from the spinner
-                String selectedProductType = productType.getSelectedItem().toString();
-
-                // Get the selected customer type from the spinner
-                String selectedCustomerType = customerType.getSelectedItem().toString();
+                String selectedProductType = productType.getSelectedItem().toString().toLowerCase();
 
                 // Build the form body
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
-                        .add("applied_roi", appliedRoi.getText().toString().trim())
+                        .add("applicant_id", application_id)
+                        .add("applied_ROI", appliedRoi.getText().toString().trim())
                         .add("applied_tenure", appliedTenure.getText().toString())
-                        .add("transacton_type", transaction_type.getText().toString())
+                        .add("transaction_type", "automatic")
+                        .add("case_tag","normal")
                         .add("description", "")
                         .add("comment", "")
                         .add("applied_loan_amount", loanAmountText)
-                        .add("productType", selectedProductType)
-                        .add("customerType", selectedCustomerType)
+                        .add("product_type", selectedProductType)
                         .add("processing_fees", processingFees.toString())
                         .add("valuation_charges", valuationCharges.toString())
-                        .add("legal_and_incidental_fees", legalIncidentalCharges.toString())
+                        .add("legal_and_incidental_fee", legalIncidentalCharges.toString())
                         .add("stamp_duty_applicable_rate", stampDutyCharges.toString())
                         .add("rcu_charges_applicable_rate", rcuCharges.toString())
                         .add("stamping_expenses_applicable_rate", stampingCharges.toString());
@@ -397,24 +399,20 @@ public class LoanDetailsActivity extends AppCompatActivity {
                     assert response.body() != null;
                     String serverResponse = response.body().string();
 
+                    // log response
+                    Log.i("LoanDetailsActivity", serverResponse);
+
                     // Parse the JSON response
                     JSONObject jsonResponse = new JSONObject(serverResponse);
                     boolean isError = jsonResponse.getBoolean("error");
                     if (!isError) {
                         // Get the lead data
-                        JSONObject leadData = jsonResponse.getJSONObject("data");
-                        String leadId = leadData.getString("lead_id");
-
-                        // Pass lead ID to KycActivity1
-                        Intent mainIntent = new Intent(LoanDetailsActivity.this, Document.class);
-                        mainIntent.putExtra("lead_id", leadId);
+                        JSONObject data = jsonResponse.getJSONObject("data");
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 showToast("Loan Details Added successfully");
-                                startActivity(mainIntent);
-                                finish();
                             }
                         });
                     } else {

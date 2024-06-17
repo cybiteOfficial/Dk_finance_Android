@@ -31,6 +31,9 @@ public class PermanentFragment extends Fragment {
     private EditText pinCodeEditText;
     private EditText landmarkEditText;
     private EditText propertyValueEditText;
+    private EditText propertyTitleEditText;
+    private EditText occupationStatusEditText;
+    private EditText flatNumberEditText;
 
     private CurrentAddressData currentAddressData;
 
@@ -48,6 +51,9 @@ public class PermanentFragment extends Fragment {
         propertyOwnerEditText = rootView.findViewById(R.id.propertyOwner);
         propertyCategoryEditText = rootView.findViewById(R.id.propertyCategory);
         typesOfCategoryEditText = rootView.findViewById(R.id.typesOfCategory);
+        occupationStatusEditText = rootView.findViewById(R.id.occupationStatus);
+        propertyTitleEditText = rootView.findViewById(R.id.propertyTitle);
+        flatNumberEditText = rootView.findViewById(R.id.flatNumber);
         plotNumberEditText = rootView.findViewById(R.id.plotNumber);
         localityEditText = rootView.findViewById(R.id.locality);
         villageEditText = rootView.findViewById(R.id.village);
@@ -86,6 +92,9 @@ public class PermanentFragment extends Fragment {
             String propertyOwner = propertyOwnerEditText.getText().toString();
             String propertyCategory = propertyCategoryEditText.getText().toString();
             String typesOfCategory = typesOfCategoryEditText.getText().toString();
+            String occupationStatus = occupationStatusEditText.getText().toString();
+            String propertyTitle = propertyTitleEditText.getText().toString();
+            String flatNumber = flatNumberEditText.getText().toString();
             String plotNumber = plotNumberEditText.getText().toString();
             String locality = localityEditText.getText().toString();
             String village = villageEditText.getText().toString();
@@ -99,15 +108,6 @@ public class PermanentFragment extends Fragment {
 
             // Create an Intent to pass back the data
             Intent intent = new Intent(getActivity(), AddCustomerActivity.class);
-            // Get the customer name from the intent
-            Intent parentIntent = getActivity().getIntent();
-            String customerName = parentIntent.getStringExtra("customerName");
-            ArrayList<String> coApplicantNames = parentIntent.getStringArrayListExtra("coApplicantNames");
-
-            // Pass the customer name and co-applicant names
-            intent.putExtra("customerName", customerName);
-            intent.putStringArrayListExtra("coApplicantNames", coApplicantNames);
-
             startActivity(intent);
         });
 
@@ -125,6 +125,9 @@ public class PermanentFragment extends Fragment {
             propertyOwnerEditText.setText(currentAddressData.getPropertyOwner());
             propertyCategoryEditText.setText(currentAddressData.getPropertyCategory());
             typesOfCategoryEditText.setText(currentAddressData.getTypesOfCategory());
+            occupationStatusEditText.setText(currentAddressData.getOccupationStatus());
+            propertyTitleEditText.setText(currentAddressData.getPropertyTitle());
+            flatNumberEditText.setText(currentAddressData.getHouseNumber());
             plotNumberEditText.setText(currentAddressData.getPlotNumber());
             localityEditText.setText(currentAddressData.getLocality());
             villageEditText.setText(currentAddressData.getVillage());
@@ -155,6 +158,18 @@ public class PermanentFragment extends Fragment {
         typesOfCategoryEditText.setEnabled(false);
         typesOfCategoryEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
         typesOfCategoryEditText.setTextColor(getResources().getColor(R.color.black));
+
+        occupationStatusEditText.setEnabled(false);
+        occupationStatusEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        occupationStatusEditText.setTextColor(getResources().getColor(R.color.black));
+
+        propertyTitleEditText.setEnabled(false);
+        propertyTitleEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        propertyTitleEditText.setTextColor(getResources().getColor(R.color.black));
+
+        flatNumberEditText.setEnabled(false);
+        flatNumberEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        flatNumberEditText.setTextColor(getResources().getColor(R.color.black));
 
         plotNumberEditText.setEnabled(false);
         plotNumberEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
@@ -213,6 +228,21 @@ public class PermanentFragment extends Fragment {
         typesOfCategoryEditText.setBackgroundResource(R.drawable.edit_text_border);
         typesOfCategoryEditText.setTextColor(getResources().getColor(R.color.black));
 
+        occupationStatusEditText.setText("");
+        occupationStatusEditText.setEnabled(true);
+        occupationStatusEditText.setBackgroundResource(R.drawable.edit_text_border);
+        occupationStatusEditText.setTextColor(getResources().getColor(R.color.black));
+
+        propertyTitleEditText.setText("");
+        propertyTitleEditText.setEnabled(true);
+        propertyTitleEditText.setBackgroundResource(R.drawable.edit_text_border);
+        propertyTitleEditText.setTextColor(getResources().getColor(R.color.black));
+
+        flatNumberEditText.setText("");
+        flatNumberEditText.setEnabled(true);
+        flatNumberEditText.setBackgroundResource(R.drawable.edit_text_border);
+        flatNumberEditText.setTextColor(getResources().getColor(R.color.black));
+
         plotNumberEditText.setText("");
         plotNumberEditText.setEnabled(true);
         plotNumberEditText.setBackgroundResource(R.drawable.edit_text_border);
@@ -264,4 +294,3 @@ public class PermanentFragment extends Fragment {
         propertyValueEditText.setTextColor(getResources().getColor(R.color.black));
     }
 }
-
