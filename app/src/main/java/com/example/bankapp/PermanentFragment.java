@@ -47,6 +47,10 @@ public class PermanentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_permanent, container, false);
 
+        // get application id from parent activity
+        Intent i = getActivity().getIntent();
+        String application_id = i.getStringExtra("application_id");
+
         // Initialize EditText fields
         propertyOwnerEditText = rootView.findViewById(R.id.propertyOwner);
         propertyCategoryEditText = rootView.findViewById(R.id.propertyCategory);
@@ -108,6 +112,7 @@ public class PermanentFragment extends Fragment {
 
             // Create an Intent to pass back the data
             Intent intent = new Intent(getActivity(), AddCustomerActivity.class);
+            intent.putExtra("application_id", application_id);
             startActivity(intent);
         });
 

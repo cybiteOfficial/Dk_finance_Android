@@ -43,6 +43,9 @@ public class CreatCustomer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creat_customer);
 
+        Intent i = getIntent();
+        String application_id = i.getStringExtra("application_id");
+
         dobEditText = findViewById(R.id.dobEditText);
         imageView = findViewById(R.id.imageView);
 
@@ -113,6 +116,8 @@ public class CreatCustomer extends AppCompatActivity {
             String agricultureLandOwner = agricultureLandOwnerSpinner.getSelectedItem().toString();
 
             Intent intent = new Intent(CreatCustomer.this, AddressActivity.class);
+            // Send data to AddressActivity using Intent
+            intent.putExtra("application_id", application_id);
             intent.putExtra("customerName", firstName + " " + middleName + " " + lastName);
             intent.putExtra("dob", dob);
             intent.putExtra("age", age);
@@ -131,8 +136,11 @@ public class CreatCustomer extends AppCompatActivity {
             Log.i("Customer Name", firstName + " " + middleName + " " + lastName);
             Log.i("DOB", dob);
             Log.i("Age", age);
-            Log.i("imagePath", imagePath);
 
+            // check if the image path is not null
+            if (imagePath != null) {
+                Log.i("Image Path", imagePath);
+            }
             startActivity(intent);
         });
     }

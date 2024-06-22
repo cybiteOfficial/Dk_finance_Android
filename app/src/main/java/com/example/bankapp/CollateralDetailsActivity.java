@@ -10,18 +10,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bankapp.environment.BaseUrl;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,8 +37,8 @@ import retrofit2.Response;
 
 public class CollateralDetailsActivity extends AppCompatActivity {
 
-    private static final int PICK_FILE_REQUEST_CODE = 1;
     private static final String TAG = "CollateralActivity";
+    private static final int PICK_FILE_REQUEST_CODE = 1;
 
     // EditText fields
     private EditText collateralType, collateralName, primarySecondary, valuationRequired, relationshipWithLoan;
@@ -49,7 +52,6 @@ public class CollateralDetailsActivity extends AppCompatActivity {
     private Uri selectedDocumentUri;
     private String applicationId;
     private String accessToken;
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +59,28 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collateral_details);
 
         // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accessToken = sharedPreferences.getString("accessToken", "");
 
         // Get applicationId from Intent
         Intent intent = getIntent();
         applicationId = intent.getStringExtra("application_id");
+        Log.d(TAG, "Received applicationId: " + applicationId);
+
+        TextView applicationIdTextView = findViewById(R.id.applicationID);
+        applicationIdTextView.setText(applicationId);
 
         // Initialize EditText fields
         initEditTextFields();
+
+        // Check if collateral details exist for the applicationId
+        checkExistingCollateralDetails(applicationId);
 
         // Set onClickListener for choosing document
         docs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Choose document clicked");
                 openFilePicker();
             }
         });
@@ -79,6 +89,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Submit button clicked");
                 submitCollateralDetails();
             }
         });
@@ -146,6 +157,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
                         String fileName = getFileNameFromUri(fileUri);
                         docs.setText(fileName);
                         selectedDocumentUri = fileUri;
+                        Log.d(TAG, "Selected document: " + fileName);
                     }
                 }
             }
@@ -166,9 +178,9 @@ public class CollateralDetailsActivity extends AppCompatActivity {
                 int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 if (displayNameIndex != -1) {
                     fileName = cursor.getString(displayNameIndex);
+                    Log.d(TAG, "File name: " + fileName);
                 }
             }
-            Log.d(TAG, "getFileNameFromUri: File name is " + fileName);
             return fileName;
         } catch (Exception e) {
             Log.e(TAG, "getFileNameFromUri: Exception", e);
@@ -278,6 +290,7 @@ public class CollateralDetailsActivity extends AppCompatActivity {
                 }
 
                 InputStream inputStream = getContentResolver().openInputStream(selectedDocumentUri);
+                assert inputStream != null;
                 byte[] fileBytes = new byte[inputStream.available()];
                 inputStream.read(fileBytes);
                 inputStream.close();
@@ -307,4 +320,133 @@ public class CollateralDetailsActivity extends AppCompatActivity {
             Toast.makeText(CollateralDetailsActivity.this, "Failed to submit collateral details", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // Method to check existing collateral details
+// Method to check existing collateral details
+    private void checkExistingCollateralDetails(String applicationId) {
+        ApiService apiService = RetrofitClient.getClient(BaseUrl.BASE_URL, accessToken).create(ApiService.class);
+
+        String endpointUrl = "api/v1/collateral_details?application_id=" + applicationId;
+        Call<JsonObject> call = apiService.getCollateralDetails(endpointUrl);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject responseData = response.body();
+
+                    if (responseData != null && responseData.has("error") && !responseData.get("error").getAsBoolean()) {
+                        JsonArray dataArray = responseData.getAsJsonArray("data");
+
+                        if (dataArray != null && !dataArray.isEmpty()) {
+                            JsonObject collateralData = dataArray.get(0).getAsJsonObject();
+                            Log.d(TAG, "Existing collateral details: " + collateralData);
+
+                            // Set data to EditText fields safely
+                            runOnUiThread(() -> {
+                                setEditTextValue(collateralType, collateralData, "collateralType");
+                                setEditTextValue(collateralName, collateralData, "collateralName");
+                                setEditTextValue(primarySecondary, collateralData, "primarySecondary");
+                                setEditTextValue(valuationRequired, collateralData, "valuationRequired");
+                                setEditTextValue(relationshipWithLoan, collateralData, "relationshipWithLoan");
+                                setEditTextValue(propertyOwner, collateralData, "propertyOwner");
+                                setEditTextValue(propertyCategory, collateralData, "propertyCategory");
+                                setEditTextValue(propertyType, collateralData, "propertyType");
+                                setEditTextValue(occupationStatus, collateralData, "occupationStatus");
+                                setEditTextValue(propertyStatus, collateralData, "propertyStatus");
+                                setEditTextValue(propertyTitle, collateralData, "propertyTitle");
+                                setEditTextValue(houseFlatShopNo, collateralData, "houseFlatShopNo");
+                                setEditTextValue(khasraPlotNo, collateralData, "khasraPlotNo");
+                                setEditTextValue(locality, collateralData, "locality");
+                                setEditTextValue(village, collateralData, "village");
+                                setEditTextValue(state, collateralData, "state");
+                                setEditTextValue(district, collateralData, "district");
+                                setEditTextValue(city, collateralData, "city");
+                                setEditTextValue(taluka, collateralData, "taluka");
+                                setEditTextValue(pincode, collateralData, "pincode");
+                                setEditTextValue(landmark, collateralData, "landmark");
+                                setEditTextValue(estimatedPropertyValue, collateralData, "estimatedPropertyValue");
+                                setEditTextValue(documentName, collateralData, "documentName");
+                                setEditTextValue(isExisting, collateralData, "isExisting");
+
+                                // Disable EditText fields
+                                disableEditTextFields();
+
+                                // Hide submit button
+                                submitButton.setVisibility(View.GONE);
+
+                                // Inform user
+                                Toast.makeText(CollateralDetailsActivity.this, "Existing collateral details loaded", Toast.LENGTH_SHORT).show();
+                            });
+                        } else {
+                            // No data found for the applicationId
+                            runOnUiThread(() -> {
+                                Toast.makeText(CollateralDetailsActivity.this, "No existing collateral details found", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    } else {
+                        // Error occurred or error flag is true
+                        String errorMessage = responseData != null ? responseData.get("message").getAsString() : "Unknown error";
+                        Log.e(TAG, "Failed to fetch collateral details: " + errorMessage);
+                        runOnUiThread(() -> {
+                            Toast.makeText(CollateralDetailsActivity.this, "Failed to fetch collateral details: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } else {
+                    // Response not successful
+                    Log.e(TAG, "Failed to fetch collateral details. Response code: " + response.code());
+                    runOnUiThread(() -> {
+                        Toast.makeText(CollateralDetailsActivity.this, "Failed to fetch collateral details. Check your internet connection.", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e(TAG, "Failed to fetch collateral details", t);
+                runOnUiThread(() -> {
+                    Toast.makeText(CollateralDetailsActivity.this, "Failed to fetch collateral details. Check your internet connection.", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
+    // Helper method to set EditText value safely
+    private void setEditTextValue(EditText editText, JsonObject jsonObject, String key) {
+        if (jsonObject.has(key) && !jsonObject.get(key).isJsonNull()) {
+            editText.setText(jsonObject.get(key).getAsString());
+        } else {
+            editText.setText("");
+        }
+    }
+
+    // Method to disable EditText fields
+    private void disableEditTextFields() {
+        collateralType.setEnabled(false);
+        collateralName.setEnabled(false);
+        primarySecondary.setEnabled(false);
+        valuationRequired.setEnabled(false);
+        relationshipWithLoan.setEnabled(false);
+        propertyOwner.setEnabled(false);
+        propertyCategory.setEnabled(false);
+        propertyType.setEnabled(false);
+        occupationStatus.setEnabled(false);
+        propertyStatus.setEnabled(false);
+        propertyTitle.setEnabled(false);
+        houseFlatShopNo.setEnabled(false);
+        khasraPlotNo.setEnabled(false);
+        locality.setEnabled(false);
+        village.setEnabled(false);
+        state.setEnabled(false);
+        district.setEnabled(false);
+        city.setEnabled(false);
+        taluka.setEnabled(false);
+        pincode.setEnabled(false);
+        landmark.setEnabled(false);
+        estimatedPropertyValue.setEnabled(false);
+        documentName.setEnabled(false);
+        isExisting.setEnabled(false);
+    }
+
 }
+

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DecimalFormat;
 import android.content.SharedPreferences;
@@ -34,6 +35,7 @@ public class CAFActivity extends AppCompatActivity {
     Button submitbutton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
+    TextView applicationIdTextView;
 
     private static final String TAG = "CAFActivity"; // Log tag
 
@@ -58,6 +60,9 @@ public class CAFActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String application_id = intent.getStringExtra("application_id");
         Log.d(TAG, "onCreate: application_id = " + application_id);
+
+        applicationIdTextView = findViewById(R.id.applicationID);
+        applicationIdTextView.setText(application_id);
 
         checkIfDataExists(application_id, accessToken);
 
@@ -145,6 +150,7 @@ public class CAFActivity extends AppCompatActivity {
                     if (!isError) {
                         // Get the data
                         JSONObject data = jsonResponse.getJSONObject("data");
+                        Log.d(TAG, "run: Data found = " + data.toString());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

@@ -4,6 +4,7 @@ import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -114,10 +115,13 @@ public class payment extends AppCompatActivity {
                     assert response.body() != null;
                     final String responseBody = response.body().string();
                     JSONObject jsonObject = new JSONObject(responseBody);
+                    Log.d("Response", responseBody);
                     boolean isError = jsonObject.getBoolean("error");
                     if (!isError) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         String applicationId = data.getString("application_id");
+
+                        Log.d("Application ID", applicationId);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -153,6 +157,7 @@ public class payment extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Payment successful, redirecting to main page
                 Intent intent = new Intent(payment.this, NewRegistrationActivity2.class);
+
                 startActivity(intent);
                 finish();
             } else {

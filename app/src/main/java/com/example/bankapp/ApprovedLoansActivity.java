@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,6 +36,11 @@ public class ApprovedLoansActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     ProgressBar progressBar;
+    LinearLayout cardContainer;
+    Button loadMoreBtn;
+    int currentPage = 1; // Initial page number
+    boolean isLoading = false; // Flag to prevent multiple simultaneous requests
+    boolean isLastPage = false; // Flag to track if all pages have been loaded
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,8 @@ public class ApprovedLoansActivity extends AppCompatActivity {
 
         Spinner loanStatusSpinner = findViewById(R.id.page_spinner);
         progressBar = findViewById(R.id.progressBar);
+        cardContainer = findViewById(R.id.card_container);
+        loadMoreBtn = findViewById(R.id.load_more_btn);
 
         List<String> loanStatuses = new ArrayList<>();
         loanStatuses.add("Pending loans");
@@ -80,7 +88,6 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         });
 
         ImageView backButton = findViewById(R.id.back_btn);
-        LinearLayout cardContainer = findViewById(R.id.card_container);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,20 +102,22 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         // Fetch applicants and display cards
-        fetchApplicants(cardContainer);
+        fetchApplicants();
     }
 
-    private void fetchApplicants(LinearLayout cardContainer) {
+    private void fetchApplicants() {
         showProgressBar(); // Show progress bar when fetching applicants
         String accessToken = sharedPreferences.getString("accessToken", "");
         OkHttpClient client = new OkHttpClient();
-        String url = BASE_URL + "api/v1/applicants/";
+        String url = BASE_URL + "api/v1/applicants/?page=" + currentPage;
 
         Request request = new Request.Builder()
                 .url(url)
                 .header("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();
+
+        isLoading = true; // Set loading flag to true before making the request
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -123,6 +132,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                         showToast("Failed to fetch applicants");
                     }
                 });
+                isLoading = false; // Reset loading flag on failure
             }
 
             @Override
@@ -135,6 +145,7 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                             showToast("Failed to fetch applicants");
                         }
                     });
+                    isLoading = false; // Reset loading flag on failure
                     return;
                 }
 
@@ -149,12 +160,18 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         hideProgressBar(); // Hide progress bar after fetching applicants
-                        if(applicantResponse.getCount() == 0){
+                        if (applicantResponse.getCount() == 0) {
                             TextView noApplicantsText = findViewById(R.id.no_applications_text);
                             noApplicantsText.setVisibility(View.VISIBLE);
+                        } else {
+                            displayApplicants(applicants);
                         }
-                        else {
-                            displayApplicants(applicants, cardContainer);
+                        isLoading = false; // Reset loading flag after fetching data
+                        if (applicantResponse.getNext() == null) {
+                            isLastPage = true; // Mark as last page if there is no next page
+                            loadMoreBtn.setVisibility(View.GONE); // Hide load more button if it's the last page
+                        } else {
+                            currentPage++; // Increment page number for next request
                         }
                     }
                 });
@@ -162,10 +179,8 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("SetTextI18n")
-    private void displayApplicants(List<ApplicantDataApproved> applicants, LinearLayout cardContainer) {
-        cardContainer.removeAllViews();
-        for (int i = 0; i < applicants.size(); i++) {  // Changed to i < applicants.size() for better readability
+    private void displayApplicants(List<ApplicantDataApproved> applicants) {
+        for (int i = 0; i < applicants.size(); i++) {
             ApplicantDataApproved applicant = applicants.get(i);
 
             if (!Objects.equals(applicant.getStatus(), "md")) {
@@ -199,6 +214,11 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         }
     }
 
+    public void loadMoreData(View view) {
+        if (!isLoading && !isLastPage) {
+            fetchApplicants();
+        }
+    }
 
     // Show toast message
     private void showToast(String message) {

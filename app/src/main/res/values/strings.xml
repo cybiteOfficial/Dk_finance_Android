@@ -72,6 +72,13 @@
     </string-array>
     <!-- Create Customer Option -->
 
+    <string-array name="transaction_type">
+        <item>Purchase</item>
+        <item>Refinance</item>
+        <item>Construction</item>
+        <!--        <item>Loan</item>-->
+    </string-array>
+
     <string-array name="gender_type">
         <item>Male</item>
         <item>Female</item>

@@ -34,6 +34,14 @@ public class AddressActivity extends AppCompatActivity implements DataTransferLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
+        // get application id from intent
+        Intent i = getIntent();
+        String application_id = i.getStringExtra("application_id");
+
+        // pass this to the fragments
+        Bundle bundle = new Bundle();
+        bundle.putString("application_id", application_id);
+
         // Find views
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);

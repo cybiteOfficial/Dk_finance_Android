@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,6 +65,9 @@ public class PhotographUploadActivity extends AppCompatActivity {
         // Get the application ID from the previous activity intent
         Intent intent = getIntent();
         String application_id = intent.getStringExtra("application_id");
+
+        TextView applicationIdTextView = findViewById(R.id.applicationID);
+        applicationIdTextView.setText(application_id);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override

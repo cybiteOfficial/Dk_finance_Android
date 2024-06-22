@@ -36,7 +36,7 @@ public class AddCustomerActivity extends AppCompatActivity {
 
     private static final String TAG = "AddCustomerActivity";
     private LinearLayout coApplicantsLayout;
-    private TextView applicationID;
+    private TextView appIdTextView;
     private ImageView homeBtn;
     private OkHttpClient client;
     private String accessToken;
@@ -46,7 +46,7 @@ public class AddCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_customer);
 
-        applicationID = findViewById(R.id.applicationID);
+        appIdTextView = findViewById(R.id.applicationID);
         TextView btnSave = findViewById(R.id.save_button);
         homeBtn = findViewById(R.id.homeButton);
         btnSave.setPaintFlags(btnSave.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -68,7 +68,7 @@ public class AddCustomerActivity extends AppCompatActivity {
             return;
         }
 
-        applicationID.setText(applicationId);
+        appIdTextView.setText(applicationId);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
