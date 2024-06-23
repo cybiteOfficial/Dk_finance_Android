@@ -61,187 +61,82 @@
                         android:gravity="center_vertical" />
                 </LinearLayout>
 
+                <!-- Address Fields : Line 1, 2, 3 -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Property Owner"
-                    android:layout_marginTop="20dp"
+                    android:text="Address Line 1"
+                    android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyOwner"
+                    android:id="@+id/address_line_1"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
+                    android:elevation="4dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp" />
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,"
+                    android:maxLength="100"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Property Category"
+                    android:text="Address Line 2"
                     android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyCategory"
+                    android:id="@+id/address_line_2"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Types of Category"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/typesOfCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Occupation Status"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/occupationStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Property Title"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/propertyTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp" />
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,"
+                    android:maxLength="100"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Flat number/ House number"
+                    android:text="Address Line 3"
                     android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/flatNumber"
-                    android:inputType="number"
+                    android:id="@+id/address_line_3"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Plot Number"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/plotNumber"
-                    android:inputType="number"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Locality"
-                    android:layout_marginTop="15dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/locality"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
-                    android:elevation="4dp"
-                    android:padding="8dp"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="Village"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:gravity="left" />
-
-                <EditText
-                    android:id="@+id/village"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:drawablePadding="8dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp" />
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,"
+                    android:maxLength="100"
+                    android:singleLine="true" />
+
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -252,6 +147,7 @@
                     android:textSize="16sp"
                     android:gravity="left" />
 
+
                 <EditText
                     android:id="@+id/state"
                     android:layout_width="match_parent"
@@ -261,7 +157,12 @@
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="40"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -281,7 +182,12 @@
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="30"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -301,7 +207,12 @@
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="30"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -319,9 +230,14 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
+                    android:elevation="4dp"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:elevation="4dp" />
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="30"
+                    android:singleLine="true" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -337,12 +253,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:inputType="number"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:inputType="number"
+                    android:maxLength="6" />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -362,28 +280,101 @@
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
                     android:padding="8dp"
+                    android:textColor="@android:color/black"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ,0123456789"
+                    android:maxLength="50"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Residence State"
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <Spinner
+                    android:id="@+id/residenceState"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/custom_spinner_background"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:padding="8dp"
                     android:textColor="@android:color/black" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Estimate Property Value"
+                    android:text="Residence Type"
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <Spinner
+                    android:id="@+id/residenceType"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/custom_spinner_background"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:textColor="@android:color/black" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Stability At Residence"
                     android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
-                    android:id="@+id/propertyValue"
+                    android:id="@+id/stabilityAtResidence"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:inputType="number"
                     android:padding="8dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="30"
+                    android:singleLine="true" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Distance From Branch"
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <EditText
+                    android:id="@+id/distanceFromBranch"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:textColor="@android:color/black"
+                    android:inputType="number"
+                    android:singleLine="true" />
+
+
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

@@ -449,4 +449,3 @@ public class CollateralDetailsActivity extends AppCompatActivity {
     }
 
 }
-

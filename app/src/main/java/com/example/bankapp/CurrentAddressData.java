@@ -1,76 +1,51 @@
 package com.example.bankapp;
 
 public class CurrentAddressData {
-    private String propertyOwner;
-    private String propertyCategory;
-    private String typesOfCategory;
-    private String occupationStatus;
-    private String propertyTitle;
-    private String houseNumber;
-    private String plotNumber;
-    private String locality;
-    private String village;
+
+    private String addressLine1;
+    private String addressLine2;
+    private String addressLine3;
     private String state;
     private String district;
     private String city;
     private String taluka;
     private String pinCode;
     private String landmark;
-    private String propertyValue;
+    private String stabilityAtResidence;
+    private String distanceFromBranch;
+    private String residenceState;
+    private String residenceType;
 
-    public CurrentAddressData(String propertyOwner, String propertyCategory, String typesOfCategory, String occupationStatus, String propertyTitle, String houseNumber, String plotNumber, String locality, String village, String state, String district, String city, String taluka, String pinCode, String landmark, String propertyValue) {
-        this.propertyOwner = propertyOwner;
-        this.propertyCategory = propertyCategory;
-        this.typesOfCategory = typesOfCategory;
-        this.occupationStatus = occupationStatus;
-        this.propertyTitle = propertyTitle;
-        this.houseNumber = houseNumber;
-        this.plotNumber = plotNumber;
-        this.locality = locality;
-        this.village = village;
+    public CurrentAddressData( String addressLine1 , String addressLine2, String addressLine3, String state, String district, String city, String taluka, String pinCode, String landmark, String stabilityAtResidence, String distanceFromBranch, String residenceState, String residenceType) {
+
+
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.addressLine3 = addressLine3;
         this.state = state;
         this.district = district;
         this.city = city;
         this.taluka = taluka;
         this.pinCode = pinCode;
         this.landmark = landmark;
-        this.propertyValue = propertyValue;
+        this.stabilityAtResidence = stabilityAtResidence;
+        this.distanceFromBranch = distanceFromBranch;
+        this.residenceState = residenceState;
+        this.residenceType = residenceType;
+
     }
 
-    public String getPropertyOwner() {
-        return propertyOwner;
+
+    public String getAddressLine1() {
+        return addressLine1;
     }
 
-    public String getPropertyCategory() {
-        return propertyCategory;
+    public String getAddressLine2() {
+        return addressLine2;
     }
 
-    public String getTypesOfCategory() {
-        return typesOfCategory;
-    }
-
-    public String getOccupationStatus() {
-        return occupationStatus;
-    }
-
-    public String getPropertyTitle() {
-        return propertyTitle;
-    }
-
-    public String getHouseNumber() {
-        return houseNumber;
-    }
-
-    public String getPlotNumber() {
-        return plotNumber;
-    }
-
-    public String getLocality() {
-        return locality;
-    }
-
-    public String getVillage() {
-        return village;
+    public String getAddressLine3() {
+        return addressLine3;
     }
 
     public String getState() {
@@ -97,7 +72,20 @@ public class CurrentAddressData {
         return landmark;
     }
 
-    public String getPropertyValue() {
-        return propertyValue;
+    public String getStabilityAtResidence() {
+        return stabilityAtResidence;
     }
+
+    public String getDistanceFromBranch() {
+        return distanceFromBranch;
+    }
+
+    public String getResidenceState() {
+        return residenceState;
+    }
+
+    public String getResidenceType() {
+        return residenceType;
+    }
+
 }

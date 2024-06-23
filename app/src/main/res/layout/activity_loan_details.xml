@@ -247,13 +247,13 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
-                    android:digits="0123456789"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:inputType="phone"
+                    android:inputType="numberDecimal"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:maxLength="15"/>
+                    android:maxLength="15"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -270,13 +270,13 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
-                    android:digits="0123456789"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:maxLength="15"/>
+                    android:maxLength="15"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -293,13 +293,13 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
-                    android:digits="0123456789"
                     android:drawablePadding="8dp"
                     android:elevation="4dp"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:padding="8dp"
                     android:textColor="@android:color/black"
-                    android:maxLength="15"/>
+                    android:maxLength="15"
+                    android:singleLine="true"/>
 
                 <!-- Processing Fees Section -->
                 <TextView

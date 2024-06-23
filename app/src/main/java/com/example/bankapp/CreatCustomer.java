@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class CreatCustomer extends AppCompatActivity {
@@ -25,17 +28,18 @@ public class CreatCustomer extends AppCompatActivity {
     private EditText firstNameEditText;
     private EditText middleNameEditText;
     private EditText lastNameEditText;
-    private EditText industryEditText;
-    private EditText occupationEditText;
     private EditText sourceOfIncomeEditText;
     private EditText incomeEditText;
     private EditText familyIncomeEditText;
     private EditText ageEditText;
+    private EditText noOfDependentsEditText;
     private Spinner genderSpinner;
     private Spinner titleSpinner;
     private Spinner customerSegmentSpinner;
     private Spinner residenceOwnerSpinner;
     private Spinner agricultureLandOwnerSpinner;
+    private Spinner roles;
+    private Spinner educationQualificationSpinner;
     private String imagePath;
 
     @Override
@@ -45,6 +49,9 @@ public class CreatCustomer extends AppCompatActivity {
 
         Intent i = getIntent();
         String application_id = i.getStringExtra("application_id");
+        Boolean applicantExists = i.getBooleanExtra("applicantExists", false);
+        Log.i("Application ID", application_id);
+        Log.i("Applicant Exists", String.valueOf(applicantExists));
 
         dobEditText = findViewById(R.id.dobEditText);
         imageView = findViewById(R.id.imageView);
@@ -60,12 +67,29 @@ public class CreatCustomer extends AppCompatActivity {
         firstNameEditText = findViewById(R.id.customerName);
         middleNameEditText = findViewById(R.id.customerMiddleName);
         lastNameEditText = findViewById(R.id.customerLastName);
-        industryEditText = findViewById(R.id.industry);
-        occupationEditText = findViewById(R.id.occupation);
         sourceOfIncomeEditText = findViewById(R.id.sourceOfIncome);
         incomeEditText = findViewById(R.id.income);
         familyIncomeEditText = findViewById(R.id.familyIncome);
         ageEditText = findViewById(R.id.age);
+        noOfDependentsEditText = findViewById(R.id.noOfDependents);
+
+        roles = findViewById(R.id.role);
+
+        // Load roles from resources
+        // Load roles from resources
+        String[] rolesArray = getResources().getStringArray(R.array.application_roles);
+        ArrayList rolesList = new ArrayList<>(Arrays.asList(rolesArray));
+
+        // If applicant exists, remove "applicant" from roles list
+        if (applicantExists) {
+            rolesList.remove("Applicant"); // Ensure the casing matches exactly what is in the string array
+        }
+
+        // Create adapter with the updated roles list
+        ArrayAdapter<String> rolesAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, rolesList);
+        rolesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roles.setAdapter(rolesAdapter);
+
 
         genderSpinner = findViewById(R.id.gender);
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.gender_type));
@@ -83,14 +107,19 @@ public class CreatCustomer extends AppCompatActivity {
         customerSegmentSpinner.setAdapter(customerSegmentAdapter);
 
         residenceOwnerSpinner = findViewById(R.id.residenceOwner);
-        ArrayAdapter<String> residenceOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.customer_segment));
+        ArrayAdapter<String> residenceOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.residenceOwner));
         residenceOwnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         residenceOwnerSpinner.setAdapter(residenceOwnerAdapter);
 
         agricultureLandOwnerSpinner = findViewById(R.id.agricultureLandOwner);
-        ArrayAdapter<String> agricultureLandOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.customer_segment));
+        ArrayAdapter<String> agricultureLandOwnerAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.agricultureLandOwner));
         agricultureLandOwnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         agricultureLandOwnerSpinner.setAdapter(agricultureLandOwnerAdapter);
+
+        educationQualificationSpinner = findViewById(R.id.educationQualification);
+        ArrayAdapter<String> educationQualificationAdapter = new ArrayAdapter<>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.education_qualification));
+        educationQualificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        educationQualificationSpinner.setAdapter(educationQualificationAdapter);
 
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent(CreatCustomer.this, DashboardActivity.class);
@@ -107,35 +136,50 @@ public class CreatCustomer extends AppCompatActivity {
             String gender = genderSpinner.getSelectedItem().toString();
             String title = titleSpinner.getSelectedItem().toString();
             String customerSegment = customerSegmentSpinner.getSelectedItem().toString();
-            String industry = industryEditText.getText().toString().trim();
-            String occupation = occupationEditText.getText().toString().trim();
             String sourceOfIncome = sourceOfIncomeEditText.getText().toString().trim();
             String income = incomeEditText.getText().toString().trim();
             String familyIncome = familyIncomeEditText.getText().toString().trim();
+            String numberOfDependents = noOfDependentsEditText.getText().toString().trim();
             String residenceOwner = residenceOwnerSpinner.getSelectedItem().toString();
             String agricultureLandOwner = agricultureLandOwnerSpinner.getSelectedItem().toString();
+            String educationQualification = educationQualificationSpinner.getSelectedItem().toString();
+            String roleText = roles.getSelectedItem().toString();
+
+            // Get the role from the selected role
+            String role;
+            if(roleText.equals("Applicant")) {
+                role = "applicant";
+            } else {
+                role = "co_applicant";
+            }
 
             Intent intent = new Intent(CreatCustomer.this, AddressActivity.class);
+
+            // make a normal object of data and pass it to the next activity
+            CustomerData customerData = new CustomerData(role, application_id, firstName, middleName , lastName , dob , age , gender, title, customerSegment, numberOfDependents
+                    , sourceOfIncome, income, familyIncome, residenceOwner, agricultureLandOwner, educationQualification, imagePath);
+            customerData.setRole(role);
+            customerData.setApplicationId(application_id);
+            customerData.setTitle(title);
+            customerData.setFirstName(firstName);
+            customerData.setMiddleName(middleName);
+            customerData.setLastName(lastName);
+            customerData.setDob(dob);
+            customerData.setAge(age);
+            customerData.setGender(gender);
+            customerData.setCustomerSegment(customerSegment);
+            customerData.setSourceOfIncome(sourceOfIncome);
+            customerData.setIncome(income);
+            customerData.setFamilyIncome(familyIncome);
+            customerData.setNumberOfDependents(numberOfDependents);
+            customerData.setResidenceOwner(residenceOwner);
+            customerData.setAgricultureLandOwner(agricultureLandOwner);
+            customerData.setEducationQualification(educationQualification);
+            customerData.setImagePath(imagePath);
+
             // Send data to AddressActivity using Intent
             intent.putExtra("application_id", application_id);
-            intent.putExtra("customerName", firstName + " " + middleName + " " + lastName);
-            intent.putExtra("dob", dob);
-            intent.putExtra("age", age);
-            intent.putExtra("gender", gender);
-            intent.putExtra("title", title);
-            intent.putExtra("customerSegment", customerSegment);
-            intent.putExtra("industry", industry);
-            intent.putExtra("occupation", occupation);
-            intent.putExtra("sourceOfIncome", sourceOfIncome);
-            intent.putExtra("income", income);
-            intent.putExtra("familyIncome", familyIncome);
-            intent.putExtra("residenceOwner", residenceOwner);
-            intent.putExtra("agricultureLandOwner", agricultureLandOwner);
-            intent.putExtra("imageFilePath", imagePath);
-
-            Log.i("Customer Name", firstName + " " + middleName + " " + lastName);
-            Log.i("DOB", dob);
-            Log.i("Age", age);
+            intent.putExtra("customerData", customerData);
 
             // check if the image path is not null
             if (imagePath != null) {

@@ -22,13 +22,14 @@
         android:textColor="@color/black"
         android:padding="10dp"
         android:drawablePadding="8dp"
-        android:elevation="4dp"/>
+        android:elevation="4dp"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/label_change_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Amount"
+        android:text="Charge Amount"
         android:textSize="16sp"
         android:textColor="@color/primary"
         android:layout_marginTop="10dp" />
@@ -43,7 +44,8 @@
         android:textColor="@color/black"
         android:drawablePadding="8dp"
         android:elevation="4dp"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/label_tax_amount"
@@ -64,8 +66,8 @@
         android:textColor="@color/black"
         android:drawablePadding="8dp"
         android:elevation="4dp"
-        android:padding="10dp"/>
-
+        android:padding="10dp"
+        android:singleLine="true"/>
     <TextView
         android:id="@+id/label_total_amount"
         android:layout_width="wrap_content"
@@ -85,6 +87,7 @@
         android:textColor="@color/black"
         android:drawablePadding="8dp"
         android:elevation="4dp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:singleLine="true"/>
 
 </LinearLayout>

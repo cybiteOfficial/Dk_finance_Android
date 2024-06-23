@@ -1,43 +1,64 @@
 package com.example.bankapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.bankapp.environment.BaseUrl;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PermanentFragment extends Fragment {
 
-    private EditText propertyOwnerEditText;
-    private EditText propertyCategoryEditText;
-    private EditText typesOfCategoryEditText;
-    private EditText plotNumberEditText;
-    private EditText localityEditText;
-    private EditText villageEditText;
+
+    private EditText addressLine1EditText;
+    private EditText addressLine2EditText;
+    private EditText addressLine3EditText;
     private EditText stateEditText;
     private EditText districtEditText;
     private EditText cityEditText;
     private EditText talukaEditText;
     private EditText pinCodeEditText;
     private EditText landmarkEditText;
-    private EditText propertyValueEditText;
-    private EditText propertyTitleEditText;
-    private EditText occupationStatusEditText;
-    private EditText flatNumberEditText;
+    private EditText  stabilityAtResidenceEditText;
+    private EditText  distanceFromBranchEditText;
+    private Spinner residenceStateSpinner;
+    private Spinner residenceTypeSpinner;
+
 
     private CurrentAddressData currentAddressData;
 
-    private boolean isSameAsCurrent = false; // Track if "Same as Current Address" is toggled
+    private boolean isSameAsCurrent = false;
 
     LinearLayout sameAsCurrentLayout;
     Button submitBtn;
@@ -47,27 +68,40 @@ public class PermanentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_permanent, container, false);
 
-        // get application id from parent activity
+        // get customer details from parent activity
         Intent i = getActivity().getIntent();
         String application_id = i.getStringExtra("application_id");
+        CustomerData customerData = (CustomerData) i.getSerializableExtra("customerData");
+
+        String customerDataString = customerData.toString();
+
+        Log.d("PermanentFragment", "onCreateView: Application ID = " + application_id);
+        Log.d("PermanentFragment", "onCreateView: Customer Data = " + customerData.toString());
+
+        // extract image path from customer data
+        String imagePath = customerData.getImagePath();
+        Log.d("PermanentFragment", "onCreateView: Image Path = " + imagePath);
+
+
+        // get access token from shared preferences
+        String accessToken = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getString("accessToken", "");
 
         // Initialize EditText fields
-        propertyOwnerEditText = rootView.findViewById(R.id.propertyOwner);
-        propertyCategoryEditText = rootView.findViewById(R.id.propertyCategory);
-        typesOfCategoryEditText = rootView.findViewById(R.id.typesOfCategory);
-        occupationStatusEditText = rootView.findViewById(R.id.occupationStatus);
-        propertyTitleEditText = rootView.findViewById(R.id.propertyTitle);
-        flatNumberEditText = rootView.findViewById(R.id.flatNumber);
-        plotNumberEditText = rootView.findViewById(R.id.plotNumber);
-        localityEditText = rootView.findViewById(R.id.locality);
-        villageEditText = rootView.findViewById(R.id.village);
+        addressLine1EditText = rootView.findViewById(R.id.address_line_1);
+        addressLine2EditText = rootView.findViewById(R.id.address_line_2);
+        addressLine3EditText = rootView.findViewById(R.id.address_line_3);
         stateEditText = rootView.findViewById(R.id.state);
         districtEditText = rootView.findViewById(R.id.district);
         cityEditText = rootView.findViewById(R.id.city);
         talukaEditText = rootView.findViewById(R.id.taluka);
         pinCodeEditText = rootView.findViewById(R.id.pinCode);
         landmarkEditText = rootView.findViewById(R.id.landmark);
-        propertyValueEditText = rootView.findViewById(R.id.propertyValue);
+        stabilityAtResidenceEditText = rootView.findViewById(R.id.stabilityAtResidence);
+        distanceFromBranchEditText = rootView.findViewById(R.id.distanceFromBranch);
+
+        // Setup Spinners
+        residenceStateSpinner = setupSpinner(rootView, R.id.residenceState, R.array.residence_state);
+        residenceTypeSpinner = setupSpinner(rootView, R.id.residenceType, R.array.residence_type);
 
         // Initialize LinearLayout
         sameAsCurrentLayout = rootView.findViewById(R.id.sameAsCurrentLayout);
@@ -92,31 +126,251 @@ public class PermanentFragment extends Fragment {
 
         // Set click listener for the button
         submitBtn.setOnClickListener(v -> {
-            // Get data from EditText fields
-            String propertyOwner = propertyOwnerEditText.getText().toString();
-            String propertyCategory = propertyCategoryEditText.getText().toString();
-            String typesOfCategory = typesOfCategoryEditText.getText().toString();
-            String occupationStatus = occupationStatusEditText.getText().toString();
-            String propertyTitle = propertyTitleEditText.getText().toString();
-            String flatNumber = flatNumberEditText.getText().toString();
-            String plotNumber = plotNumberEditText.getText().toString();
-            String locality = localityEditText.getText().toString();
-            String village = villageEditText.getText().toString();
-            String state = stateEditText.getText().toString();
-            String district = districtEditText.getText().toString();
-            String city = cityEditText.getText().toString();
-            String taluka = talukaEditText.getText().toString();
-            String pinCode = pinCodeEditText.getText().toString();
-            String landmark = landmarkEditText.getText().toString();
-            String propertyValue = propertyValueEditText.getText().toString();
 
-            // Create an Intent to pass back the data
-            Intent intent = new Intent(getActivity(), AddCustomerActivity.class);
-            intent.putExtra("application_id", application_id);
-            startActivity(intent);
+            Boolean is_permanent = isSameAsCurrent;
+            if(!is_permanent) {
+                JSONObject currentAddressJson;
+                try {
+                    currentAddressJson = createAddressJson(currentAddressData);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                JSONObject permanentAddressJson;
+                try {
+                    permanentAddressJson = createAddressJsonFromInput();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                makeHttpRequest(application_id, submitBtn, accessToken, is_permanent, customerData, currentAddressJson, permanentAddressJson);
+            }
+
+            else {
+                JSONObject currentAddressJson;
+                try {
+                    currentAddressJson = createAddressJson(currentAddressData);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                makeHttpRequest(application_id, submitBtn, accessToken, is_permanent, customerData, currentAddressJson, null);
+            }
+
         });
 
         return rootView;
+    }
+
+    private void makeHttpRequest(String applicationId, Button submitButton, String accessToken, boolean isPermanent, CustomerData customerData, JSONObject currentAddressJson, @Nullable JSONObject permanentAddressJson) {
+        String url = BaseUrl.BASE_URL + "api/v1/customers";
+        Log.d("PermanentFragment", "makeHttpRequest: URL = " + url);
+        Log.d("PermanentFragment", "makeHttpRequest: Access Token = " + accessToken);
+        Log.d("PermanentFragment", "makeHttpRequest: isPermanent = " + String.valueOf(isPermanent));
+        Log.d("PermanentFragment", "makeHttpRequest: Customer Data = " + customerData.toString());
+        Log.d("PermanentFragment", "makeHttpRequest: Current Address = " + currentAddressJson.toString());
+
+        // Get file path from customer data
+        String imagePath = customerData.getImagePath();
+        File imageFile = null;
+
+        // Create the image file if imagePath is not null
+        if (imagePath != null) {
+            imageFile = new File(imagePath);
+            if (!imageFile.exists()) {
+                Log.e("PermanentFragment", "makeHttpRequest: Image file does not exist at: " + imageFile.getAbsolutePath());
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast("Error: Image file not found");
+                        submitButton.setEnabled(true);
+                    }
+                });
+                return; // Exit method if image file does not exist
+            }
+            Log.d("PermanentFragment", "makeHttpRequest: Image File Path = " + imageFile.getAbsolutePath());
+        }
+
+        // Check if permanent address is present
+        if (permanentAddressJson != null) {
+            Log.d("PermanentFragment", "makeHttpRequest: Permanent Address = " + permanentAddressJson.toString());
+        }
+
+        File finalImageFile = imageFile;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Create the multipart form body builder
+                    MultipartBody.Builder multipartBuilder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("customer_data", customerData.toString())
+                            .addFormDataPart("is_permanent", String.valueOf(isPermanent))
+                            .addFormDataPart("current_address", currentAddressJson.toString());
+
+                    // Add permanent address if it's not the same as current address
+                    if (!isPermanent && permanentAddressJson != null) {
+                        multipartBuilder.addFormDataPart("permanent_address", permanentAddressJson.toString());
+                    }
+
+                    // Add image file if it exists
+                    if (finalImageFile != null && finalImageFile.exists()) {
+                        multipartBuilder.addFormDataPart("profile_photo", finalImageFile.getName(),
+                                RequestBody.create(MediaType.parse("image/jpeg"), finalImageFile));
+                    }
+
+                    // Build the multipart form body
+                    RequestBody requestBody = multipartBuilder.build();
+
+                    // Create the request
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .post(requestBody)
+                            .addHeader("Authorization", "Bearer " + accessToken)
+                            .build();
+
+                    // Create the OkHttpClient and execute the request
+                    OkHttpClient client = new OkHttpClient();
+                    Call call = client.newCall(request);
+
+                    Response response = call.execute();
+
+                    // Check response code
+                    if (!response.isSuccessful()) {
+                        Log.e("PermanentFragment", "run: HTTP error code: " + response.code());
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast("Error: Failed to upload data. HTTP error code: " + response.code());
+                                submitButton.setEnabled(true);
+                            }
+                        });
+                        return; // Exit method on HTTP error
+                    }
+
+                    // Read server response
+                    String serverResponse = response.body().string();
+                    Log.d("PermanentFragment", "run: Server response = " + serverResponse);
+
+                    // Parse JSON response
+                    JSONObject jsonResponse;
+                    try {
+                        jsonResponse = new JSONObject(serverResponse);
+
+                        boolean isError = jsonResponse.getBoolean("error");
+                        if (!isError) {
+                            Log.d("PermanentFragment", "run: Data uploaded successfully");
+                            requireActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast("Data Uploaded Successfully");
+
+                                    // Start AddCustomerActivity and finish the current activity
+                                    Intent intent = new Intent(requireContext(), AddCustomerActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("application_id", applicationId);
+                                    requireContext().startActivity(intent);
+                                    requireActivity().finish();
+                                }
+                            });
+                        }
+                        else {
+                            String errorMessage = jsonResponse.optString("message", "Unknown error");
+                            Log.e("PermanentFragment", "run: Error from server: " + errorMessage);
+                            requireActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast("Error uploading data: " + errorMessage);
+                                    submitButton.setEnabled(true);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        Log.e("PermanentFragment", "run: Error parsing server response", e);
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast("Error parsing server response");
+                                submitButton.setEnabled(true);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e("PermanentFragment", "run: Exception occurred during HTTP request", e);
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast("Error occurred while uploading data: " + e.getMessage());
+                            submitButton.setEnabled(true);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private JSONObject createAddressJson(CurrentAddressData data) throws Exception {
+        JSONObject addressJson = new JSONObject();
+        addressJson.put("address_line_1", data.getAddressLine1());
+        addressJson.put("address_line_2", data.getAddressLine2());
+        addressJson.put("address_line_3", data.getAddressLine3());
+        addressJson.put("state", data.getState());
+        addressJson.put("city", data.getCity());
+        addressJson.put("district", data.getDistrict());
+        addressJson.put("tehsil_or_taluka", data.getTaluka());
+        addressJson.put("pincode", data.getPinCode());
+        addressJson.put("landmark", data.getLandmark());
+        addressJson.put("residence_state", data.getResidenceState());
+        addressJson.put("residence_type", data.getResidenceType());
+        addressJson.put("stability_at_residence", data.getStabilityAtResidence());
+        addressJson.put("distance_from_branch", data.getDistanceFromBranch());
+        return addressJson;
+    }
+
+    private JSONObject createAddressJsonFromInput() throws Exception {
+        JSONObject addressJson = new JSONObject();
+        addressJson.put("address_line_1", addressLine1EditText.getText().toString());
+        addressJson.put("address_line_2", addressLine2EditText.getText().toString());
+        addressJson.put("address_line_3", addressLine3EditText.getText().toString());
+        addressJson.put("state", stateEditText.getText().toString());
+        addressJson.put("city", cityEditText.getText().toString());
+        addressJson.put("district", districtEditText.getText().toString());
+        addressJson.put("tehsil_or_taluka", talukaEditText.getText().toString());
+        addressJson.put("pincode", pinCodeEditText.getText().toString());
+        addressJson.put("landmark", landmarkEditText.getText().toString());
+        addressJson.put("residence_state", residenceStateSpinner.getSelectedItem().toString());
+        addressJson.put("residence_type", residenceTypeSpinner.getSelectedItem().toString());
+        addressJson.put("stability_at_residence", stabilityAtResidenceEditText.getText().toString());
+        addressJson.put("distance_from_branch", distanceFromBranchEditText.getText().toString());
+        return addressJson;
+    }
+
+
+    private Spinner setupSpinner(View view, int spinnerId, int arrayId) {
+        Spinner spinner = view.findViewById(spinnerId);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.sample_spinner_item, getResources().getStringArray(arrayId)) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black));
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.black));
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_layout);
+        spinner.setAdapter(adapter);
+        return spinner;
     }
 
     // Method to store the current address data
@@ -127,22 +381,19 @@ public class PermanentFragment extends Fragment {
     // Method to update UI with CurrentAddressData
     private void updateUIWithCurrentData(CurrentAddressData currentAddressData) {
         if (currentAddressData != null) {
-            propertyOwnerEditText.setText(currentAddressData.getPropertyOwner());
-            propertyCategoryEditText.setText(currentAddressData.getPropertyCategory());
-            typesOfCategoryEditText.setText(currentAddressData.getTypesOfCategory());
-            occupationStatusEditText.setText(currentAddressData.getOccupationStatus());
-            propertyTitleEditText.setText(currentAddressData.getPropertyTitle());
-            flatNumberEditText.setText(currentAddressData.getHouseNumber());
-            plotNumberEditText.setText(currentAddressData.getPlotNumber());
-            localityEditText.setText(currentAddressData.getLocality());
-            villageEditText.setText(currentAddressData.getVillage());
+            addressLine1EditText.setText(currentAddressData.getAddressLine1());
+            addressLine2EditText.setText(currentAddressData.getAddressLine2());
+            addressLine3EditText.setText(currentAddressData.getAddressLine3());
             stateEditText.setText(currentAddressData.getState());
             districtEditText.setText(currentAddressData.getDistrict());
             cityEditText.setText(currentAddressData.getCity());
             talukaEditText.setText(currentAddressData.getTaluka());
             pinCodeEditText.setText(currentAddressData.getPinCode());
             landmarkEditText.setText(currentAddressData.getLandmark());
-            propertyValueEditText.setText(currentAddressData.getPropertyValue());
+            stabilityAtResidenceEditText.setText(currentAddressData.getStabilityAtResidence());
+            distanceFromBranchEditText.setText(currentAddressData.getDistanceFromBranch());
+            residenceStateSpinner.setSelection(((ArrayAdapter<String>) residenceStateSpinner.getAdapter()).getPosition(currentAddressData.getResidenceState()));
+            residenceTypeSpinner.setSelection(((ArrayAdapter<String>) residenceTypeSpinner.getAdapter()).getPosition(currentAddressData.getResidenceType()));
 
             // Make EditText fields non-editable
             makeFieldsNonEditable();
@@ -152,41 +403,18 @@ public class PermanentFragment extends Fragment {
     }
 
     private void makeFieldsNonEditable() {
-        propertyOwnerEditText.setEnabled(false);
-        propertyOwnerEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        propertyOwnerEditText.setTextColor(getResources().getColor(R.color.black));
 
-        propertyCategoryEditText.setEnabled(false);
-        propertyCategoryEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        propertyCategoryEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine1EditText.setEnabled(false);
+        addressLine1EditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        addressLine1EditText.setTextColor(getResources().getColor(R.color.black));
 
-        typesOfCategoryEditText.setEnabled(false);
-        typesOfCategoryEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        typesOfCategoryEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine2EditText.setEnabled(false);
+        addressLine2EditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        addressLine2EditText.setTextColor(getResources().getColor(R.color.black));
 
-        occupationStatusEditText.setEnabled(false);
-        occupationStatusEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        occupationStatusEditText.setTextColor(getResources().getColor(R.color.black));
-
-        propertyTitleEditText.setEnabled(false);
-        propertyTitleEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        propertyTitleEditText.setTextColor(getResources().getColor(R.color.black));
-
-        flatNumberEditText.setEnabled(false);
-        flatNumberEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        flatNumberEditText.setTextColor(getResources().getColor(R.color.black));
-
-        plotNumberEditText.setEnabled(false);
-        plotNumberEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        plotNumberEditText.setTextColor(getResources().getColor(R.color.black));
-
-        localityEditText.setEnabled(false);
-        localityEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        localityEditText.setTextColor(getResources().getColor(R.color.black));
-
-        villageEditText.setEnabled(false);
-        villageEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        villageEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine3EditText.setEnabled(false);
+        addressLine3EditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        addressLine3EditText.setTextColor(getResources().getColor(R.color.black));
 
         stateEditText.setEnabled(false);
         stateEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
@@ -212,56 +440,38 @@ public class PermanentFragment extends Fragment {
         landmarkEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
         landmarkEditText.setTextColor(getResources().getColor(R.color.black));
 
-        propertyValueEditText.setEnabled(false);
-        propertyValueEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
-        propertyValueEditText.setTextColor(getResources().getColor(R.color.black));
+        stabilityAtResidenceEditText.setEnabled(false);
+        stabilityAtResidenceEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        stabilityAtResidenceEditText.setTextColor(getResources().getColor(R.color.black));
+
+        distanceFromBranchEditText.setEnabled(false);
+        distanceFromBranchEditText.setBackgroundResource(R.drawable.edit_text_border_fixed);
+        distanceFromBranchEditText.setTextColor(getResources().getColor(R.color.black));
+
+        residenceStateSpinner.setEnabled(false);
+//        residenceStateSpinner.setBackgroundResource(R.drawable.spinner_border_fixed);
+
+        residenceTypeSpinner.setEnabled(false);
+//        residenceTypeSpinner.setBackgroundResource(R.drawable.spinner_border_fixed);
+
     }
 
     private void clearAndEnableFields() {
-        propertyOwnerEditText.setText("");
-        propertyOwnerEditText.setEnabled(true);
-        propertyOwnerEditText.setBackgroundResource(R.drawable.edit_text_border);
-        propertyOwnerEditText.setTextColor(getResources().getColor(R.color.black));
 
-        propertyCategoryEditText.setText("");
-        propertyCategoryEditText.setEnabled(true);
-        propertyCategoryEditText.setBackgroundResource(R.drawable.edit_text_border);
-        propertyCategoryEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine1EditText.setText("");
+        addressLine1EditText.setEnabled(true);
+        addressLine1EditText.setBackgroundResource(R.drawable.edit_text_border);
+        addressLine1EditText.setTextColor(getResources().getColor(R.color.black));
 
-        typesOfCategoryEditText.setText("");
-        typesOfCategoryEditText.setEnabled(true);
-        typesOfCategoryEditText.setBackgroundResource(R.drawable.edit_text_border);
-        typesOfCategoryEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine2EditText.setText("");
+        addressLine2EditText.setEnabled(true);
+        addressLine2EditText.setBackgroundResource(R.drawable.edit_text_border);
+        addressLine2EditText.setTextColor(getResources().getColor(R.color.black));
 
-        occupationStatusEditText.setText("");
-        occupationStatusEditText.setEnabled(true);
-        occupationStatusEditText.setBackgroundResource(R.drawable.edit_text_border);
-        occupationStatusEditText.setTextColor(getResources().getColor(R.color.black));
-
-        propertyTitleEditText.setText("");
-        propertyTitleEditText.setEnabled(true);
-        propertyTitleEditText.setBackgroundResource(R.drawable.edit_text_border);
-        propertyTitleEditText.setTextColor(getResources().getColor(R.color.black));
-
-        flatNumberEditText.setText("");
-        flatNumberEditText.setEnabled(true);
-        flatNumberEditText.setBackgroundResource(R.drawable.edit_text_border);
-        flatNumberEditText.setTextColor(getResources().getColor(R.color.black));
-
-        plotNumberEditText.setText("");
-        plotNumberEditText.setEnabled(true);
-        plotNumberEditText.setBackgroundResource(R.drawable.edit_text_border);
-        plotNumberEditText.setTextColor(getResources().getColor(R.color.black));
-
-        localityEditText.setText("");
-        localityEditText.setEnabled(true);
-        localityEditText.setBackgroundResource(R.drawable.edit_text_border);
-        localityEditText.setTextColor(getResources().getColor(R.color.black));
-
-        villageEditText.setText("");
-        villageEditText.setEnabled(true);
-        villageEditText.setBackgroundResource(R.drawable.edit_text_border);
-        villageEditText.setTextColor(getResources().getColor(R.color.black));
+        addressLine3EditText.setText("");
+        addressLine3EditText.setEnabled(true);
+        addressLine3EditText.setBackgroundResource(R.drawable.edit_text_border);
+        addressLine3EditText.setTextColor(getResources().getColor(R.color.black));
 
         stateEditText.setText("");
         stateEditText.setEnabled(true);
@@ -293,9 +503,20 @@ public class PermanentFragment extends Fragment {
         landmarkEditText.setBackgroundResource(R.drawable.edit_text_border);
         landmarkEditText.setTextColor(getResources().getColor(R.color.black));
 
-        propertyValueEditText.setText("");
-        propertyValueEditText.setEnabled(true);
-        propertyValueEditText.setBackgroundResource(R.drawable.edit_text_border);
-        propertyValueEditText.setTextColor(getResources().getColor(R.color.black));
+        stabilityAtResidenceEditText.setText("");
+        stabilityAtResidenceEditText.setEnabled(true);
+        stabilityAtResidenceEditText.setBackgroundResource(R.drawable.edit_text_border);
+        stabilityAtResidenceEditText.setTextColor(getResources().getColor(R.color.black));
+
+        distanceFromBranchEditText.setText("");
+        distanceFromBranchEditText.setEnabled(true);
+        distanceFromBranchEditText.setBackgroundResource(R.drawable.edit_text_border);
+        distanceFromBranchEditText.setTextColor(getResources().getColor(R.color.black));
+
+        residenceStateSpinner.setEnabled(true);
+//        residenceStateSpinner.setBackgroundResource(R.drawable.spinner_border);
+        residenceTypeSpinner.setEnabled(true);
+//        residenceTypeSpinner.setBackgroundResource(R.drawable.spinner_border);
+
     }
 }

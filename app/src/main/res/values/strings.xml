@@ -8,6 +8,10 @@
     <string name="new_registration">New Registration</string>
     <string name="stats_and_graph">Stats and Graph</string>
 
+    <string-array name = "yes_no">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 
     <string-array name="addDocs">
         <item>Select more documents</item>
@@ -93,8 +97,23 @@
     </string-array>
 
     <string-array name="customer_segment">
-        <item>Yes</item>
-        <item>No</item>
+        <item>Self-Employed Professional</item>
+    </string-array>
+
+    <string-array name="education_qualification">
+        <item>Uneducated</item>
+        <item>Below 10th</item>
+        <item>Secondary</item>
+        <item>M. Tech</item>
+        <item>Senior Secondary</item>
+        <item>ITI Technical Degree</item>
+        <item>Graduation</item>
+        <item>Post Graduation</item>
+    </string-array>
+
+    <string-array name="application_roles">
+        <item>Applicant</item>
+        <item>Co-Applicant</item>
     </string-array>
 
     <string-array name="residenceOwner">
@@ -105,6 +124,35 @@
     <string-array name="agricultureLandOwner">
         <item>Yes</item>
         <item>No</item>
+    </string-array>
+
+    <string-array name="residence_state">
+        <item>Owned</item>
+        <item>Rented</item>
+    <item>Parented</item>
+    <item>Spouse Owned</item>
+    <item>Company</item>
+    <item>Govt Provided</item>
+    </string-array>
+
+    <string-array name="residence_type">
+        <item>Independent House</item>
+        <item>Flat</item>
+        <item>Slum</item>
+        <item>Chawl</item>
+        <item>Kucha House</item>
+        <item>Others</item>
+
+    </string-array>
+
+    <string-array name="collateral_type">
+        <item>Property</item>
+        <item>Automobile</item>
+        <item>Deposit</item>
+        <item>Financial Security</item>
+        <item>Plant and Machinery</item>
+        <item>Insurance</item>
+        <item>Gold</item>
     </string-array>
 
     <!-- Strings used for fragments for navigation -->

@@ -3,12 +3,11 @@ package com.example.bankapp;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -44,11 +42,11 @@ import org.json.JSONObject;
 
 public class NewRegistrationActivity extends AppCompatActivity {
 
+    private static final String TAG = "NewRegistrationActivity";
     EditText firstName, lastName, phoneNumber, branchName, loanAmount;
     Spinner caseTag, productType, customerType;
     ImageView homeButton;
     TextView date, agentCode, branchCode, timeTextView;
-
 
     SharedPreferences sharedPreferences;
 
@@ -57,8 +55,9 @@ public class NewRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_registration);
 
-        String userID = getIntent().getStringExtra("userId");
+        Log.d(TAG, "onCreate: Starting NewRegistrationActivity");
 
+        String userID = getIntent().getStringExtra("userId");
 
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
@@ -69,11 +68,10 @@ public class NewRegistrationActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.time);
         homeButton = findViewById(R.id.homeButton);
 
-
         // Define a DecimalFormat to format the number
         DecimalFormat formatter = new DecimalFormat("#,##,##0");
 
-// Set text change listener to format the number as user types
+        // Set text change listener to format the number as user types
         loanAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -90,7 +88,7 @@ public class NewRegistrationActivity extends AppCompatActivity {
                 loanAmount.removeTextChangedListener(this);
                 try {
                     String str = s.toString().replaceAll(",", "");
-                    if(str.length() > 15) {
+                    if (str.length() > 15) {
                         // If the length exceeds 15, trim it
                         str = str.substring(0, 15);
                     }
@@ -101,12 +99,11 @@ public class NewRegistrationActivity extends AppCompatActivity {
                     loanAmount.setText(formattedNumber);
                     loanAmount.setSelection(formattedNumber.length());
                 } catch (NumberFormatException e) {
-                    // Not a valid number
+                    Log.e(TAG, "afterTextChanged: Invalid number format", e);
                 }
                 loanAmount.addTextChangedListener(this);
             }
         });
-//        agentCode.setText(userID);
 
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +149,6 @@ public class NewRegistrationActivity extends AppCompatActivity {
         };
         caseTagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         caseTagSpinner.setAdapter(caseTagAdapter);
-
 
         Spinner productSpinner = findViewById(R.id.productType);
         ArrayAdapter<String> productAdapter = new ArrayAdapter<String>(this, R.layout.sample_spinner_item, getResources().getStringArray(R.array.product_types_array)) {
@@ -208,10 +204,14 @@ public class NewRegistrationActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Submit button clicked");
                 if (validateFields()) {
                     // Disable the button to prevent multiple submissions
                     submitButton.setEnabled(false);
                     makeHttpRequest(accessToken, submitButton);
+                } else {
+                    Log.d(TAG, "Validation failed");
+                    Toast.makeText(NewRegistrationActivity.this, "Validation failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -226,54 +226,68 @@ public class NewRegistrationActivity extends AppCompatActivity {
 
         // Set the current date in the TextView
         date.setText(currentDate);
+        Log.d(TAG, "Current date set: " + currentDate);
     }
-    private void autoTime(){
+
+    private void autoTime() {
         Calendar calendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         String currentTime = timeFormat.format(calendar.getTime());
         timeTextView.setText(currentTime);
+        Log.d(TAG, "Current time set: " + currentTime);
     }
-
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(firstName.getText().toString().trim())) {
             firstName.setError("Please enter first name");
+            Log.d(TAG, "Validation failed: First name is empty");
+            Toast.makeText(this, "Please enter first name", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (TextUtils.isEmpty(lastName.getText().toString().trim())) {
             lastName.setError("Please enter last name");
+            Log.d(TAG, "Validation failed: Last name is empty");
+            Toast.makeText(this, "Please enter last name", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (phoneNumber.getText().toString().trim().length() < 10) {
             phoneNumber.setError("Please enter a valid phone number");
+            Log.d(TAG, "Validation failed: Invalid phone number");
+            Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if(TextUtils.isEmpty(loanAmount.getText().toString().trim())){
+        if (TextUtils.isEmpty(loanAmount.getText().toString().trim())) {
             loanAmount.setError("Please enter loan amount");
+            Log.d(TAG, "Validation failed: Loan amount is empty");
+            Toast.makeText(this, "Please enter loan amount", Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        Log.d(TAG, "Validation passed");
         return true;
     }
 
     private void makeHttpRequest(String accessToken, final Button submitButton) {
         String url = BASE_URL + "api/v1/leads";
+        Log.d(TAG, "HTTP Request URL: " + url);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String phoneNumberText = phoneNumber.getText().toString().trim();
-                phoneNumberText = phoneNumberText.substring(4);
+                if (phoneNumberText.length() > 4) {
+                    phoneNumberText = phoneNumberText.substring(4);
+                }
 
                 String loanAmountText = loanAmount.getText().toString().replaceAll(",", "");
 
                 FormBody.Builder formBodyBuilder = new FormBody.Builder()
                         .add("first_name", firstName.getText().toString().trim())
                         .add("last_name", lastName.getText().toString().trim())
-                        .add("mobile_number", phoneNumber.getText().toString())
+                        .add("mobile_number", phoneNumber.getText().toString().trim())
                         .add("email", "")
                         .add("loan_amount", loanAmountText)
                         .add("agent_code", "DKFE001")
@@ -296,47 +310,79 @@ public class NewRegistrationActivity extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
                 Call call = client.newCall(request);
 
-                Response response = null;
                 try {
-                    response = call.execute();
+                    Response response = call.execute();
                     String serverResponse = response.body().string();
-                    // Parse the JSON response
-                    JSONObject jsonResponse = new JSONObject(serverResponse);
-                    boolean isError = jsonResponse.getBoolean("error");
-                    if (!isError) {
-                        // Get the lead data
-                        JSONObject leadData = jsonResponse.getJSONObject("data");
-                        String leadId = leadData.getString("lead_id");
+                    Log.d(TAG, "Server response: " + serverResponse);
 
-                        // Pass lead ID to KycActivity1
-                        Intent mainIntent = new Intent(NewRegistrationActivity.this, KycActivity1.class);
-                        mainIntent.putExtra("firstName", firstName.getText().toString().trim());
-                        mainIntent.putExtra("lastName", lastName.getText().toString().trim());
-                        mainIntent.putExtra("phoneNumber", "+91 " + phoneNumber.getText().toString().trim());
-                        mainIntent.putExtra("leadId", leadId); // Pass lead ID as extra
+                    // Check the HTTP status code
+                    if (!response.isSuccessful()) {
+                        Log.e(TAG, "HTTP error: " + response.code());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast("Lead created successfully"); // Fixed toast message
+                                showToast("Server error: " + response.code());
+                                submitButton.setEnabled(true);
                             }
                         });
-                        startActivity(mainIntent);
-                        finish();
-                    } else {
-                        // Enable the button again
+                        return;
+                    }
+
+                    // Attempt to parse the response as JSON
+                    try {
+                        JSONObject jsonResponse = new JSONObject(serverResponse);
+                        boolean isError = jsonResponse.getBoolean("error");
+
+                        if (!isError) {
+                            // Get the lead data
+                            JSONObject leadData = jsonResponse.getJSONObject("data");
+                            String leadId = leadData.getString("lead_id");
+
+                            // Pass lead ID to KycActivity1
+                            Intent mainIntent = new Intent(NewRegistrationActivity.this, KycActivity1.class);
+                            mainIntent.putExtra("firstName", firstName.getText().toString().trim());
+                            mainIntent.putExtra("lastName", lastName.getText().toString().trim());
+                            mainIntent.putExtra("phoneNumber", "+91 " + phoneNumber.getText().toString().trim());
+                            mainIntent.putExtra("leadId", leadId); // Pass lead ID as extra
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast("Lead created successfully");
+                                    Log.d(TAG, "Lead created successfully, leadId: " + leadId);
+                                    startActivity(mainIntent);
+                                    finish();
+                                }
+                            });
+                        } else {
+                            String errorMessage = jsonResponse.getString("message");
+                            Log.d(TAG, "Error in response: " + errorMessage);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast("Error: " + errorMessage);
+                                    submitButton.setEnabled(true);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        // Handle the case where the response is not a valid JSON
+                        Log.e(TAG, "Failed to parse JSON response", e);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                showToast("Invalid server response");
                                 submitButton.setEnabled(true);
                             }
                         });
                     }
-                } catch (IOException | JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
-                    // Enable the button again in case of an error
+                    Log.e(TAG, "Exception: ", e);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            showToast("Failed to create lead");
                             submitButton.setEnabled(true);
                         }
                     });
@@ -344,8 +390,6 @@ public class NewRegistrationActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

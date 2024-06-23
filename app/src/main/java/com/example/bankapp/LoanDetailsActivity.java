@@ -507,7 +507,6 @@ public class LoanDetailsActivity extends AppCompatActivity {
                 }
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "run: Exception occurred", e);
-                runOnUiThread(() -> showToast("Error occurred while checking data: " + e.getMessage()));
             }
         }).start();
     }
