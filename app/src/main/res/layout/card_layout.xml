@@ -39,24 +39,23 @@
 
     <!-- Applicant Name -->
     <TextView
-        android:id="@+id/customer_name_text"
+        android:id="@+id/ro_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="John Doe"
         android:textColor="@color/primary"
         android:textSize="16sp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <!-- Customer Type -->
     <TextView
-        android:id="@+id/customer_type_text"
+        android:id="@+id/creation_date_time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Individual"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <!-- Vertical Space -->
     <View

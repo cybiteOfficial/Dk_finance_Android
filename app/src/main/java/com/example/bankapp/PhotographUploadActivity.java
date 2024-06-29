@@ -1,12 +1,11 @@
 package com.example.bankapp;
 
-import static com.example.bankapp.RetrofitClient.getClient;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,19 +23,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.bankapp.environment.BaseUrl;
-import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 
 public class PhotographUploadActivity extends AppCompatActivity {
@@ -49,7 +48,6 @@ public class PhotographUploadActivity extends AppCompatActivity {
     private ImageView uploadImage;
     private ImageView homeButton;
     private SharedPreferences sharedPreferences;
-    private Uri photoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +63,6 @@ public class PhotographUploadActivity extends AppCompatActivity {
         // Get the application ID from the previous activity intent
         Intent intent = getIntent();
         String application_id = intent.getStringExtra("application_id");
-
-        TextView applicationIdTextView = findViewById(R.id.applicationID);
-        applicationIdTextView.setText(application_id);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +89,9 @@ public class PhotographUploadActivity extends AppCompatActivity {
                 checkPermissionsAndOpenFileChooser();
             }
         });
+
+        // Fetch and display the existing photo
+        fetchAndDisplayPhoto(accessToken, application_id);
     }
 
     private void checkPermissionsAndOpenFileChooser() {
@@ -158,9 +156,6 @@ public class PhotographUploadActivity extends AppCompatActivity {
     }
 
     private void uploadDocumentsUsingRetrofit(String accessToken, final Button submitButton, String application_id) {
-        Retrofit retrofit = getClient(BaseUrl.BASE_URL, accessToken);
-        ApiService apiService = retrofit.create(ApiService.class);
-
         // Get the image from the image view
         Bitmap bitmap = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
         File file = new File(getCacheDir(), "img_" + application_id + ".jpg");
@@ -179,36 +174,116 @@ public class PhotographUploadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Create a request body for the image file
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        // Create OkHttp client and request body
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file))
+                .addFormDataPart("documentType", "photos")
+                .addFormDataPart("application_id", application_id)
+                .build();
 
-        // Create a request body for the document type
-        RequestBody documentType = RequestBody.create(MediaType.parse("text/plain"), "photos");
+        // Create the request
+        Request request = new Request.Builder()
+                .url(BaseUrl.BASE_URL + "/upload/photo") // Replace with your endpoint
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .post(requestBody)
+                .build();
 
-        // Call the uploadDocuments_photo method in the ApiService interface
-        Call<Void> call = apiService.uploadDocuments_photo(documentType, body, RequestBody.create(MediaType.parse("text/plain"), application_id));
-
-        // Enqueue the call
-        call.enqueue(new Callback<Void>() {
+        // Execute the request asynchronously
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(PhotographUploadActivity.this, "Photograph uploaded successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(PhotographUploadActivity.this, "Failed to upload photograph", Toast.LENGTH_SHORT).show();
-                }
-                submitButton.setEnabled(true);
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "Failed to upload photograph: " + e.getMessage());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PhotographUploadActivity.this, "Failed to upload photograph", Toast.LENGTH_SHORT).show();
+                        submitButton.setEnabled(true);
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Failed to upload photograph: " + t.getMessage());
-                Toast.makeText(PhotographUploadActivity.this, "Failed to upload photograph", Toast.LENGTH_SHORT).show();
-                submitButton.setEnabled(true);
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(PhotographUploadActivity.this, "Photograph uploaded successfully", Toast.LENGTH_SHORT).show();
+                            try {
+                                Log.d(TAG, "Upload Response: " + response.body().string());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            submitButton.setEnabled(true);
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(PhotographUploadActivity.this, "Failed to upload photograph", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "Upload Failed: " + response.code() + " " + response.message());
+                            submitButton.setEnabled(true);
+                        }
+                    });
+                }
             }
         });
     }
+
+
+    private void fetchAndDisplayPhoto(String accessToken, String application_id) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Replace with your API endpoint and parameter handling
+        String photoUrl = BaseUrl.BASE_URL + "/photos/" + application_id;
+
+        Request request = new Request.Builder()
+                .url(photoUrl)
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PhotographUploadActivity.this, "Failed to fetch photo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(PhotographUploadActivity.this, "Failed to fetch photo, code: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
+                }
+
+                // Read the response body and convert it to a Bitmap
+                byte[] imageData = response.body().bytes();
+                final Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+
+                // Update the ImageView on the UI thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadImage.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        });
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

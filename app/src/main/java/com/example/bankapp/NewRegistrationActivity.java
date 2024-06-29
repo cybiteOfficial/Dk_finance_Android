@@ -338,6 +338,9 @@ public class NewRegistrationActivity extends AppCompatActivity {
                             JSONObject leadData = jsonResponse.getJSONObject("data");
                             String leadId = leadData.getString("lead_id");
 
+                            // log the lead ID
+                            Log.d(TAG, "Lead ID: " + leadId);
+
                             // Pass lead ID to KycActivity1
                             Intent mainIntent = new Intent(NewRegistrationActivity.this, KycActivity1.class);
                             mainIntent.putExtra("firstName", firstName.getText().toString().trim());

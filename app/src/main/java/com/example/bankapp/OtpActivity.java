@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +80,7 @@ public class OtpActivity extends AppCompatActivity {
                 if (verifyOTP()) {
                     Intent intent = new Intent(OtpActivity.this, payment.class);
                     intent.putExtra("leadId", leadID);
+//                    Log.d("leadId", leadID);
                     startActivity(intent);
                     finish();
                 } else {

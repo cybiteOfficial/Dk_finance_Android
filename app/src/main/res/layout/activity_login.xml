@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="280sp"
             android:layout_height="90sp"
-            android:src="@drawable/logo_login"
+            android:src="@drawable/new_logo"
             android:layout_marginTop="10dp" />
 
     </LinearLayout>
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="Version 2.1"
+                android:text="Version 2.2"
                 android:textColor="@color/primary" />
 
             <ProgressBar

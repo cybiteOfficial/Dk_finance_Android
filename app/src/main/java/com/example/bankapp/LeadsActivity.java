@@ -188,7 +188,7 @@ public class LeadsActivity extends AppCompatActivity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (int i = leads.length - 1; i >= 0; i--) {
+        for (int i = 0; i < leads.length; i++) {
             LeadData lead = leads[i];
             View leadItem = inflater.inflate(R.layout.lead_item_layout, leadsContainer, false); // Move the creation inside the loop
             TextView leadNumberTextView = leadItem.findViewById(R.id.lead_number);

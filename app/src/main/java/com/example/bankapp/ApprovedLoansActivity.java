@@ -1,11 +1,15 @@
 package com.example.bankapp;
 
+// line no 203 -> cardView onclick listener
+
 import static com.example.bankapp.environment.BaseUrl.BASE_URL;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,11 +20,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +39,10 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ApprovedLoansActivity extends AppCompatActivity {
 
@@ -164,6 +176,10 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                             TextView noApplicantsText = findViewById(R.id.no_applications_text);
                             noApplicantsText.setVisibility(View.VISIBLE);
                         } else {
+                            // log applicants data
+                            Log.d("Applicants", applicants.toString());
+                            // log hello
+                            Log.d("Hello", "Hello");
                             displayApplicants(applicants);
                         }
                         isLoading = false; // Reset loading flag after fetching data
@@ -183,12 +199,14 @@ public class ApprovedLoansActivity extends AppCompatActivity {
         for (int i = 0; i < applicants.size(); i++) {
             ApplicantDataApproved applicant = applicants.get(i);
 
-            if (!Objects.equals(applicant.getStatus(), "md")) {
+            if (!Objects.equals(applicant.getStatus(), "sanctioned")) {
                 View cardView = getLayoutInflater().inflate(R.layout.card_layout, cardContainer, false);
 
                 // Find views in the card layout
                 TextView applicationIdTextView = cardView.findViewById(R.id.application_id_text);
                 TextView loanStatusTextView = cardView.findViewById(R.id.loan_status_text);
+                TextView roNameTextView = cardView.findViewById(R.id.ro_name_text);
+                TextView creationDateTimeTextView = cardView.findViewById(R.id.creation_date_time_text);
 
                 // Set applicant data to views
                 if (applicationIdTextView != null) {
@@ -198,16 +216,26 @@ public class ApprovedLoansActivity extends AppCompatActivity {
                     loanStatusTextView.setText("Status: " + applicant.getStatus());
                     loanStatusTextView.setBackgroundResource(R.drawable.status_completed_background);
                 }
+                if (roNameTextView != null) {
+                    roNameTextView.setText("Lead ID: " + applicant.getLead());
+                }
+
+                if (creationDateTimeTextView != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        creationDateTimeTextView.setText("Created at: " + formatTime(applicant.getCreated_at()) + " on " + formatDate(applicant.getCreated_at()));
+                    }
+                }
+
 
                 // Add click listener to the card view
-                cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ApprovedLoansActivity.this, DashboardInsideActivity.class);
-                        intent.putExtra("application_id", applicant.getApplication_id());
-                        startActivity(intent);
-                    }
-                });
+//                cardView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(ApprovedLoansActivity.this, DashboardInsideActivity.class);
+//                        intent.putExtra("application_id", applicant.getApplication_id());
+//                        startActivity(intent);
+//                    }
+//                });
 
                 cardContainer.addView(cardView);
             }
@@ -244,6 +272,45 @@ public class ApprovedLoansActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String formatDate(String timestamp) {
+        try {
+            ZonedDateTime zonedDateTime = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                zonedDateTime = ZonedDateTime.parse(timestamp);
+            }
+            DateTimeFormatter dateFormatter = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            }
+            assert zonedDateTime != null;
+            return zonedDateTime.format(dateFormatter);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String formatTime(String timestamp) {
+        try {
+            ZonedDateTime zonedDateTime = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                zonedDateTime = ZonedDateTime.parse(timestamp);
+            }
+            DateTimeFormatter timeFormatter = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+            }
+            assert zonedDateTime != null;
+            return zonedDateTime.format(timeFormatter);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 
 class ApplicantResponseApproved {
@@ -268,6 +335,18 @@ class ApplicantResponseApproved {
         return results;
     }
 }
+class CreatedBy {
+    private String ro_name;
+    private String employee_id;
+
+    public String getRo_name() {
+        return ro_name;
+    }
+
+    public String getEmployee_id() {
+        return employee_id;
+    }
+}
 
 class ApplicantDataApproved {
     private String uuid;
@@ -277,6 +356,7 @@ class ApplicantDataApproved {
     private String status;
     private String lead;
     private String paymentedetails;
+    private CreatedBy created_by;  // Add this line
 
     public String getUuid() {
         return uuid;
@@ -305,4 +385,13 @@ class ApplicantDataApproved {
     public String getPaymentedetails() {
         return paymentedetails;
     }
+
+    public CreatedBy getCreated_by() {
+        return created_by;
+    }
+
+    public String getRo_name() {  // Add this method
+        return created_by != null ? created_by.getRo_name() : null;
+    }
 }
+

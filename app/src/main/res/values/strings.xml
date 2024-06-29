@@ -204,5 +204,6 @@
     <string name="charges_type_rcu_charges">Charges Type (Rcu Charges)</string>
     <string name="charges_type_stamping_expenses">Charges Type (Stamping expenses)</string>
     <string name="loan_details">Loan Details</string>
+    <string name="no_applications_available">No applications available</string>
 
 </resources>

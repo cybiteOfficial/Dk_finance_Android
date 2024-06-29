@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 public interface ApiService {
@@ -78,5 +79,8 @@ public interface ApiService {
 
     @GET
     Call<JsonObject> getCollateralDetails(@Url String url);
+
+    @GET("api/v1/upload_document")
+    Call<PhotoResponse> getPhoto(@Query("application_id") String applicationId);
 
 }

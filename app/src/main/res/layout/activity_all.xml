@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:fitsSystemWindows="true">
 
@@ -54,7 +55,7 @@
         android:textColor="@color/primary"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="No applications available"
+        android:text="@string/no_applications_available"
         android:visibility="gone" />
 
     <ScrollView
@@ -62,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top_section"
+        android:layout_above="@id/load_more_layout"
         android:layout_marginTop="16dp"
         android:padding="16dp"
         android:scrollbars="none">
@@ -77,4 +79,29 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <!-- Load More Button -->
+    <LinearLayout
+        android:id="@+id/load_more_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/load_more_btn"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/primary"
+            android:text="LOAD MORE"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="center"
+            android:onClick="loadMoreData"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

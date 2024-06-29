@@ -85,6 +85,7 @@ public class KycActivity2 extends AppCompatActivity {
 
         final String mobNo = getIntent().getStringExtra("phoneNumber");
         final String kyc_id = getIntent().getStringExtra("kyc_id");
+        final String leadID = getIntent().getStringExtra("leadId");
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -142,7 +143,7 @@ public class KycActivity2 extends AppCompatActivity {
                 }
                 if(validateAdharNumber() && !adharDocsEditText.getText().toString().isEmpty()){
                     if(validateAllDocsUploaded()){
-                        uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id);
+                        uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id, leadID);
                     }
                     else {
                         Toast.makeText(KycActivity2.this, "Please upload all documents", Toast.LENGTH_SHORT).show();
@@ -583,7 +584,7 @@ public class KycActivity2 extends AppCompatActivity {
 
 
     //////////////////////////////
-    private void uploadDocumentsUsingRetrofit(String accessToken, String phoneNumber, String kyc_id) {
+    private void uploadDocumentsUsingRetrofit(String accessToken, String phoneNumber, String kyc_id, String leadId) {
         Retrofit retrofit = getClient(BaseUrl.BASE_URL, accessToken);
         ApiService apiService = retrofit.create(ApiService.class);
 
@@ -693,7 +694,7 @@ public class KycActivity2 extends AppCompatActivity {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
-                    makeHttpRequest2(accessToken, phoneNumber, kyc_id);
+                    makeHttpRequest2(accessToken, phoneNumber, kyc_id, leadId);
                     Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
@@ -722,7 +723,7 @@ public class KycActivity2 extends AppCompatActivity {
     }
 
     //////////////////////////////
-    private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id) {
+    private void makeHttpRequest1(String accessToken, String phoneNumber, String kyc_id, String leadId) {
         String url1 = BaseUrl.BASE_URL + "api/v1/upload_document";
         String uuid = sharedPreferences.getString("uuid", "");
 
@@ -754,7 +755,7 @@ public class KycActivity2 extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (serverResponse.contains("false")) {
-                                makeHttpRequest2(accessToken, phoneNumber, kyc_id);
+                                makeHttpRequest2(accessToken, phoneNumber, kyc_id, leadId);
                                 Toast.makeText(KycActivity2.this, "Documents Uploaded Successfully", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(KycActivity2.this, "Upload Failed 1", Toast.LENGTH_SHORT).show();
@@ -768,7 +769,7 @@ public class KycActivity2 extends AppCompatActivity {
         }).start();
     }
 
-    private void makeHttpRequest2(String accessToken, String phoneNumber, String kyc_id) {
+    private void makeHttpRequest2(String accessToken, String phoneNumber, String kyc_id, String leadId) {
         String url2 = BaseUrl.BASE_URL + "api/v1/kyc?kyc_id=" + kyc_id;
 
         new Thread(new Runnable() {
@@ -776,6 +777,7 @@ public class KycActivity2 extends AppCompatActivity {
             public void run() {
                 RequestBody formBody = new FormBody.Builder()
                         .add("kyc_document_verified", "true")
+                        .add("lead_id", leadId)
                         .build();
 
                 Request request = new Request.Builder()
@@ -796,6 +798,7 @@ public class KycActivity2 extends AppCompatActivity {
                             if (serverResponse2.contains("Successfully updated.")) {
                                 Intent mainIntent = new Intent(KycActivity2.this, OtpActivity.class);
                                 mainIntent.putExtra("phoneNumber", phoneNumber);
+                                mainIntent.putExtra("leadId", leadId);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
