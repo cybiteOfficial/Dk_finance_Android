@@ -46,6 +46,7 @@ public class payment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final String leadID = getIntent().getStringExtra("leadId");
+        final String leadUUID = getIntent().getStringExtra("leadUUID");
 
         setContentView(R.layout.activity_payment);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -79,7 +80,7 @@ public class payment extends AppCompatActivity {
                 sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String accessToken = sharedPreferences.getString("accessToken", "");
 
-                makeHttpRequest(accessToken, leadID);
+                makeHttpRequest(accessToken, leadID, leadUUID);
 //                String base64Body = encodeDataToString(new JSONObject(data));
 //                try {
 //                    B2BPGRequest b2BPGRequest = createB2BPGRequest(base64Body, "/pg/v1/pay");
@@ -91,14 +92,15 @@ public class payment extends AppCompatActivity {
         });
     }
 
-    private void makeHttpRequest(String accessToken, String leadID) {
-        String url = BASE_URL + "api/v1/create_app_id";
+    private void makeHttpRequest(String accessToken, String leadID, String leadUUID) {
+        String url = BASE_URL + "api/v1/create_app_id?lead_id=" + leadID;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                RequestBody formBody = new FormBody.Builder().build();
+                RequestBody formBody = new FormBody.Builder()
+                        .build();
 
                 Request request = new Request.Builder()
                         .url(url)

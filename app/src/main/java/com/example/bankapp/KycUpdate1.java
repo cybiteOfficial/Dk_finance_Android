@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +41,12 @@ public class KycUpdate1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc_1);
+
+        // fetch leadUUID from intent
+        String leadUUID = getIntent().getStringExtra("leadUUID");
+
+        // log the leadUUID
+        Log.d("KycUpdate1", "Lead UUID: " + leadUUID);
 
         // Retrieve the values from Intent
         String fName = getIntent().getStringExtra("firstName");
@@ -83,7 +90,7 @@ public class KycUpdate1 extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateFields()) {
                     submitButton.setEnabled(false);
-                    makeHttpRequest(accessToken, leadID, kyc_id, phone);
+                    makeHttpRequest(accessToken, leadID, kyc_id, phone, leadUUID);
                 }
             }
         });
@@ -142,7 +149,7 @@ public class KycUpdate1 extends AppCompatActivity {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-    private void makeHttpRequest(String accessToken, final String leadID, String kyc_id, String phone) {
+    private void makeHttpRequest(String accessToken, final String leadID, String kyc_id, String phone, String leadUUID) {
 
         String url = BASE_URL + "api/v1/kyc?kyc_id=" + kyc_id;
 
@@ -155,7 +162,7 @@ public class KycUpdate1 extends AppCompatActivity {
                         .add("last_name", lastName.getText().toString().trim())
                         .add("mobile_number", phoneNumber.getText().toString().trim())
                         .add("email", emailId.getText().toString().trim())
-                        .add("lead_id", leadID)
+                        .add("lead_id", leadUUID)
                         .add("kyc_verified", "true")
                         .build();
 
@@ -183,6 +190,7 @@ public class KycUpdate1 extends AppCompatActivity {
 //                                mainIntent.putExtra("phoneNumber", );
                                 mainIntent.putExtra("leadId", leadID);
                                 mainIntent.putExtra("kyc_id", kyc_id);
+                                mainIntent.putExtra("leadUUID", leadUUID);
                                 mainIntent.putExtra("phoneNumber", phone);
                                 startActivity(mainIntent);
                                 finish();

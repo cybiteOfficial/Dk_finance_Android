@@ -33,6 +33,7 @@ public class OtpActivity extends AppCompatActivity {
 
         String phone = getIntent().getStringExtra("phoneNumber");
         final String leadID = getIntent().getStringExtra("leadId");
+        final String leadUUID = getIntent().getStringExtra("leadUUID");
 
         phoneNumber = findViewById(R.id.phoneNumber);
         phoneNumber.setText(phone);
@@ -80,6 +81,7 @@ public class OtpActivity extends AppCompatActivity {
                 if (verifyOTP()) {
                     Intent intent = new Intent(OtpActivity.this, payment.class);
                     intent.putExtra("leadId", leadID);
+                    intent.putExtra("leadUUID", leadUUID);
 //                    Log.d("leadId", leadID);
                     startActivity(intent);
                     finish();

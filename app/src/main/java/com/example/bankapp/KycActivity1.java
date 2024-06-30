@@ -38,7 +38,7 @@ public class KycActivity1 extends AppCompatActivity {
     Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
-    String kycId;
+    String kycId, leadUUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +70,9 @@ public class KycActivity1 extends AppCompatActivity {
 
         fetchKycId(accessToken, leadID, new KycIdCallback() {
             @Override
-            public void onKycIdFetched(String kycId) {
+            public void onKycIdFetched(String kycId, String leadUUID) {
                 KycActivity1.this.kycId = kycId; // Store kycId globally
+                KycActivity1.this.leadUUID = leadUUID;
             }
 
             @Override
@@ -145,8 +146,10 @@ public class KycActivity1 extends AppCompatActivity {
                             JSONArray KYCdata = jsonResponse.getJSONArray("data");
                             Log.d("array", KYCdata.toString());
                             String kycId = KYCdata.getJSONObject(0).getString("uuid");
+                            String leadUUID = KYCdata.getJSONObject(0).getString("lead_id");
                             Log.d("kycID", kycId);
-                            callback.onKycIdFetched(kycId);
+                            Log.d("leadUUID", leadUUID);
+                            callback.onKycIdFetched(kycId, leadUUID);
                         } else {
                             callback.onError(new Exception("Error occurred"));
                         }
@@ -194,7 +197,7 @@ public class KycActivity1 extends AppCompatActivity {
                 .add("last_name", lastName.getText().toString().trim())
                 .add("mobile_number", "+91" + phoneNumberText)
                 .add("email", emailId.getText().toString().trim())
-                .add("lead_id", leadID)
+                .add("lead_id", leadUUID)
                 .add("kyc_verified", "true")
                 .build();
 
@@ -226,6 +229,7 @@ public class KycActivity1 extends AppCompatActivity {
                                 mainIntent.putExtra("phoneNumber", phoneNumber.getText().toString());
                                 mainIntent.putExtra("leadId", leadID);
                                 mainIntent.putExtra("kyc_id", kycId);
+                                mainIntent.putExtra("leadUUID", leadUUID);
                                 startActivity(mainIntent);
                                 finish();
                             } else {
@@ -239,7 +243,7 @@ public class KycActivity1 extends AppCompatActivity {
     }
 
     interface KycIdCallback {
-        void onKycIdFetched(String kycId);
+        void onKycIdFetched(String kycId, String leadUUID);
         void onError(Throwable throwable);
     }
 }

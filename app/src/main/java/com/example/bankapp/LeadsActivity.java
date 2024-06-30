@@ -262,7 +262,7 @@ public class LeadsActivity extends AppCompatActivity {
         // Check if KYC is done for the lead
         checkKYCStatus(lead.getLead_id(), new KYCCheckListener() {
             @Override
-            public void onKYCStatusChecked(boolean isKYCDone, boolean isKyc1done, boolean isKyc2done, String UUID) {
+            public void onKYCStatusChecked(boolean isKYCDone, boolean isKyc1done, boolean isKyc2done, String UUID, String leadUUID) {
                 String myString = String.valueOf(isKyc1done);
                 Log.i("kyc1", myString);
 
@@ -288,6 +288,7 @@ public class LeadsActivity extends AppCompatActivity {
                                 intent.putExtra("phoneNumber", lead.getMobile_number());
                                 intent.putExtra("leadId", lead.getLead_id());
                                 intent.putExtra("kyc_id", UUID);
+                                intent.putExtra("leadUUID", leadUUID);
                                 intent.putExtra("accessToken", accessToken); // Pass accessToken to KYC activity
                                 startActivity(intent);
                                 finish();
@@ -301,6 +302,7 @@ public class LeadsActivity extends AppCompatActivity {
                                 intent.putExtra("accessToken", accessToken); // Pass accessToken to KYC activity
                                 intent.putExtra("kyc_id", UUID);
                                 intent.putExtra("phoneNumber", lead.getMobile_number());
+                                intent.putExtra("leadUUID", leadUUID);
                                 startActivity(intent);
                                 finish();
 
@@ -362,7 +364,7 @@ public class LeadsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // Notify listener with KYC not done
-                        listener.onKYCStatusChecked(true, false, false, null);
+                        listener.onKYCStatusChecked(true, false, false, null, null);
                     }
                 });
             }
@@ -376,6 +378,7 @@ public class LeadsActivity extends AppCompatActivity {
                     KYCResponse kycResponse = gson.fromJson(responseBody, KYCResponse.class);
                     int dataSize = kycResponse.getData() != null ? kycResponse.getData().length : 0;
                     String UUID = kycResponse.getData()[0].uuid;
+                    String leadUUId = kycResponse.getData()[0].lead_id;
                     // Check if KYC is successful
                     if (!kycResponse.isError() && (!kycResponse.getData()[0].kyc_verified  || !kycResponse.getData()[0].kyc_document_verified)){
                         // KYC is done
@@ -383,7 +386,7 @@ public class LeadsActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Notify listener with KYC done
-                                listener.onKYCStatusChecked(true,kycResponse.getData()[0].kyc_verified,kycResponse.getData()[0].kyc_document_verified, UUID);
+                                listener.onKYCStatusChecked(true,kycResponse.getData()[0].kyc_verified,kycResponse.getData()[0].kyc_document_verified, UUID, leadUUId);
 
                             }
                         });
@@ -393,7 +396,7 @@ public class LeadsActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Notify listener with KYC not done
-                                listener.onKYCStatusChecked(true, kycResponse.getData()[0].kyc_verified,kycResponse.getData()[0].kyc_document_verified ,UUID);
+                                listener.onKYCStatusChecked(true, kycResponse.getData()[0].kyc_verified,kycResponse.getData()[0].kyc_document_verified ,UUID, leadUUId);
                             }
                         });
                     }
@@ -415,7 +418,7 @@ public class LeadsActivity extends AppCompatActivity {
 
     // Interface for KYC status callback
     interface KYCCheckListener {
-        void onKYCStatusChecked(boolean isKYCDone, boolean isKyc1done, boolean isKyc2done, String UUID);
+        void onKYCStatusChecked(boolean isKYCDone, boolean isKyc1done, boolean isKyc2done, String UUID, String leadUUID);
     }
 
     // KYCResponse class for JSON parsing
@@ -449,11 +452,16 @@ public class LeadsActivity extends AppCompatActivity {
         private String mobile_number;
         private String email;
         private String lead;
+        private String lead_id;
 
         private boolean kyc_document_verified;
 
         public boolean getkyc_verified(){
             return kyc_verified;
+        }
+
+        public String getLeadUUID(){
+            return lead_id;
         }
 
         public boolean kyc_document_verified(){
