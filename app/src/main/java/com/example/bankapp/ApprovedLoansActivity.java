@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -277,40 +278,41 @@ public class ApprovedLoansActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String formatDate(String timestamp) {
         try {
-            ZonedDateTime zonedDateTime = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                zonedDateTime = ZonedDateTime.parse(timestamp);
-            }
-            DateTimeFormatter dateFormatter = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            }
-            assert zonedDateTime != null;
-            return zonedDateTime.format(dateFormatter);
+            // Parse the timestamp as a ZonedDateTime in UTC
+            ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
+            // Convert to Indian Standard Time (IST)
+            ZonedDateTime istDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+
+            // Format the date in the desired format
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return istDateTime.format(dateFormatter);
         } catch (DateTimeParseException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String formatTime(String timestamp) {
         try {
-            ZonedDateTime zonedDateTime = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                zonedDateTime = ZonedDateTime.parse(timestamp);
-            }
-            DateTimeFormatter timeFormatter = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-            }
-            assert zonedDateTime != null;
-            return zonedDateTime.format(timeFormatter);
+            // Parse the timestamp as a ZonedDateTime in UTC
+            ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
+            // Convert to Indian Standard Time (IST)
+            ZonedDateTime istDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+
+            // Format the time in the desired format
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+            return istDateTime.format(timeFormatter);
         } catch (DateTimeParseException e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
 }
 
 class ApplicantResponseApproved {
