@@ -103,13 +103,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:text="Upload Aadhar Card"
+                    android:text="Upload Aadhar Card Front"
                     android:layout_marginTop="15dp"
                     android:textSize="16sp"
                     android:gravity="left" />
 
                 <EditText
                     android:id="@+id/adhardocs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="8dp"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
+                    android:drawableEnd="@drawable/attach_file"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:onClick="onUploadDocumentClick" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="Upload Aadhar Card Back"
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:gravity="left" />
+
+                <EditText
+                    android:id="@+id/adhardocsBack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

@@ -68,9 +68,10 @@ public class KycActivity2 extends AppCompatActivity {
     private static final int REQUEST_VOTER_ID_DOCS = 4;
     private static final int REQUEST_FORM_60_DOCS = 5;
     private static final int REQUEST_PASSPORT_DOCS = 6;
+    private static final int REQUEST_ADHAR_BACK_DOCUMENT = 7;
 
     EditText adhar_number, panNumber, voterIdNumber, drivingId, passportNo;
-    EditText adharDocsEditText, panDocs, formDocs, passportDocs, voterDocs, drivingDocs;
+    EditText adharDocsEditText, adharDocsBackEditText, panDocs, formDocs, passportDocs, voterDocs, drivingDocs;
     Button submitButton;
     ImageView homeButton;
     SharedPreferences sharedPreferences;
@@ -100,11 +101,19 @@ public class KycActivity2 extends AppCompatActivity {
 
         adhar_number = findViewById(R.id.adhar_number);
         adharDocsEditText = findViewById(R.id.adhardocs);
+        adharDocsBackEditText = findViewById(R.id.adhardocsBack);
 
         adharDocsEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onUploadDocumentClick(REQUEST_ADHAR_DOCUMENT);
+            }
+        });
+
+        adharDocsBackEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUploadDocumentClick(REQUEST_ADHAR_BACK_DOCUMENT);
             }
         });
 
@@ -140,9 +149,14 @@ public class KycActivity2 extends AppCompatActivity {
                 }
                 // if adhaar is selected, check whether file is present or not
                 if(adharDocsEditText.getText().toString().isEmpty()){
-                   Toast.makeText(KycActivity2.this, "Please upload Adhaar document", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(KycActivity2.this, "Please upload Adhaar document (Front)", Toast.LENGTH_SHORT).show();
                 }
-                if(validateAdharNumber() && !adharDocsEditText.getText().toString().isEmpty()){
+
+                if(adharDocsEditText.getText().toString().isEmpty()){
+                   Toast.makeText(KycActivity2.this, "Please upload Adhaar document (Back)", Toast.LENGTH_SHORT).show();
+                }
+
+                if(validateAdharNumber() && !adharDocsEditText.getText().toString().isEmpty() && !adharDocsBackEditText.getText().toString().isEmpty()){
                     if(validateAllDocsUploaded()){
                         uploadDocumentsUsingRetrofit(accessToken, mobNo, kyc_id, leadID, leadUUID);
                     }
@@ -397,7 +411,7 @@ public class KycActivity2 extends AppCompatActivity {
     // create a hashmap to store the URIs of the selected documents named as documetURIs
     private HashMap<Integer, Uri> documentURIs = new HashMap<>();
 
-    private Uri adharDocsUri, panDocsUri, drivingDocsUri, voterDocsUri, formDocsUri, passportDocsUri;
+    private Uri adharDocsUri, adharBackDocsUri, panDocsUri, drivingDocsUri, voterDocsUri, formDocsUri, passportDocsUri;
 
 
 
@@ -514,6 +528,14 @@ public class KycActivity2 extends AppCompatActivity {
                         adharDocsUri = selectedFileUri;
                         documentURIs.put(REQUEST_ADHAR_DOCUMENT, selectedFileUri);
                         break;
+
+                    case REQUEST_ADHAR_BACK_DOCUMENT:
+                        adharDocsBackEditText.setText(fileName);
+                        documentNames.put(REQUEST_ADHAR_BACK_DOCUMENT, fileName); // Store document name
+                        adharBackDocsUri = selectedFileUri;
+                        documentURIs.put(REQUEST_ADHAR_BACK_DOCUMENT, selectedFileUri);
+                        break;
+
                     case REQUEST_PAN_DOCS:
                         panDocs.setText(fileName);
                         documentNames.put(REQUEST_PAN_DOCS, fileName); // Store document name
@@ -604,6 +626,12 @@ public class KycActivity2 extends AppCompatActivity {
                     fileUri = adharDocsUri;
                     doc_id = adhar_number.getText().toString().trim();
                     break;
+
+                case REQUEST_ADHAR_BACK_DOCUMENT:
+                    fileUri = adharBackDocsUri;
+                    doc_id = adhar_number.getText().toString().trim();
+                    break;
+
                 case REQUEST_PAN_DOCS:
                     fileUri = panDocsUri;
                     doc_id = panNumber.getText().toString().trim();
